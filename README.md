@@ -1,5 +1,5 @@
 # Komunitin API
-**Disclaimer**: This is a *work in progress* with the primary goal to be used as a starting point for further discussion. Coments are welcomed as github issues or direct email contact at komunitinbox@gmail.com.
+**Disclaimer**: This is a *work in progress* with the primary goal to be used as a starting point for further discussion. Comments are very welcome as GitHub issues or direct email contact at komunitinbox@gmail.com.
 
 ## HTTP API
 The API is divided in several modules:
