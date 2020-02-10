@@ -22,8 +22,8 @@ See [doc/examples](doc/examples) folder for examples of API response on each res
 ### Notifications
 The Notifications API module allow an end-user app or a federated server to subscribe for push notifications so it can keep on sync with the events they are interested on.
 
-### Transactions
-The transactions API module features financial transactions.
+### Transfers
+The transfers API module features financial transactions.
 
 ## Authorization
 The authorization management (login, forgot password, etc) is out of the scope of the API, and will be provided by a third party Identity Access Management (IAM) system using the OpenID Connect protocol over OAuth2. For mobile and web apps, it is recommended to use the OAuth2 Authorization Code Flow with Proof Key for Code Exchange (PKCE). There open source IAM platforms such as [Keycloak](https://keycloak.org) as well as IAM-as-a-service providers.
