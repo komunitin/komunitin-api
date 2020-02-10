@@ -1,0 +1,146 @@
+{
+    "links": {
+        "self": "/EITE"
+    },
+    "data": {
+        "id": "84278843-50d5-4358-bbf7-a833ea5cde07",
+        "type": "exchanges",
+        "attributes": {
+            "name": "Easter Island Talent Exchange",
+            // HTML
+            "description": "<p>Here at <strong>Easter Island</strong> it makes a lot of sense to have a local currency because bla bla bla...",
+            "image": "/EITE/image.png",
+            "url": "https://easterislandexchange.org",
+            // RFC3339
+            "created": "2011-08-19T23:15:30.000Z",
+            "updated": "2020-08-19T23:15:30.000Z",
+            "currency": {
+                "name": "talents",
+                "symbol": "☂",
+                "scale": 2,
+                "code": "EITE",
+                "value": 0.085
+            },
+            // GeoJSON
+            "location": {
+                "name": "Easter Island",
+                "type": "Polygon",
+                "bbox": [ -109.48974609375, -27.221662326867037, -109.20616149902344, -27.024877476307523],
+                "coordinates": [
+                    [
+                      [
+                        -109.3798828125,
+                        -27.054233808785824
+                      ],
+                      [
+                        -109.44236755371094,
+                        -27.201510867989075
+                      ],
+                      [
+                        -109.23294067382812,
+                        -27.108033801463105
+                      ],
+                      [
+                        -109.3798828125,
+                        -27.054233808785824
+                      ]
+                    ]
+                  ]
+            },
+            "contacts": [
+                {
+                    "type": "telephone",
+                    "name": "+34 666 77 88 99"
+                },
+                {
+                    "type": "email",
+                    "name": "exhange@easterisland.com"
+                },
+                {
+                    "type": "whatsapp",
+                    "name": "+34 666 77 88 99"
+                },
+                {
+                    "type": "telegram",
+                    "name": "@easterisland"
+                }
+            ]
+        },
+        "relatinships": {
+            "accounts": {
+                "links": {
+                    "related": "/EITE/accounts"
+                },
+                "meta": {
+                    "personal": 50,
+                    "business": 30,
+                    "organization": 20,
+                    "public": 1,
+                    "system": 4
+                }
+            },
+            "categories": {
+                "links": {
+                    "related": "/EITE/categories"
+                },
+                "data": [
+                    {
+                        "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
+                        "type": "categories"
+                    },
+                    {
+                        "id": "cbbea21f-c47e-47ec-b7ed-93930cfa688f",
+                        "type": "categories",
+                        "attributes": {
+                            "code": "professional-services",
+                            "icon": "/EITE/categories/professional-services.svg",
+                            "name": "Professional services",
+                            "description": "Services for businesses: technology, law, accountability..."
+                        }
+                    }
+                ],
+                "meta": {
+                    "count": 2
+                }
+            },
+            "offers": {
+                "links": {
+                    "related": "/EITE/offers"
+                },
+                "meta": {
+                    "food": 63,
+                    "professional-services": 12
+                }
+            },
+            "needs": {
+                "links": {
+                    "related": "/EITE/needs"
+                },
+                "meta": {
+                    "food": 0,
+                    "professional-services": 3
+                }
+            },
+            "posts": {
+                "links": {
+                    "related": "/EITE/posts"
+                },
+                "meta": {
+                    "count": 432
+                }
+            },
+            "transactions": {
+                "links": {
+                    "related": "/EITE/transactions"
+                },
+                "meta": {
+                    "totalCount": 15627,
+                    "totalAmount": 5097723,
+                    "yearCount": 7002,
+                    "yearAmount": 1508022,
+                    "currencySupply": 602000
+                }
+            }
+        }
+    }
+}

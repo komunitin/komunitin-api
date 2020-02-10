@@ -1,0 +1,38 @@
+{
+    "links": {
+        "self": "/IETE/categories/food"
+    },
+    "data": {
+        "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
+        "type": "categories",
+        "attributes": {
+            "code": "food",
+            "name": "Food",
+            "description": "Alimentation products and services",
+            "icon": "/EITE/categories/food.svg"
+        }
+    },
+    "relationships": {
+        "exchange": {
+            "links": {
+                "related": "/EITE"
+            }
+        },
+        "needs": {
+            "links": {
+                "related": "/EITE/needs?filter[category]=food"
+            },
+            "meta": {
+                "count": 2
+            }
+        },
+        "offers": {
+            "links": {
+                "related": "/EITE/offers?filter[category]=food"
+            },
+            "meta": {
+                "count": 32
+            }
+        }
+    }
+}

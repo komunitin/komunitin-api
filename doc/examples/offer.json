@@ -1,0 +1,45 @@
+{
+    "links": {
+        "self": "/EITE/offers/ecologic-bread"
+    },
+    "data": {
+        "type": "offer",
+        "id": "785ad832-971f-4c7b-a31c-0adb8eafed86",
+        "attributes": {
+            "code": "ecologic-bread",
+            "name": "Ecologic Bread",
+            "content": "<p>We stand up every morning at 3h AM in order to...",
+            "images": [
+                {
+                    "href": "/EITE/files/ecologic-bread.jpeg",
+                    "alt": "Bakery photo"
+                }
+            ],
+            "created": "2019-08-19T23:15:30.000Z",
+            "updated": "2020-08-19T23:15:30.000Z",
+            "expires": "2020-08-20T23:15:30.000Z"
+        },
+        "relations": {
+            "category": {
+                "links": {
+                    "self": "/EITE/offers/ecologic-bread/relationships/category",
+                    "related": "/EITE/categories/food"
+                },
+                "data": {
+                    "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
+                    "type": "categories"
+                }
+            },
+            "account": {
+                "links": {
+                    "related": "/EITE/EITE0005"
+                },
+                "data": {
+                    "id": "9683ec5d-29d3-419a-8753-a5d092f1bb3d",
+                    "type": "accounts"
+                }
+            }
+        }
+        
+    }
+}
