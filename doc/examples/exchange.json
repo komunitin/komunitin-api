@@ -130,7 +130,7 @@
                 }
             },
             // That should be factored out to payments API.
-            "transactions": {
+            /*"transactions": {
                 "links": {
                     "related": "/EITE/transactions"
                 },
@@ -141,7 +141,7 @@
                     "yearAmount": 1508022,
                     "currencySupply": 602000
                 }
-            }
+            }*/
         }
     }
 }
