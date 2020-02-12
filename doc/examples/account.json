@@ -43,14 +43,15 @@
                     "type": "telegram",
                     "name": "@mariesbakery"
                 }
-            ],
-            "balance": {
+            ]//,
+            // That should be factored out to payments api.
+            /*"balance": {
                 // Inspired by cylos 4 REST api.
                 "amount": 16200,
                 "reservedAmount": 1000,
                 "creditLimit": 5000,
                 "upperCreditLimit": -1
-            }
+            }*/
         },
         "relationships": {
             "exchange": {
@@ -61,7 +62,7 @@
                     "type": "exchanges",
                     "id": "84278843-50d5-4358-bbf7-a833ea5cde07"
                 }
-            }
+            },
             "needs": {
                 // Embedding data by default.
                 "links": {
