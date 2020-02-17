@@ -10,12 +10,12 @@ The Community API module provides all the endpoints related to the information i
 The community module is based on the [JSON:API](https://jsonapi.org) standard, providing thus a solid and coherent way to read and write the resources.
 
 There are several resource types:
-  * Account: The subject of the API. It may be either a personal account, a buisiness account or others.
+  * Member: The subject in the API. It may be either a personal account, a buisiness, a non-profit or others.
   * Exchange: The trading group. It has their own currency and administration.
   * Category: A category for offers and needs.
   * Offer: A particular product or service which is offered to the exchange community. With images, description, cost.
   * Need: A particular need for a product or service to be potentially satisfied within the exchange network.
-  * Message: A text message sent usually from the exchange administration to all other accounts.
+  * Message: A text message sent usually from the exchange administration to all other members.
 
 See [doc/examples](doc/examples) folder for examples of API response on each resource type.
 
