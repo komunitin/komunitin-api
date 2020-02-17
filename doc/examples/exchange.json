@@ -14,13 +14,6 @@
             // RFC3339
             "created": "2011-08-19T23:15:30.000Z",
             "updated": "2020-08-19T23:15:30.000Z",
-            // That should be factored out to the payments API.
-            /*"currency": {
-                "name": "talents",
-                "symbol": "☂",
-                "scale": 2,
-                "code": "EITE"
-            },*/
             // GeoJSON
             "location": {
                 "name": "Easter Island",
@@ -129,19 +122,6 @@
                     "count": 432
                 }
             },
-            // That should be factored out to payments API.
-            /*"transactions": {
-                "links": {
-                    "related": "/EITE/transactions"
-                },
-                "meta": {
-                    "totalCount": 15627,
-                    "totalAmount": 5097723,
-                    "yearCount": 7002,
-                    "yearAmount": 1508022,
-                    "currencySupply": 602000
-                }
-            }*/
         }
     }
 }

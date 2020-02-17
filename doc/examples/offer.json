@@ -1,17 +1,16 @@
 {
     "links": {
-        "self": "/EITE/offers/ecologic-bread"
+        "self": "https://komunitin.org/EITE/offers/ecologic-bread"
     },
     "data": {
         "type": "offer",
         "id": "785ad832-971f-4c7b-a31c-0adb8eafed86",
         "attributes": {
-            "code": "ecologic-bread",
             "name": "Ecologic Bread",
             "content": "<p>We stand up every morning at 3h AM in order to...",
             "images": [
                 {
-                    "href": "/EITE/files/ecologic-bread.jpeg",
+                    "href": "https://komunitin.org/EITE/files/ecologic-bread.jpeg",
                     "alt": "Bakery photo"
                 }
             ],
@@ -22,7 +21,7 @@
         "relations": {
             "category": {
                 "links": {
-                    "self": "/EITE/offers/ecologic-bread/relationships/category",
+                    "self": "https://komunitin.org/EITE/offers/ecologic-bread/relationships/category",
                     "related": "/EITE/categories/food"
                 },
                 "data": {
