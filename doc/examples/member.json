@@ -13,7 +13,7 @@
             "name": "Marie's Bakery",
             "type": "business",
             "description": "My mother Marie opened the first bakery in the town 50 years ago. Since then...",
-            "image": "/EITE/files/EITE0005.jpeg",
+            "image": "https://komunitin.org/EITE/files/EITE0005.jpeg",
             "address": {
                 "streetAddress": "7 S. Broadway",
                 "addressLocality": "Denver",
@@ -58,7 +58,7 @@
             "needs": {
                 // Embedding data by default.
                 "links": {
-                    "related": "/EITE/needs?filter[account]=EITE0005"
+                    "related": "https://komunitin.org/EITE/needs?filter[account]=EITE0005"
                 },
                 "data": [],
                 "meta": {
@@ -68,7 +68,7 @@
             "offers": {
                 // Embedding data by default.
                 "links": {
-                    "related": "/EITE/offers?filter[account]=EITE0005"
+                    "related": "https://komunitin.org/EITE/offers?filter[account]=EITE0005"
                 },
                 "data": [
                     {

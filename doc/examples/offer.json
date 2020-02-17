@@ -22,7 +22,7 @@
             "category": {
                 "links": {
                     "self": "https://komunitin.org/EITE/offers/ecologic-bread/relationships/category",
-                    "related": "/EITE/categories/food"
+                    "related": "https://komunitin.org/EITE/categories/food"
                 },
                 "data": {
                     "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
@@ -31,7 +31,7 @@
             },
             "account": {
                 "links": {
-                    "related": "/EITE/EITE0005"
+                    "related": "https://komunitin.org/EITE/EITE0005"
                 },
                 "data": {
                     "id": "9683ec5d-29d3-419a-8753-a5d092f1bb3d",

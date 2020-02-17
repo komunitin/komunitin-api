@@ -9,7 +9,7 @@
             "code": "food",
             "name": "Food",
             "description": "Alimentation products and services",
-            "icon": "/EITE/categories/food.svg"
+            "icon": "https://komunitin.org/EITE/categories/food.svg"
         }
     },
     "relationships": {
@@ -20,7 +20,7 @@
         },
         "needs": {
             "links": {
-                "related": "/EITE/needs?filter[category]=food"
+                "related": "https://komunitin.org/EITE/needs?filter[category]=food"
             },
             "meta": {
                 "count": 2
@@ -28,7 +28,7 @@
         },
         "offers": {
             "links": {
-                "related": "/EITE/offers?filter[category]=food"
+                "related": "https://komunitin.org/EITE/offers?filter[category]=food"
             },
             "meta": {
                 "count": 32

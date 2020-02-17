@@ -1,6 +1,6 @@
 {
     "links": {
-        "self": "/EITE/messages/2020-08-19-2"
+        "self": "https://komunitin.org/EITE/messages/2020-08-19-2"
     },
     "data": {
         "type": "message",
@@ -16,7 +16,7 @@
         "relations": {
             "author": {
                 "links": {
-                    "related": "/EITE/EITE0000"
+                    "related": "https://komunitin.org/EITE/EITE0000"
                 },
                 "data": {
                     "id": "a01f8c6f-eebe-4c2e-ad01-0e46b6e27c64",
@@ -25,7 +25,7 @@
             },
             "to": {
                 "links": {
-                    "related": "/EITE/accounts"
+                    "related": "https://komunitin.org/EITE/accounts"
                 }
             }
         }

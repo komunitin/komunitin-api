@@ -9,7 +9,7 @@
             "name": "Easter Island Talent Exchange",
             // HTML
             "description": "<p>Here at <strong>Easter Island</strong> it makes a lot of sense to have a local currency because bla bla bla...",
-            "image": "/EITE/image.png",
+            "image": "https://komunitin.org/EITE/image.png",
             "url": "https://easterislandexchange.org",
             // RFC3339
             "created": "2011-08-19T23:15:30.000Z",
@@ -62,7 +62,7 @@
         "relatinships": {
             "accounts": {
                 "links": {
-                    "related": "/EITE/accounts"
+                    "related": "https://komunitin.org/EITE/accounts"
                 },
                 "meta": {
                     "personal": 50,
@@ -74,7 +74,7 @@
             },
             "categories": {
                 "links": {
-                    "related": "/EITE/categories"
+                    "related": "https://komunitin.org/EITE/categories"
                 },
                 "data": [
                     {
@@ -86,7 +86,7 @@
                         "type": "categories",
                         "attributes": {
                             "code": "professional-services",
-                            "icon": "/EITE/categories/professional-services.svg",
+                            "icon": "https://komunitin.org/EITE/categories/professional-services.svg",
                             "name": "Professional services",
                             "description": "Services for businesses: technology, law, accountability..."
                         }
@@ -98,7 +98,7 @@
             },
             "offers": {
                 "links": {
-                    "related": "/EITE/offers"
+                    "related": "https://komunitin.org/EITE/offers"
                 },
                 "meta": {
                     "food": 63,
@@ -107,7 +107,7 @@
             },
             "needs": {
                 "links": {
-                    "related": "/EITE/needs"
+                    "related": "https://komunitin.org/EITE/needs"
                 },
                 "meta": {
                     "food": 0,
@@ -116,7 +116,7 @@
             },
             "posts": {
                 "links": {
-                    "related": "/EITE/posts"
+                    "related": "https://komunitin.org/EITE/posts"
                 },
                 "meta": {
                     "count": 432
