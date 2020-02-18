@@ -13,7 +13,7 @@
             "updated": "2020-08-19T23:15:30.000Z",
             "expires": "2021-08-19T23:15:30.000Z"
         },
-        "relations": {
+        "relationships": {
             "author": {
                 "links": {
                     "related": "https://komunitin.org/EITE/EITE0000"

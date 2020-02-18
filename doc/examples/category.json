@@ -6,7 +6,6 @@
         "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
         "type": "categories",
         "attributes": {
-            "code": "food",
             "name": "Food",
             "description": "Alimentation products and services",
             "icon": "https://komunitin.org/EITE/categories/food.svg"

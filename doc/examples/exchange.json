@@ -80,16 +80,6 @@
                     {
                         "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
                         "type": "categories"
-                    },
-                    {
-                        "id": "cbbea21f-c47e-47ec-b7ed-93930cfa688f",
-                        "type": "categories",
-                        "attributes": {
-                            "code": "professional-services",
-                            "icon": "https://komunitin.org/EITE/categories/professional-services.svg",
-                            "name": "Professional services",
-                            "description": "Services for businesses: technology, law, accountability..."
-                        }
                     }
                 ],
                 "meta": {
@@ -121,7 +111,21 @@
                 "meta": {
                     "count": 432
                 }
-            },
+            }
         }
-    }
+    },
+    "included": [
+        {   "links": {
+                "self": "https://komunitin.org/EITE/categories/professional-services"
+            },
+            "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
+            "type": "categories",
+            "attributes": {
+                "name": "Professional services",
+                "description": "Services for businesses: technology, law, accountability...",
+                "icon": "https://komunitin.org/EITE/categories/professional-services.svg"
+            }
+            
+        }
+    ]
 }

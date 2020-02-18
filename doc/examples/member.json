@@ -43,39 +43,26 @@
                     "type": "telegram",
                     "name": "@mariesbakery"
                 }
-            ]//,
+            ]
         },
         "relationships": {
             "exchange": {
                 "links": {
                     "related": "/EITE"
-                },
-                "data": {
-                    "type": "exchanges",
-                    "id": "84278843-50d5-4358-bbf7-a833ea5cde07"
                 }
             },
             "needs": {
-                // Embedding data by default.
                 "links": {
                     "related": "https://komunitin.org/EITE/needs?filter[account]=EITE0005"
                 },
-                "data": [],
                 "meta": {
                     "count": 0
                 }
             },
             "offers": {
-                // Embedding data by default.
                 "links": {
                     "related": "https://komunitin.org/EITE/offers?filter[account]=EITE0005"
                 },
-                "data": [
-                    {
-                        "id": "9683ec5d-29d3-419a-8753-294903282732",
-                        "type": "offers"
-                    }
-                ],
                 "meta": {
                     "count": 1
                 }
