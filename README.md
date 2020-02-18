@@ -17,7 +17,7 @@ There are several resource types:
   * Need: A particular need for a product or service to be potentially satisfied within the exchange network.
   * Message: A text message sent usually from the exchange administration to all other members.
 
-See [doc/examples](doc/examples) folder for examples of API response on each resource type.
+See [API specificatin](https://app.swaggerhub.com/apis-docs/estevebadia/komunitin-api/1.0.0) for the specification of the API. See also [doc/examples](doc/examples) folder for examples of API response on each resource type.
 
 ### Notifications
 The Notifications API module allow an end-user app or a federated server to subscribe for push notifications so it can keep on sync with the events they are interested on.
