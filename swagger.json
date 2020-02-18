@@ -7,16 +7,32 @@
   "info" : {
     "version" : "1.0.0",
     "title" : "Komunitin Social API",
-    "description" : "API for interacting with the social aspect of Komunitin system.\n\n**This is still a work in progress**. Comments welcomed at komunitinbox@gmail.com or at [GitHub](https://github.com/komunitin/komunitin-api).\n\nThis API provides access to exchange group details, member details and their offers and needs and also informational message broadcasting. It doesn't feature payments nor any finantial information, as this is available in a separate API. Subscrption to notifications (email and push) and notification preferences are also defined in a separate API.\n## Preliminaries\n- This spec is based on the [JSON:API](https://jsonapi.org) standard.\n## Authorization\n\n Authorization endpoints are out of the scope of this API, which expects the user to be authorized with a JWT access token. The access token is provided by a separate authorization API. The recommended OAuth2 flow for web apps and native apps is the Authorization Code Flow with Proof Key for Code Exchange (PKCE).\n \n No OAuth2 scopes are defined at the moment, but may be defined in future.\n\n## Architecture\n \n - The URL structure starts with the exchange 4-letter code, so it eases the isolation among different exchange groups in a single server. The only exception is the global `exchanges/` endpoint.\n - All resources have a global UUID identifier as their `id` field, but the URLs are human-readable. The URLs are meant to be almost immutable to allow caching and others, but can occasinally change (for example, in case of server migration), while the UUIDs are really immutable.\n - Geolocation fields follow the [GeoJSON](https://geojson.org/) specification.\n - Date or time fields follow the [RFC3339](https://tools.ietf.org/html/rfc3339) specification.\n - Text fields allow formatting through a restricted set of HTML tags.\n \n ## Data privacy\n \n Access to resources (Exchanges, Members, Offers, Needs, Messages) may be restricted bay assigning one of the predefined access levels to the `access` resource field.\n  - `private`: The resource is only accessible by its owner.\n  - `exchange`: The resource is only accessible by the members of the same exchange group.\n  - `public`: The resource is publicly accessible on the internet.\nOther access levels may be added in the future.\n  "
+    "description" : "API for interacting with the social aspect of Komunitin system.\n\n**This is still a work in progress**. Comments welcomed at komunitinbox@gmail.com or at [GitHub](https://github.com/komunitin/komunitin-api).\n\nThis API provides access to exchange group details, member details and their offers and needs and also informational message broadcasting. It doesn't feature payments nor any finantial information, as this is available in a separate API. Subscrption to notifications (email and push) and notification preferences are also defined in a separate API.\n## Preliminaries\n- This spec is based on the [JSON:API](https://jsonapi.org) standard.\n## Authorization\n\n Authorization endpoints are out of the scope of this API, which expects the user to be authorized with a JWT access token. The access token is provided by a separate authorization API. The recommended OAuth2 flow for web apps and native apps is the Authorization Code Flow with Proof Key for Code Exchange (PKCE).\n \n No OAuth2 scopes are defined at the moment, but may be defined in future.\n\n## Architecture\n - The URL structure starts with the exchange code, so it eases the data isolation among different exchange groups in a single server, as there is no way to ask for resources from different exchanges. The only exception is the global `/exchanges` endpoint.\n - For interoperability, a system featuring just one exchange group should implement the `/exchanges` `GET` endpoint as well as the `/{exchangeCode}` `GET` endpoint, providing static responses and chosing a fixed value for the `exchangeCode` parameter (such as the word \"exchange\"). They may omit the other endpoints in Exchanges section and may also omit the exchangeCode path parameter in all other paths.\n - Clients should honor the links provided by API responses and not try to construct the URL's using the known structure defined in this document. This way it decouples client and server from URL design, making the server fully responsible of URLs.\n - All resources have a global UUID identifier as their `id` field, but the URLs are human-readable. The URLs are meant to be almost immutable to allow caching and others, but can occasinally change (for example, in case of server migration), while the UUIDs are really immutable.\n - Geolocation fields follow the [GeoJSON](https://geojson.org/) specification.\n - Date or time fields follow the [RFC3339](https://tools.ietf.org/html/rfc3339) specification.\n - Text fields allow formatting through a restricted set of HTML tags.\n \n ## Data privacy\n \n Access to resources (Exchanges, Members, Offers, Needs, Messages) may be restricted bay assigning one of the predefined access levels to the `access` resource field.\n  - `private`: The resource is only accessible by its owner.\n  - `exchange`: The resource is only accessible by the members of the same exchange group.\n  - `public`: The resource is publicly accessible on the internet.\nOther access levels may be added in the future.\n## Versioning\nClients should allow additional fields along all JSON responses. Therefore adding new fields won't be considered breaking backwards compatibility.\n  "
   },
   "security" : [ {
     "accessCode" : [ ]
   } ],
+  "tags" : [ {
+    "name" : "Exchanges",
+    "description" : "Manage exchange groups"
+  }, {
+    "name" : "Members",
+    "description" : "Manage exchange members"
+  }, {
+    "name" : "Offers",
+    "description" : "Manage exchange offers"
+  }, {
+    "name" : "Needs",
+    "description" : "Manage exchange needs"
+  }, {
+    "name" : "Messages",
+    "description" : "Manage exchange messages"
+  } ],
   "paths" : {
     "/exchanges" : {
       "get" : {
-        "summary" : "Get the exchanges collection",
-        "description" : "Return the collection of active exchanges registered in this server.",
+        "summary" : "Get exchanges collection",
+        "description" : "Return the collection of exchanges in this server.",
         "parameters" : [ {
           "$ref" : "#/components/parameters/fields"
         }, {
@@ -30,25 +46,37 @@
           "200" : {
             "description" : "OK"
           }
-        }
+        },
+        "tags" : [ "Exchanges" ]
       },
       "post" : {
-        "summary" : "Create a new exchange",
+        "summary" : "Create new exchange",
         "description" : "Create a new exchange group. The exchange group may not be immediately available, but wait for administration approval.",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "$ref" : "#/components/examples/exchange-request"
+              }
+            }
+          }
+        },
         "responses" : {
           "201" : {
             "description" : "Created"
           }
-        }
+        },
+        "tags" : [ "Exchanges" ]
       }
     },
     "/{exchangeCode}" : {
+      "parameters" : [ {
+        "$ref" : "#/components/parameters/exchange"
+      } ],
       "get" : {
-        "summary" : "Get the exchange details",
+        "summary" : "Get exchange details",
         "description" : "Return the exchange object and links to the related collections.",
         "parameters" : [ {
-          "$ref" : "#/components/parameters/exchange"
-        }, {
           "$ref" : "#/components/parameters/fields"
         }, {
           "$ref" : "#/components/parameters/include"
@@ -59,14 +87,285 @@
             "content" : {
               "application/json" : {
                 "examples" : {
-                  "example-exchange" : {
-                    "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/master/doc/examples/exchange.json"
+                  "exchange" : {
+                    "$ref" : "#/components/examples/exchange-response"
                   }
                 }
               }
             }
           }
-        }
+        },
+        "tags" : [ "Exchanges" ]
+      },
+      "patch" : {
+        "summary" : "Edit exchange details",
+        "description" : "Change some or all exchange fields.",
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "exchange" : {
+                    "$ref" : "#/components/examples/exchange-response"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags" : [ "Exchanges" ]
+      },
+      "delete" : {
+        "summary" : "Delete exchange group",
+        "description" : "Delete an exchange group",
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Exchanges" ]
+      }
+    },
+    "/{exchangeCode}/offers" : {
+      "parameters" : [ {
+        "$ref" : "#/components/parameters/exchange"
+      } ],
+      "get" : {
+        "summary" : "Get offers collection",
+        "description" : "Return a paginated list of offers that belong to the given exchange group.",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/fields"
+        }, {
+          "$ref" : "#/components/parameters/include"
+        }, {
+          "$ref" : "#/components/parameters/sort"
+        }, {
+          "$ref" : "#/components/parameters/filter"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Offers" ]
+      },
+      "post" : {
+        "summary" : "Create new offer",
+        "description" : "Create a new offer object in this exchange group.",
+        "responses" : {
+          "201" : {
+            "description" : "Created",
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "offer-response" : {
+                    "$ref" : "#/components/examples/offer-response"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags" : [ "Offers" ]
+      }
+    },
+    "/{exchangeCode}/offers/{offerCode}" : {
+      "parameters" : [ {
+        "$ref" : "#/components/parameters/exchange"
+      }, {
+        "$ref" : "#/components/parameters/offer"
+      } ],
+      "get" : {
+        "summary" : "Get offer details",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/fields"
+        }, {
+          "$ref" : "#/components/parameters/include"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK",
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "offer-response" : {
+                    "$ref" : "#/components/examples/offer-response"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags" : [ "Offers" ]
+      },
+      "patch" : {
+        "summary" : "Edit offer details",
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Offers" ]
+      },
+      "delete" : {
+        "summary" : "Delete offer",
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Offers" ]
+      }
+    },
+    "/{exchangeCode}/members" : {
+      "parameters" : [ {
+        "$ref" : "#/components/parameters/exchange"
+      } ],
+      "get" : {
+        "summary" : "Get members collection",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/fields"
+        }, {
+          "$ref" : "#/components/parameters/include"
+        }, {
+          "$ref" : "#/components/parameters/sort"
+        }, {
+          "$ref" : "#/components/parameters/filter"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Members" ]
+      },
+      "post" : {
+        "summary" : "Create new member",
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "example" : {
+                "value" : { }
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created",
+            "content" : {
+              "application/json" : {
+                "examples" : {
+                  "member-response" : {
+                    "value" : { }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags" : [ "Members" ]
+      }
+    },
+    "/{exchangeCode}/members/{memberCode}" : {
+      "parameters" : [ {
+        "$ref" : "#/components/parameters/exchange"
+      }, {
+        "$ref" : "#/components/parameters/member"
+      } ],
+      "get" : {
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/fields"
+        }, {
+          "$ref" : "#/components/parameters/include"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Members" ]
+      },
+      "patch" : {
+        "summary" : "Edit member profile",
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Members" ]
+      },
+      "delete" : {
+        "summary" : "Delete member",
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Members" ]
+      }
+    },
+    "/{exchangeCode}/needs" : {
+      "parameters" : [ {
+        "$ref" : "#/components/parameters/exchange"
+      } ],
+      "get" : {
+        "summary" : "Get needs collection",
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Needs" ]
+      },
+      "post" : {
+        "summary" : "Create new need",
+        "responses" : {
+          "201" : {
+            "description" : "Created"
+          }
+        },
+        "tags" : [ "Needs" ]
+      }
+    },
+    "/{exchangeCode}/needs/{needCode}" : {
+      "parameters" : [ {
+        "$ref" : "#/components/parameters/exchange"
+      }, {
+        "$ref" : "#/components/parameters/need"
+      } ],
+      "get" : {
+        "summary" : "Get need object",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/fields"
+        }, {
+          "$ref" : "#/components/parameters/include"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Needs" ]
+      },
+      "patch" : {
+        "summary" : "Edit need object",
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Needs" ]
+      },
+      "delete" : {
+        "summary" : "Delete need",
+        "responses" : {
+          "200" : {
+            "description" : "OK"
+          }
+        },
+        "tags" : [ "Needs" ]
       }
     }
   },
@@ -115,7 +414,34 @@
       },
       "exchange" : {
         "name" : "exchangeCode",
-        "description" : "4-letter identifier of the exchange",
+        "description" : "4 letter identifier of the exchange",
+        "in" : "path",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      },
+      "member" : {
+        "name" : "memberCode",
+        "description" : "4 letter identifier of the exchange plus 4 number identifier of the member.",
+        "in" : "path",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      },
+      "offer" : {
+        "name" : "offerCode",
+        "description" : "url-safe human-readable lowercase string identifying the offer. This identifier is unique only among the exchange group and automatically derived from the offer title.",
+        "in" : "path",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
+        }
+      },
+      "need" : {
+        "name" : "needCode",
+        "description" : "url-safe human-readable lowercase string identifying the need. This identifier is unique only among the exchange group and automatically derived from the need fields.",
         "in" : "path",
         "required" : true,
         "schema" : {
@@ -188,12 +514,12 @@
         "discriminator" : {
           "propertyName" : "data/type",
           "mapping" : {
-            "exchange" : "exchange",
-            "offer" : "offer",
-            "need" : "need",
-            "member" : "member",
-            "category" : "category",
-            "message" : "message"
+            "exchanges" : "exchanges",
+            "offers" : "offers",
+            "needs" : "needs",
+            "members" : "members",
+            "categories" : "categories",
+            "messages" : "messages"
           }
         }
       },
@@ -253,7 +579,7 @@
             "relationships" : {
               "type" : "object",
               "properties" : {
-                "accounts" : {
+                "members" : {
                   "allOf" : [ {
                     "$ref" : "#/components/schemas/Relationship"
                   }, {
@@ -321,23 +647,23 @@
       }
     },
     "examples" : {
-      "example-member" : {
-        "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/master/doc/examples/member.json"
+      "exchange-response" : {
+        "summary" : "Exchange example with included category",
+        "value" : {
+          "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/master/doc/examples/exchange.json"
+        }
       },
-      "example-exchange" : {
-        "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/master/doc/examples/exchange.json"
+      "exchange-request" : {
+        "summary" : "Request body for creating or updating an exchange",
+        "value" : {
+          "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/master/doc/examples/exchange-request.json"
+        }
       },
-      "example-offer" : {
-        "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/blob/master/doc/examples/offer.json"
-      },
-      "example-need" : {
-        "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/blob/master/doc/examples/need.json"
-      },
-      "example-category" : {
-        "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/blob/master/doc/examples/category.json"
-      },
-      "example-message" : {
-        "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/blob/master/doc/examples/message.json"
+      "offer-response" : {
+        "summary" : "Offer example",
+        "value" : {
+          "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/master/doc/examples/offer.json"
+        }
       }
     }
   }
