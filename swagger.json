@@ -20,11 +20,11 @@
         "parameters" : [ {
           "$ref" : "#/components/parameters/fields"
         }, {
+          "$ref" : "#/components/parameters/include"
+        }, {
           "$ref" : "#/components/parameters/sort"
         }, {
           "$ref" : "#/components/parameters/filter"
-        }, {
-          "$ref" : "#/components/parameters/include"
         } ],
         "responses" : {
           "200" : {
@@ -48,8 +48,11 @@
         "description" : "Return the exchange object and links to the related collections.",
         "parameters" : [ {
           "$ref" : "#/components/parameters/exchange"
+        }, {
+          "$ref" : "#/components/parameters/fields"
+        }, {
+          "$ref" : "#/components/parameters/include"
         } ],
-        "security" : [ ],
         "responses" : {
           "200" : {
             "description" : "OK",
@@ -57,7 +60,7 @@
               "application/json" : {
                 "examples" : {
                   "example-exchange" : {
-                    "$ref" : "#/components/examples/example-exchange"
+                    "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/master/doc/examples/exchange.json"
                   }
                 }
               }
@@ -319,22 +322,22 @@
     },
     "examples" : {
       "example-member" : {
-        "$ref" : "https://github.com/komunitin/komunitin-api/blob/master/doc/examples/member.json"
+        "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/master/doc/examples/member.json"
       },
       "example-exchange" : {
-        "$ref" : "https://github.com/komunitin/komunitin-api/blob/master/doc/examples/exchange.json"
+        "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/master/doc/examples/exchange.json"
       },
       "example-offer" : {
-        "$ref" : "https://github.com/komunitin/komunitin-api/blob/master/doc/examples/offer.json"
+        "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/blob/master/doc/examples/offer.json"
       },
       "example-need" : {
-        "$ref" : "https://github.com/komunitin/komunitin-api/blob/master/doc/examples/need.json"
+        "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/blob/master/doc/examples/need.json"
       },
       "example-category" : {
-        "$ref" : "https://github.com/komunitin/komunitin-api/blob/master/doc/examples/category.json"
+        "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/blob/master/doc/examples/category.json"
       },
       "example-message" : {
-        "$ref" : "https://github.com/komunitin/komunitin-api/blob/master/doc/examples/message.json"
+        "$ref" : "https://raw.githubusercontent.com/komunitin/komunitin-api/blob/master/doc/examples/message.json"
       }
     }
   }
