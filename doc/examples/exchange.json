@@ -7,15 +7,12 @@
         "type": "exchanges",
         "attributes": {
             "name": "Easter Island Talent Exchange",
-            // HTML
             "description": "<p>Here at <strong>Easter Island</strong> it makes a lot of sense to have a local currency because bla bla bla...",
             "image": "https://komunitin.org/EITE/image.png",
-            "url": "https://easterislandexchange.org",
-            // RFC3339
+            "website": "https://easterislandexchange.org",
             "created": "2011-08-19T23:15:30.000Z",
             "updated": "2020-08-19T23:15:30.000Z",
             "access": "public",
-            // GeoJSON
             "location": {
                 "name": "Easter Island",
                 "type": "Polygon",
@@ -43,7 +40,7 @@
             },
             "contacts": [
                 {
-                    "type": "telephone",
+                    "type": "phone",
                     "name": "+34 666 77 88 99"
                 },
                 {
