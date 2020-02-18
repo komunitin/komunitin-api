@@ -20,8 +20,6 @@
         "parameters" : [ {
           "$ref" : "#/components/parameters/fields"
         }, {
-          "$ref" : "#/components/parameters/fieldsType"
-        }, {
           "$ref" : "#/components/parameters/sort"
         }, {
           "$ref" : "#/components/parameters/filter"
@@ -49,13 +47,7 @@
         "summary" : "Get the exchange details",
         "description" : "Return the exchange object and links to the related collections.",
         "parameters" : [ {
-          "name" : "exchangeCode",
-          "description" : "4-letter identifier of the exchange",
-          "in" : "path",
-          "required" : true,
-          "schema" : {
-            "type" : "string"
-          }
+          "$ref" : "#/components/parameters/exchange"
         } ],
         "security" : [ ],
         "responses" : {
@@ -79,17 +71,8 @@
     "parameters" : {
       "fields" : {
         "in" : "query",
-        "name" : "fields",
-        "schema" : {
-          "type" : "array",
-          "items" : {
-            "type" : "string"
-          }
-        }
-      },
-      "fieldsType" : {
-        "in" : "query",
         "name" : "fields[{type}]",
+        "description" : "[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)",
         "schema" : {
           "type" : "array",
           "items" : {
@@ -100,6 +83,7 @@
       "sort" : {
         "in" : "query",
         "name" : "sort",
+        "description" : "[See jsonapi.org Sorting](https://jsonapi.org/format/#fetching-sorting)",
         "schema" : {
           "type" : "array",
           "items" : {
@@ -110,6 +94,7 @@
       "filter" : {
         "in" : "query",
         "name" : "filter[{type}]",
+        "description" : "[See jsonapi.org Filtering](https://jsonapi.org/format/#fetching-filtering)",
         "schema" : {
           "type" : "string"
         }
@@ -117,11 +102,21 @@
       "include" : {
         "in" : "query",
         "name" : "include",
+        "description" : "[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)",
         "schema" : {
           "type" : "array",
           "items" : {
             "type" : "string"
           }
+        }
+      },
+      "exchange" : {
+        "name" : "exchangeCode",
+        "description" : "4-letter identifier of the exchange",
+        "in" : "path",
+        "required" : true,
+        "schema" : {
+          "type" : "string"
         }
       }
     },
