@@ -8,7 +8,8 @@
         "attributes": {
             "name": "Food",
             "description": "Alimentation products and services",
-            "icon": "https://komunitin.org/EITE/categories/food.svg"
+            "icon": "https://komunitin.org/EITE/categories/food.svg",
+            "access": "public"
         }
     },
     "relationships": {

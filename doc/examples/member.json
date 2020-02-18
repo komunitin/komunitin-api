@@ -10,6 +10,7 @@
             "code": "EITE0005",
             "created": "2019-08-19T23:15:30.000Z",
             "updated": "2020-08-19T23:15:30.000Z",
+            "access": "exchange",
             "name": "Marie's Bakery",
             "type": "business",
             "description": "My mother Marie opened the first bakery in the town 50 years ago. Since then...",

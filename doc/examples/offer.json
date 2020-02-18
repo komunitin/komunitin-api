@@ -16,7 +16,8 @@
             ],
             "created": "2019-08-19T23:15:30.000Z",
             "updated": "2020-08-19T23:15:30.000Z",
-            "expires": "2020-08-20T23:15:30.000Z"
+            "expires": "2020-08-20T23:15:30.000Z",
+            "access": "public"
         },
         "relationships": {
             "category": {

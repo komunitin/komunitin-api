@@ -14,6 +14,7 @@
             // RFC3339
             "created": "2011-08-19T23:15:30.000Z",
             "updated": "2020-08-19T23:15:30.000Z",
+            "access": "public",
             // GeoJSON
             "location": {
                 "name": "Easter Island",

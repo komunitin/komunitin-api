@@ -11,7 +11,8 @@
             "images": [],
             "created": "2020-08-19T23:15:30.000Z",
             "updated": "2020-08-19T23:15:30.000Z",
-            "expires": "2021-08-19T23:15:30.000Z"
+            "expires": "2021-08-19T23:15:30.000Z",
+            "access": "public"
         },
         "relationships": {
             "author": {
