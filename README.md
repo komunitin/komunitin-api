@@ -17,6 +17,9 @@ The transfers API module features financial transactions.
 ## Authorization
 The authorization management (login, forgot password, etc) is out of the scope of the API, and will be provided by a third party Identity Access Management (IAM) system using the OpenID Connect protocol over OAuth2. For mobile and web apps, it is recommended to use the OAuth2 Authorization Code Flow with Proof Key for Code Exchange (PKCE). There open source IAM platforms such as [Keycloak](https://keycloak.org) as well as IAM-as-a-service providers.
 
+## Files
+Binary files upload and download management is out of the scope of this API, and will be provided by a third party service. This way we can enable advanced features like upload and download resumes and effective caching on delivery. Files should be isolated in different pools depending on the exchange group.
+
 ## Federation
 The federation of exchange system servers for the Community part is accomplished by letting remote servers to subscribe for push notifications. They will be therefore warned when new content is available and then they will be able to retry the new content using the regular community API.
 
