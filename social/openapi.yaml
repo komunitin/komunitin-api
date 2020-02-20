@@ -21,22 +21,27 @@ tags:
   - name: Exchanges
     description: Manage exchange groups
   - name: Members
-    description: Manage exchange members
+    description: Manage members
+  - name: Contacts
+    description: Manage exchange and member contacts
   - name: Offers
-    description: Manage exchange offers
+    description: Manage offers
   - name: Needs
-    description: Manage exchange needs
-  - name: Messages
-    description: Manage exchange messages
+    description: Manage needs
+  - name: Categories
+    description: Manage categories for offers and needs 
+  - name: Posts
+    description: Manage posts
 paths:
   /exchanges:
+    parameters:  
+      - $ref: "#/components/parameters/fields"
+      - $ref: "#/components/parameters/include"
     get:
       summary: Get exchanges collection
       description: >-
         Return the collection of exchanges in this server.
       parameters:
-        - $ref: "#/components/parameters/fields"
-        - $ref: "#/components/parameters/include"
         - $ref: "#/components/parameters/sort"
         - $ref: "#/components/parameters/filter"
       responses:
@@ -51,6 +56,7 @@ paths:
       requestBody:
         content:
           "application/vnd.api+json":
+            schema: {}
             examples:
               exchange-post:
                 $ref: "#/components/examples/exchange-post"
@@ -86,11 +92,15 @@ paths:
         - Exchanges
     patch:
       summary: Edit exchange details
+      parameters:
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
       description: >-
         Change some or all exchange fields.
       requestBody:
         content:
           "application/vnd.api+json":
+            schema: {}
             examples:
               exchange-patch:
                 $ref: "#/components/examples/exchange-patch"
@@ -111,18 +121,21 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            "application/vnd.api+json":
+              schema: {}
       tags:
         - Exchanges
   /{exchangeCode}/offers:
     parameters:
       - $ref: "#/components/parameters/exchange"
+      - $ref: "#/components/parameters/fields"
+      - $ref: "#/components/parameters/include"
     get:
       summary: Get offers collection
       description: >-
         Return a paginated list of offers that belong to the given exchange group.
       parameters:
-        - $ref: "#/components/parameters/fields"
-        - $ref: "#/components/parameters/include"
         - $ref: "#/components/parameters/sort"
         - $ref: "#/components/parameters/filter"
       responses:
@@ -134,11 +147,18 @@ paths:
       summary: Create new offer
       description: >-
         Create a new offer object in this exchange group.
+      requestBody:
+        content:
+          "application/vnd.api+json":
+            schema: {}
+            examples:
+              offer-post:
+                $ref: "#/components/examples/offer-post"
       responses:
         '201':
           description: Created
           content:
-            application/json:
+            "application/vnd.api+json":
               examples:
                 offer-response:
                   $ref: "#/components/examples/offer-get"
@@ -157,7 +177,7 @@ paths:
         '200':
           description: OK
           content:
-            application/json:
+            "application/vnd.api+json":
                 examples:
                   offer-response:
                     $ref: "#/components/examples/offer-get"
@@ -165,9 +185,24 @@ paths:
         - Offers
     patch:
       summary: Edit offer details
+      parameters:
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
+      requestBody:
+        content:
+          "application/vnd.api+json":
+            schema: {}
+            examples:
+              offer-patch:
+                $ref: "#/components/examples/offer-patch"
       responses:
         '200':
           description: OK
+          content:
+            "application/vnd.api+json":
+              examples:
+                offer-get:
+                  $ref: "#/components/examples/offer-get"
       tags:
         - Offers
     delete:
@@ -175,16 +210,19 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            "application/vnd.api+json":
+              schema: {}
       tags:
         - Offers
   /{exchangeCode}/members:
     parameters:
       - $ref: "#/components/parameters/exchange"
+      - $ref: "#/components/parameters/fields"
+      - $ref: "#/components/parameters/include"
     get:
       summary: Get members collection
       parameters:
-        - $ref: "#/components/parameters/fields"
-        - $ref: "#/components/parameters/include"
         - $ref: "#/components/parameters/sort"
         - $ref: "#/components/parameters/filter"
       responses:
@@ -196,17 +234,19 @@ paths:
       summary: Create new member
       requestBody:
         content:
-          application/json:
-            example:
-              value: {}
+          "application/vnd.api+json":
+            schema: {}
+            examples:
+              member-post:
+                $ref: "#/components/examples/member-post"
       responses:
         '201':
           description: Created
           content:
-            application/json:
-                examples:
-                  member-response:
-                    value: {}
+            "application/vnd.api+json":
+              examples:
+                member-get:
+                  $ref: "#/components/examples/member-get"
       tags:
         - Members
   /{exchangeCode}/members/{memberCode}:
@@ -214,19 +254,40 @@ paths:
       - $ref: "#/components/parameters/exchange"
       - $ref: "#/components/parameters/member"
     get:
+      summary: Get a member object
       parameters:
         - $ref: "#/components/parameters/fields"
         - $ref: "#/components/parameters/include"
       responses:
         '200':
           description: OK
+          content:
+            "application/vnd.api+json":
+              examples:
+                member-get:
+                  $ref: "#/components/examples/member-get"
       tags:
         - Members
     patch:
       summary: Edit member profile
+      parameters:
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
+      requestBody:
+        content:
+          "application/vnd.api+json":
+            schema: {}
+            examples:
+              member-patch:
+                $ref: "#/components/examples/member-patch"
       responses:
         '200':
           description: OK
+          content:
+            "application/vnd.api+json":
+              examples:
+                member-get:
+                  $ref: "#/components/examples/member-get"
       tags:
         - Members
     delete:
@@ -234,6 +295,9 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            "application/vnd.api+json":
+              schema: {}
       tags:
         - Members
   /{exchangeCode}/needs:
@@ -248,9 +312,21 @@ paths:
         - Needs
     post:
       summary: Create new need
+      requestBody:
+        content:
+          "application/vnd.api+json":
+            schema: {}
+            examples:
+              need-post:
+                $ref: "#/components/examples/need-post"
       responses:
         '201':
           description: Created
+          content:
+            "application/vnd.api+json":
+              examples:
+                need-get:
+                  $ref: "#/components/examples/need-get"
       tags:
         - Needs
   /{exchangeCode}/needs/{needCode}:
@@ -265,13 +341,33 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            "application/vnd.api+json":
+              examples:
+                need-get:
+                  $ref: "#/components/examples/need-get"
       tags:
         - Needs
     patch:
       summary: Edit need object
+      parameters:  
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
+      requestBody:
+        content:
+          "application/vnd.api+json":
+            schema: {}
+            examples:
+              need-patch:
+                $ref: "#/components/examples/need-patch"
       responses:
         '200':
           description: OK
+          content:
+            "application/vnd.api+json":
+              examples:
+                need-get:
+                  $ref: "#/components/examples/need-get"
       tags:
         - Needs
     delete:
@@ -279,9 +375,144 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            "application/vnd.api+json":
+              schema: {}
       tags:
         - Needs
-        
+  /contacts:
+    post:
+      summary: Create contact
+      requestBody:
+        content:
+          "application/vnd.api+json":
+            schema: {}
+            examples:
+              contact-post:
+                $ref: "#/components/examples/contact-post"
+      responses:
+        '201':
+          description: Created
+          content:
+            "application/vnd.api+json":
+              examples:
+                contact-get:
+                  $ref: "#/components/examples/contact-get" 
+      tags:
+        - Contacts
+  /contacts/{contactId}:
+    parameters:
+      - $ref: "#/components/parameters/contact"
+    patch:
+      summary: Edit contact
+      requestBody:
+        content:
+            "application/vnd.api+json":
+              schema: {}
+              examples:
+                contact-patch:
+                  $ref: "#/components/examples/contact-patch"
+      responses:
+        '200':
+          description: OK
+          content:
+            "application/vnd.api+json":
+              examples:
+                contact-patch:
+                  $ref: "#/components/examples/contact-patch" 
+      tags:
+        - Contacts
+    delete:
+      summary: Delete contact
+      responses:
+        '200':
+          description: OK
+          content:
+            "application/vnd.api+json":
+              schema: {}
+      tags:
+        - Contacts
+  /{exchangeCode}/posts:
+    parameters:
+      - $ref: "#/components/parameters/exchange"
+    get:
+      summary: Get posts collection
+      responses:
+        '200':
+          description: OK
+      tags:
+        - Posts
+    post:
+      summary: Create new post
+      requestBody:
+        content:
+          "application/vnd.api+json":
+            schema: {}
+            examples:
+              post-post:
+                $ref: "#/components/examples/post-post"
+      responses:
+        '201':
+          description: Created
+          content:
+            "application/vnd.api+json":
+              examples:
+                post-get:
+                  $ref: "#/components/examples/post-get"
+      tags:
+        - Needs
+  /{exchangeCode}/posts/{postCode}:
+    parameters:
+      - $ref: "#/components/parameters/exchange"
+      - $ref: "#/components/parameters/post"
+    get:
+      summary: Get post object
+      parameters:
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
+      responses:
+        '200':
+          description: OK
+          content:
+            "application/vnd.api+json":
+              examples:
+                post-get:
+                  $ref: "#/components/examples/post-get"
+      tags:
+        - Needs
+    patch:
+      summary: Edit need object
+      parameters:  
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
+      requestBody:
+        content:
+          "application/vnd.api+json":
+            schema: {}
+            examples:
+              post-patch:
+                $ref: "#/components/examples/post-patch"
+      responses:
+        '200':
+          description: OK
+          content:
+            "application/vnd.api+json":
+              examples:
+                post-get:
+                  $ref: "#/components/examples/post-get"
+      tags:
+        - Posts
+    delete:
+      summary: Delete post
+      responses:
+        '200':
+          description: OK
+          content:
+            "application/vnd.api+json":
+              schema: {}
+      tags:
+        - Posts
+
 components:
   parameters:
     fields:
@@ -337,7 +568,7 @@ components:
     offer:
       name: offerCode
       description: >-
-        url-safe human-readable lowercase string identifying the offer. This identifier is unique only among the exchange group and automatically derived from the offer title.
+        url-safe human-readable lowercase string identifying the offer. This identifier is unique only within the exchange group and automatically derived from the offer title.
       in: path
       required: true
       schema:
@@ -345,7 +576,23 @@ components:
     need:
       name: needCode
       description: >-
-        url-safe human-readable lowercase string identifying the need. This identifier is unique only among the exchange group and automatically derived from the need fields.
+        url-safe human-readable lowercase string identifying the need. This identifier is unique only within the exchange group and automatically derived from the need fields.
+      in: path
+      required: true
+      schema:
+        type: string
+    contact:
+      name: contactId
+      description: >-
+        contact UUID
+      in: path
+      required: true
+      schema:
+        type: string
+    post:
+      name: postCode
+      description: >-
+        url-safe human-readable string identifying the post. This identifier is unique only within the exchange group and automatically derived from the post fields.
       in: path
       required: true
       schema:
@@ -561,3 +808,27 @@ components:
       summary: "Update need"
       value:
         $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/need-patch.json"
+    contact-get:
+      summary: "Get contact"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/contact-get.json"
+    contact-post:
+      summary: "Create contact"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/contact-post.json"
+    contact-patch:
+      summary: "Update contact"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/contact-patch.json"
+    post-get:
+      summary: "Get post"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/post-get.json"
+    post-post:
+      summary: "Create post"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/post-post.json"
+    post-patch:
+      summary: "Update need"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/post-patch.json"
