@@ -1,39 +1,32 @@
 {
-    "links": {
-        "self": "https://komunitin.org/EITE/needs/agency-3"
-    },
     "data": {
-        "type": "need",
+        "type": "needs",
         "id": "76f46e54-94c9-4893-addf-03f86ee8e8c8",
         "attributes": {
+            "code": "agency-3",
             "content": "I need a business agency to manage the accounting for me. My business has been growing a bit and it's not sustainable for me to keep doing the numbers myself. It doesn't need to be a professional agency, but anybody who know how to do accountability for a small local business.",
             "images": [],
-            "created": "2019-08-19T23:15:30.000Z",
-            "updated": "2020-08-19T23:15:30.000Z",
             "expires": "2020-08-20T23:15:30.000Z",
             "access": "exchange"
         },
         "relationships": {
             "category": {
                 "links": {
-                    "self": "https://komunitin.org/EITE/offers/agency-3/relationships/category",
                     "related": "https://komunitin.org/EITE/categories/professional-services"
-                },
-                "data": {
-                    "id": "9a8c4f0e-6964-4ad8-956d-575dd428f9e8",
-                    "type": "categories"
                 }
             },
-            "account": {
+            "author": {
                 "links": {
                     "related": "https://komunitin.org/EITE/EITE0005"
-                },
-                "data": {
-                    "id": "9683ec5d-29d3-419a-8753-a5d092f1bb3d",
-                    "type": "accounts"
                 }
             }
+        },
+        "links": {
+            "self": "https://komunitin.org/EITE/needs/agency-3"
+        },
+        "meta": {
+            "created": "2019-08-19T23:15:30.000Z",
+            "updated": "2020-08-19T23:15:30.000Z"
         }
-        
     }
 }

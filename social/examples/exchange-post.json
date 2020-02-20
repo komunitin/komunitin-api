@@ -1,0 +1,38 @@
+{
+    "data": {
+        "type": "exchanges",
+        "attributes": {
+            "code": "EITE",
+            "name": "Easter Island Talent Exchange",
+            "description": "<p>Here at <strong>Easter Island</strong> it makes a lot of sense to have a local currency because bla bla bla...",
+            "image": "https://komunitin.org/files/EITE/c445714f-5a9f-410a-bd8e-1ffe20970c74.png",
+            "website": "https://easterislandexchange.org",
+            "access": "public",
+            "location": {
+                "name": "Easter Island",
+                "type": "Polygon",
+                "bbox": [ -109.48974609375, -27.221662326867037, -109.20616149902344, -27.024877476307523],
+                "coordinates": [
+                    [
+                    [
+                        -109.3798828125,
+                        -27.054233808785824
+                    ],
+                    [
+                        -109.44236755371094,
+                        -27.201510867989075
+                    ],
+                    [
+                        -109.23294067382812,
+                        -27.108033801463105
+                    ],
+                    [
+                        -109.3798828125,
+                        -27.054233808785824
+                    ]
+                    ]
+                ]
+            }
+        }
+    }
+}

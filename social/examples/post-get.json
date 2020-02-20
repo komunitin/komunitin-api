@@ -1,7 +1,4 @@
 {
-    "links": {
-        "self": "https://komunitin.org/EITE/messages/2020-08-19-2"
-    },
     "data": {
         "type": "message",
         "id": "8f74060d-4b9f-4972-96f0-d7571470a10b",
@@ -9,27 +6,21 @@
             "code": "2020-08-19-2",
             "content": "<p>Hi guys! We're sorry but tomorrow afternoon we've to close the exchange point because Bob got sick.</p><p>Remember that thursday we'll open at 10AM in the morning!</p>",
             "images": [],
-            "created": "2020-08-19T23:15:30.000Z",
-            "updated": "2020-08-19T23:15:30.000Z",
-            "expires": "2021-08-19T23:15:30.000Z",
             "access": "public"
         },
         "relationships": {
             "author": {
                 "links": {
                     "related": "https://komunitin.org/EITE/EITE0000"
-                },
-                "data": {
-                    "id": "a01f8c6f-eebe-4c2e-ad01-0e46b6e27c64",
-                    "type": "accounts"
-                }
-            },
-            "to": {
-                "links": {
-                    "related": "https://komunitin.org/EITE/accounts"
                 }
             }
+        },
+        "links": {
+            "self": "https://komunitin.org/EITE/posts/2020-08-19-2"
+        },
+        "meta": {
+            "created": "2020-08-19T23:15:30.000Z",
+            "updated": "2020-08-19T23:15:30.000Z"
         }
-        
     }
 }

@@ -1,0 +1,88 @@
+{
+    "data": {
+        "id": "9683ec5d-29d3-419a-8753-a5d092f1bb3d",
+        "type": "members",
+        "attributes": {
+            "code": "EITE0005",
+            "access": "exchange",
+            "name": "Marie's Bakery",
+            "type": "business",
+            "description": "My mother Marie opened the first bakery in the town 50 years ago. Since then...",
+            "image": "https://komunitin.org/files/EITE/68cbbec3-df9d-4af0-b333-07bb4c404a24.jpeg",
+            "address": {
+                "streetAddress": "7 S. Broadway",
+                "addressLocality": "Denver",
+                "postalCode": "80209",
+                "addressRegion": "CO"
+            },
+            "location": {
+                "type": "Point",
+                "coordinates": [-109.44236755371094, -27.201510867989075]
+            }
+        },
+        "relationships": {
+            "contacts": {
+                "data": [
+                    {"type": "contacts", "id": "7ceb75eb-9da0-4746-bb61-a34e0be49112"},
+                    {"type": "contacts", "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb"}
+                ]
+            },
+            "exchange": {
+                "links": {
+                    "related": "https://komunitin.org/EITE"
+                }
+            },
+            "needs": {
+                "links": {
+                    "related": "https://komunitin.org/EITE/needs?filter[member]=EITE0005"
+                },
+                "meta": {
+                    "count": 0
+                }
+            },
+            "offers": {
+                "links": {
+                    "related": "https://komunitin.org/EITE/offers?filter[member]=EITE0005"
+                },
+                "meta": {
+                    "count": 1
+                }
+            }
+        },
+        "links": {
+            "self": "https://komunitin.org/EITE/members/EITE0005"
+        },
+        "meta": {
+            "created": "2019-08-19T23:15:30.000Z",
+            "updated": "2020-08-19T23:15:30.000Z"
+        }
+    },
+    "included": [
+        {
+            "links": {
+                "self": "https://komunitin.org/EITE/contacts/7ceb75eb-9da0-4746-bb61-a34e0be49112"
+            },
+            "data": {
+                "type": "contacts",
+                "id": "7ceb75eb-9da0-4746-bb61-a34e0be49112",
+                "attributes": {
+                    "type": "phone",
+                    "name": "+34 666 77 88 99"
+                }
+            }
+        },
+        {
+            "links": {
+                "self": "https://komunitin.org/EITE/contacts/193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb"
+            },
+            "data": {
+                "type": "contacts",
+                "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
+                "attributes": {
+                    "type": "email",
+                    "name": "exhange@easterisland.com"
+                }
+            }
+        }
+    ]
+}

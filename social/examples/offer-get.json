@@ -1,0 +1,41 @@
+{
+    "data": {
+        "type": "offer",
+        "id": "785ad832-971f-4c7b-a31c-0adb8eafed86",
+        "attributes": {
+            "name": "Ecologic Bread",
+            "content": "<p>We stand up every morning at 3h AM in order to...",
+            "images": [
+                {
+                    "href": "https://komunitin.org/files/EITE/0cdc8a80-1c63-418d-99b6-ee53f366b097.jpeg",
+                    "alt": "Ecologic Bread image"
+                },
+                {
+                    "href": "https://komunitin.org/files/EITE/9fb3c174-3436-4928-b3f9-3a969310b18a.jpeg",
+                    "alt": "Ecologic Bread image 2"
+                }
+            ],
+            "expires": "2020-08-20T23:15:30.000Z",
+            "access": "public"
+        },
+        "relationships": {
+            "category": {
+                "links": {
+                    "related": "https://komunitin.org/EITE/categories/food"
+                }
+            },
+            "author": {
+                "links": {
+                    "related": "https://komunitin.org/EITE/EITE0005"
+                }
+            }
+        },
+        "links": {
+            "self": "https://komunitin.org/EITE/offers/ecologic-bread"
+        },
+        "meta": {
+            "created": "2019-08-19T23:15:30.000Z",
+            "updated": "2020-08-19T23:15:30.000Z"
+        }
+    }
+}

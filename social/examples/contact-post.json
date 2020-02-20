@@ -1,0 +1,17 @@
+{
+    "data": {
+        "type": "contacts",
+        "attribues": {
+            "type": "phone",
+            "name": "+34 666 77 88 99"
+        },
+        "relationships": {
+            "owner": {
+                "data": {
+                    "type": "exchange",
+                    "id": "84278843-50d5-4358-bbf7-a833ea5cde07"
+                }
+            }
+        }
+    }
+}

@@ -1,28 +1,17 @@
 # Komunitin API
 **Disclaimer**: This is a *work in progress* with the primary goal to be used as a starting point for further discussion. Comments are very welcome as GitHub issues or direct email contact at komunitinbox@gmail.com.
 
-## HTTP API
-The API is divided in several modules:
+The Komunitin API system is divided in several modules:
 
-### Community
-The Community API module provides all the endpoints related to the information in an exchange community beyond payments. This is details about people, buisinesses and exchange groups, offers and needs, messages, etc. The main goal of this module is to allow apps to discover and travel all this social information.
+## Social API
+The Social API provides the endpoints related to the marketplace service in an exchange community beyond payments. This is details about people, buisinesses and exchange groups, offers and needs, posts, etc. The main goal of this module is to allow apps to discover and travel all this social information.
 
-The community module is based on the [JSON:API](https://jsonapi.org) standard, providing thus a solid and coherent way to read and write the resources.
+See the [Komunitin Social API Readme](social/README.md) for the details and specification.
 
-There are several resource types:
-  * Member: The subject in the API. It may be either a personal account, a buisiness, a non-profit or others.
-  * Exchange: The trading group. It has their own currency and administration.
-  * Category: A category for offers and needs.
-  * Offer: A particular product or service which is offered to the exchange community. With images, description, cost.
-  * Need: A particular need for a product or service to be potentially satisfied within the exchange network.
-  * Message: A text message sent usually from the exchange administration to all other members.
+## Notifications API
+The Notifications API allow an end-user app or a federated server to subscribe for push notifications so it can keep on sync with the events they are interested on.
 
-See [doc/examples](doc/examples) folder for examples of API response on each resource type.
-
-### Notifications
-The Notifications API module allow an end-user app or a federated server to subscribe for push notifications so it can keep on sync with the events they are interested on.
-
-### Transfers
+## Transfers API
 The transfers API module features financial transactions.
 
 ## Authorization

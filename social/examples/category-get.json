@@ -1,21 +1,27 @@
 {
-    "links": {
-        "self": "/IETE/categories/food"
-    },
     "data": {
-        "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
         "type": "categories",
+        "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
         "attributes": {
+            "code": "food",
             "name": "Food",
-            "description": "Alimentation products and services",
-            "icon": "https://komunitin.org/EITE/categories/food.svg",
+            "cpa": ["10", "11", "56"],
+            "description": "Alimentation and beverage products and services",
+            "icon": "https://komunitin.org/static/icons/food.svg",
             "access": "public"
+        },
+        "links": {
+            "self": "https://komunitin.org/EITE/categories/food"
+        },
+        "meta": {
+            "created": "2011-08-19T23:15:30.000Z",
+            "updated": "2020-08-19T23:15:30.000Z" 
         }
     },
     "relationships": {
         "exchange": {
             "links": {
-                "related": "/EITE"
+                "related": "https://komunitin.org/EITE"
             }
         },
         "needs": {
