@@ -1,6 +1,5 @@
 {
     "data": [
-        ...
     ],
     "links": {
         "self": "https://komunitin.org/EITE/{type}?page[cursor]={id}",
