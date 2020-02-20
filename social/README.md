@@ -1,6 +1,7 @@
 # Komunitin Social API
 
 REST API featuring marketplace services for Exchange Communities.
+
 See the specificatin documentation at [SwaggerHub](https://app.swaggerhub.com/apis-docs/estevebadia/komunitin-api/1.0.0).
 
 **This is still a work in progress**. Comments welcomed at komunitinbox@gmail.com or at [GitHub](https://github.com/komunitin/komunitin-api).
