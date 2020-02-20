@@ -47,6 +47,12 @@ paths:
       responses:
         '200':
           description: OK
+          content: 
+            "application/vnd.api+json":
+              examples:
+                collection:
+                  $ref: "#/components/examples/collection"
+          
       tags:
         - Exchanges
     post:
@@ -460,7 +466,7 @@ paths:
                 post-get:
                   $ref: "#/components/examples/post-get"
       tags:
-        - Needs
+        - Posts
   /{exchangeCode}/posts/{postCode}:
     parameters:
       - $ref: "#/components/parameters/exchange"
@@ -479,9 +485,9 @@ paths:
                 post-get:
                   $ref: "#/components/examples/post-get"
       tags:
-        - Needs
+        - Posts
     patch:
-      summary: Edit need object
+      summary: Edit post object
       parameters:  
         - $ref: "#/components/parameters/fields"
         - $ref: "#/components/parameters/include"
@@ -512,6 +518,88 @@ paths:
               schema: {}
       tags:
         - Posts
+
+  /{exchangeCode}/categories:
+    parameters:
+      - $ref: "#/components/parameters/exchange"
+    get:
+      summary: Get categories collection
+      responses:
+        '200':
+          description: OK
+      tags:
+        - Categories
+    post:
+      summary: Create new category
+      requestBody:
+        content:
+          "application/vnd.api+json":
+            schema: {}
+            examples:
+              category-post:
+                $ref: "#/components/examples/category-post"
+      responses:
+        '201':
+          description: Created
+          content:
+            "application/vnd.api+json":
+              examples:
+                category-get:
+                  $ref: "#/components/examples/category-get"
+      tags:
+        - Categories
+  /{exchangeCode}/categories/{categoryCode}:
+    parameters:
+      - $ref: "#/components/parameters/exchange"
+      - $ref: "#/components/parameters/category"
+    get:
+      summary: Get category object
+      parameters:
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
+      responses:
+        '200':
+          description: OK
+          content:
+            "application/vnd.api+json":
+              examples:
+                category-get:
+                  $ref: "#/components/examples/category-get"
+      tags:
+        - Categories
+    patch:
+      summary: Edit category object
+      parameters:  
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
+      requestBody:
+        content:
+          "application/vnd.api+json":
+            schema: {}
+            examples:
+              category-patch:
+                $ref: "#/components/examples/category-patch"
+      responses:
+        '200':
+          description: OK
+          content:
+            "application/vnd.api+json":
+              examples:
+                category-get:
+                  $ref: "#/components/examples/category-get"
+      tags:
+        - Categories
+    delete:
+      summary: Delete category
+      responses:
+        '200':
+          description: OK
+          content:
+            "application/vnd.api+json":
+              schema: {}
+      tags:
+        - Categories
+
 
 components:
   parameters:
@@ -597,147 +685,14 @@ components:
       required: true
       schema:
         type: string
-  schemas:
-    Relationship:
-      type: object
-      properties:
-        links:
-          type: object
-          properties:
-            related:
-              type: string
-              format: "url"
-        meta:
-          type: object
-    Resource:
-      type: object
-      properties:
-        links:
-          type: object
-          properties:
-            self:
-              type: string
-              format: "url"
-        data:
-          type: object
-          properties:
-            id:
-              type: string
-              format: "uuid"
-            "type":
-              type: string
-              enum:
-               - exchanges
-               - members
-               - offers
-               - needs
-               - categories
-               - messages
-            attributes:
-              type: object
-              properties:
-                created:
-                  type: string
-                  format: date-time
-                updated:
-                  type: string
-                  format: date-time
-                access:
-                  type: string
-                  description: >-
-                    The access level for this resource. `public` for free access to anyone on the internet, `exchange` for access only to other members of the same exchange group or `private` for access only to yourself and the exchange group administration. Other access labels may be added in the future, such as "friends" or "contacts".
-                  enum:
-                    - public
-                    - exchange
-                    - private
-      discriminator:
-        propertyName: "data/type"
-        mapping:
-          exchanges: exchanges
-          offers: offers
-          needs: needs
-          members: members
-          categories: categories
-          messages: messages
-          
-    Contacts:
-      type: array
-      items:
-        type: object
-        properties:
-          "type": 
-            type: string
-            enum:
-              - email
-              - phone
-              - whatsapp
-              - telegram
-              # in future we may add more contact types, such as twitter, instagram or facebook.
-          "name":
-            type: string
-            description: >-
-              The identifier for the contact type. For example, the email address, the phone number or the telegram username.
-            
-    Exchange:
-      allOf:
-        - $ref: "#/components/schemas/Resource"
-        - type: object
-          properties:
-            data:
-              type: object
-              properties:
-              
-                "attributes":
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                    description:
-                      type: string
-                      format: "html"
-                    image:
-                      type: string
-                      format: "url"
-                    website:
-                      type: string
-                      format: "url"
-                    location:
-                      $ref: "https://geojson.org/schema/Geometry.json"
-                    contacts:
-                      $ref: "#/components/schemas/Contacts"
-            relationships:
-              type: object
-              properties:
-                members:
-                  allOf:
-                    - $ref: "#/components/schemas/Relationship"
-                    - type: object
-                      properties:
-                        meta:
-                          type: object
-                          properties:
-                            personal:
-                              type: integer
-                            business:
-                              type: integer
-                            organization:
-                              type: integer
-                            public:
-                              type: integer
-                            system:
-                              type: integer
-                categories:
-                  allOf:
-                    - $ref: "#/components/schemas/Relationship"
-                    - type: object
-                      properties:
-                        meta:
-                          type: object
-                          properties:
-                            count:
-                              type: integer
-                offers:
-                  $ref: "#/components/schemas/Relationship"
+    category:
+      name: categoryCode
+      description: >-
+        url-safe human-readable string identifying the category. This identifier is unique only within the exchange group and automatically derived from the category title.
+      in: path
+      required: true
+      schema:
+        type: string
                   
   securitySchemes:
     accessCode:
@@ -832,3 +787,7 @@ components:
       summary: "Update need"
       value:
         $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/post-patch.json"
+    collection:
+      summary: "Generic collection"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/collection.json"
