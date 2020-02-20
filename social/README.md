@@ -10,15 +10,6 @@ This API provides access to exchange group details, member profile and their off
 
 This specification is based on the [JSON:API](https://jsonapi.org) standard.
 
-## Authorization
-
-Authorization endpoints are out of the scope of this API, which expects the user to be authorized with a JWT access token. The access token is provided by a separate authorization API. The recommended OAuth2 flow for web apps and native apps is the Authorization Code Flow with Proof Key for Code Exchange (PKCE).
-
-No OAuth2 scopes are defined at the moment, but may be defined in future.
-
-## Files
-File server is out of the scope of this API, and should be handled using a separate specialized service. This way we ease the implementation of advanced upload techniques and efficient delivery of static binary files. File URLs should be randomized in order to minimize unauthorized access to files. Additional security measures such as short-lived Signed URLs can be implemented to further restrict access to binary files.
-
 ## Format
 Some format conventions are defined which are compatible with th [JSON:API](https://jsonapi.org) standard.
 
@@ -79,6 +70,15 @@ Access to all resources may be restricted by assigning one of the predefined acc
  - `public`: The resource is publicly accessible on the internet. Note that in order for members in other exchange groups to access a resource, it must be declared public. Public resources are also accessible by non-logged users when they browse the exchange network before registering.
 
 In a future, other access labels may be added (friends, contacts, exchange:XXXX, etc) and the `access` field may accept multiple labels for a resource.
+
+## Authorization
+
+Authorization endpoints are out of the scope of this API, which expects the user to be authorized with a JWT access token. The access token is provided by a separate authorization API. The recommended OAuth2 flow for web apps and native apps is the Authorization Code Flow with Proof Key for Code Exchange (PKCE).
+
+No OAuth2 scopes are defined at the moment, but may be defined in future.
+
+## Files
+File server is out of the scope of this API, and should be handled using a separate specialized service. This way we ease the implementation of advanced upload techniques and efficient delivery of static binary files. File URLs should be randomized in order to minimize unauthorized access to files. Additional security measures such as short-lived Signed URLs can be implemented to further restrict access to binary files.
 
 ## Versioning
 Clients should allow additional fields along all JSON responses. Therefore adding new fields won't be considered breaking backwards compatibility. API versioning is done using HTTP headers (still to specify).
