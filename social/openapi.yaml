@@ -147,6 +147,11 @@ paths:
       responses:
         '200':
           description: OK
+          content: 
+            "application/vnd.api+json":
+              examples:
+                collection:
+                  $ref: "#/components/examples/collection"
       tags:
         - Offers
     post:
@@ -234,6 +239,11 @@ paths:
       responses:
         '200':
           description: OK
+          content: 
+            "application/vnd.api+json":
+              examples:
+                collection:
+                  $ref: "#/components/examples/collection"
       tags:
         - Members
     post:
@@ -314,6 +324,11 @@ paths:
       responses:
         '200':
           description: OK
+          content: 
+            "application/vnd.api+json":
+              examples:
+                collection:
+                  $ref: "#/components/examples/collection"
       tags:
         - Needs
     post:
@@ -446,6 +461,11 @@ paths:
       responses:
         '200':
           description: OK
+          content: 
+            "application/vnd.api+json":
+              examples:
+                collection:
+                  $ref: "#/components/examples/collection"
       tags:
         - Posts
     post:
@@ -527,6 +547,11 @@ paths:
       responses:
         '200':
           description: OK
+          content: 
+            "application/vnd.api+json":
+              examples:
+                collection:
+                  $ref: "#/components/examples/collection"
       tags:
         - Categories
     post:
