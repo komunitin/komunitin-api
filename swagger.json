@@ -1,13 +1,17 @@
 {
   "openapi" : "3.0.0",
+  "info" : {
+    "version" : "1.0.0",
+    "title" : "Komunitin Social API",
+    "description" : null
+  },
   "servers" : [ {
     "description" : "SwaggerHub API Auto Mocking",
     "url" : "https://virtserver.swaggerhub.com/estevebadia/komunitin-api/1.0.0"
   } ],
-  "info" : {
-    "version" : "1.0.0",
-    "title" : "Komunitin Social API",
-    "description" : "API for interacting with the social aspect of Komunitin system.\n\n**This is still a work in progress**. Comments welcomed at komunitinbox@gmail.com or at [GitHub](https://github.com/komunitin/komunitin-api).\n\nThis API provides access to exchange group details, member details and their offers and needs and also informational message broadcasting. It doesn't feature payments nor any finantial information, as this is available in a separate API. Subscrption to notifications (email and push) and notification preferences are also defined in a separate API.\n## Preliminaries\n- This spec is based on the [JSON:API](https://jsonapi.org) standard.\n## Authorization\n\n Authorization endpoints are out of the scope of this API, which expects the user to be authorized with a JWT access token. The access token is provided by a separate authorization API. The recommended OAuth2 flow for web apps and native apps is the Authorization Code Flow with Proof Key for Code Exchange (PKCE).\n \n No OAuth2 scopes are defined at the moment, but may be defined in future.\n\n## Architecture\n - The URL structure starts with the exchange code, so it eases the data isolation among different exchange groups in a single server, as there is no way to ask for resources from different exchanges. The only exception is the global `/exchanges` endpoint.\n - For interoperability, a system featuring just one exchange group should implement the `/exchanges` `GET` endpoint as well as the `/{exchangeCode}` `GET` endpoint, providing static responses and chosing a fixed value for the `exchangeCode` parameter (such as the word \"exchange\"). They may omit the other endpoints in Exchanges section and may also omit the exchangeCode path parameter in all other paths.\n - Clients should honor the links provided by API responses and not try to construct the URL's using the known structure defined in this document. This way it decouples client and server from URL design, making the server fully responsible of URLs.\n - All resources have a global UUID identifier as their `id` field, but the URLs are human-readable. The URLs are meant to be almost immutable to allow caching and others, but can occasinally change (for example, in case of server migration), while the UUIDs are really immutable.\n - Geolocation fields follow the [GeoJSON](https://geojson.org/) specification. Note that the spec allows to specify either a concrete point or an area.\n - Date or time fields follow the [RFC3339](https://tools.ietf.org/html/rfc3339) specification.\n - Long text fields allow formatting through a restricted set of HTML tags.\n - File server is out of the scope of this API, and should be handled using a separate specialized service. This way we ease the implementation of advanced upload techniques and efficient delivery of static binary files. File URLs should be randomized in order to minimize unauthorized access to files. Additional security measures such as short-lived Signed URLs can be implemented to further restrict access to binary files.\n \n ## Data privacy\n \n Access to resources (Exchanges, Members, Offers, Needs, Messages) may be restricted bay assigning one of the predefined access levels to the `access` resource field.\n  - `private`: The resource is only accessible by its owner.\n  - `exchange`: The resource is only accessible by the members of the same exchange group.\n  - `public`: The resource is publicly accessible on the internet.\nOther access levels may be added in the future.\n## Versioning\nClients should allow additional fields along all JSON responses. Therefore adding new fields won't be considered breaking backwards compatibility.\n  "
+  "externalDocs" : {
+    "url" : "https://github.com/komunitin/komunitin-api/social/README.md",
+    "description" : "See the Komunitin Social API documentation"
   },
   "security" : [ {
     "accessCode" : [ ]
