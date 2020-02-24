@@ -1,4 +1,9 @@
 # Notifications API
+REST API featuring marketplace services for Exchange Communities.
+
+See the specification at [SwaggerHub](https://app.swaggerhub.com/apis-docs/estevebadia/komunitin-notifications-api/0.0.1).
+
+**This is still a work in progress**. Comments welcomed at komunitinbox@gmail.com or at GitHub.
 
 ## Messages
 The Komunitin system need to send notifications to the users in response to several different events:
