@@ -11,6 +11,8 @@ See the [Komunitin Social API Readme](social/README.md) for the details and spec
 ## Notifications API
 The Notifications API allow an end-user app or a federated server to subscribe for push notifications so it can keep on sync with the events they are interested on.
 
+See the [Komunitin Notifications Readme](notifications/README.md) for details and specification.
+
 ## Transfers API
 The transfers API module features financial transactions.
 
