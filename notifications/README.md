@@ -7,9 +7,9 @@ See the specification at [SwaggerHub](https://app.swaggerhub.com/apis-docs/estev
 
 ## UX
 A suggested user interface for notifications:
- - When the user has not already been asked for notifications permission, show a banner briefly explaining the use of notifications. A button triggers the permission request. Note that browsers won't let you ask for permission again after it ahs been denied.
+ - When the user has not already been asked for notifications permission, show a [banner](https://material.io/components/banners/) briefly explaining the use of notifications. A button triggers the permission request. Note that browsers won't let you ask for permission again after it ahs been denied.
  - After user allowed the permission, show a [snackbar](https://material.io/components/snackbars/) acknowledging the action and pointing to notifications configuration.
- - If user declined notification permission, show a [banner](https://material.io/components/banners/) pointing to notification configuration page. This page should explain how to enable the notifications again.
+ - If user declined notification permission, show a banner pointing to notification configuration page. This page should explain how to enable the notifications again.
 
 ## Implementation
 Google's [Firebase Cloud Messaging](https://firebase.google.com/docs/cloud-messaging) (FCM) service is used to send push notifications to either Android, Apple or Web systems. Each device that wants to receive notifications must subscribe using their system API (either Android, iOS or the browser). From that call the client app gets a token that must be sent to the notifications API. With this token, the notifications API will be able to send push notifications to this particular device by sending the message to the FCM backend. All devices from a single user are grouped using the grouping FCM feature so that the notification service sends messages to all their devices at once.
