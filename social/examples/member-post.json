@@ -3,7 +3,7 @@
         "type": "members",
         "attributes": {
             "code": "EITE0005",
-            "access": "exchange",
+            "access": "group",
             "name": "Marie's Bakery",
             "type": "business",
             "description": "My mother Marie opened the first bakery in the town 50 years ago. Since then...",

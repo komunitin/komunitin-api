@@ -4,7 +4,7 @@
         "type": "members",
         "attributes": {
             "code": "EITE0005",
-            "access": "exchange",
+            "access": "group",
             "name": "Marie's Bakery",
             "type": "business",
             "description": "My mother Marie opened the first bakery in the town 50 years ago. Since then...",
@@ -27,7 +27,7 @@
                     {"type": "contacts", "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb"}
                 ]
             },
-            "exchange": {
+            "group": {
                 "links": {
                     "related": "https://komunitin.org/EITE"
                 }

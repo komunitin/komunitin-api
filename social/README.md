@@ -16,8 +16,8 @@ This specification is based on the [JSON:API](https://jsonapi.org) standard.
 Some format conventions are defined which are compatible with th [JSON:API](https://jsonapi.org) standard.
 
 ### URLs
-- The URL structure starts with the exchange code, so it eases the service isolation among different exchange groups in a single server, as there is no way to ask for resources from different exchanges. The only exception is the global `/exchanges` endpoint.
-- For interoperability, a system featuring just one exchange group should implement the `/exchanges` `GET` endpoint as well as the `/{exchangeCode}` `GET` endpoint, providingstatic responses and chosing a fixed value for the `exchangeCode` parameter (such as the word "exchange"). They may omit the other endpoints in Exchanges section and may also omit the exchangeCode path parameter in all other paths.
+- The URL structure starts with the group code, so it eases the service isolation among different exchange groups in a single server, as there is no way to ask for resources from different groups. The only exception is the global `/groups` endpoint.
+- For interoperability, a system featuring just one exchange group should implement the `/groups` `GET` endpoint as well as the `/{groupCode}` `GET` endpoint, providingstatic responses and chosing a fixed value for the `groupCode` parameter (such as the word "group"). They may omit the other endpoints in Groups section and may also omit the `groupCode` path parameter in all other paths.
 - Clients should honor the links provided by API responses and not try to construct the URL's using the known structure defined in this document. This way it decouples client andserver from URL design, making the server fully responsible of URLs.
 
 ### Ids
@@ -40,19 +40,19 @@ This section extensively use the [JSON:API](https://jsonapi.org) language.
 ## Resources
 The whole API is designed as a set of resources and CRUD operations on them.
 
-### Exchanges
-Exchanges represent the different exchange groups. They have a logo, description, location, contact points, etc. All other resources belong to a particular exchange. The endpoints in one exchange are separated from other exchanges, and the implementators are recommended to isolate the data in different databases too.
+### Groups
+Groups represent the different exchange groups. They have a logo, description, location, contact points, etc. All other resources belong to a particular group. The endpoints in one group are separated from other groups, and the implementators are recommended to isolate the data in different databases too.
 
-Special administrative rights must be held in order to change exchange details.
+Special administrative rights must be held in order to change group details.
 
 ### Members
 Members are the subject of this API. They need not to be physical people, but can be businesses, non-profit organizations, etc. They have profile information, contact points and may create offers and needs.
 
 ### Contacts
-Represent a contact point of a member or an exchange group. It may be a telephone number, email address, WhatsApp or Telegram contacts. A contact is always attached to either a member or an exchange. Contact resources are included by default in they owner resources, and can't be directly listed, so they act effectively as sub-resources of exchange and member resources.
+Represent a contact point of a member or an exchange group. It may be a telephone number, email address, WhatsApp or Telegram contacts. A contact is always attached to either a member or a group. Contact resources are included by default in they owner resources, and can't be directly listed, so they act effectively as sub-resources of group and member resources.
 
 ### Categories
-Offers and needs are organized in categories. An offer or need can only belong to a single category. Good and service categories can be customized for each exchange.
+Offers and needs are organized in categories. An offer or need can only belong to a single category. Good and service categories can be customized for each group.
 
 In order to make categories interoperable, they should be mapped to the set of categories defined at [Statistical Classification of Products by Activity in the European Union, Version 2.1](https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&StrNom=CPA_2_1&StrLanguageCode=EN&IntPcKey=&StrLayoutCode=HIERARCHIC) (CPA). CPA has been chosen over other classifications because it is already translated to many languages and publicly accessible in machine-readable format.
 
@@ -68,10 +68,10 @@ Posts are messages written by the exchange group administration to reach all mem
 ## Data privacy
 Access to all resources may be restricted by assigning one of the predefined access labels to the `access` resource field.
  - `private`: The resource is only accessible by its owner.
- - `exchange`: The resource is only accessible by the members of the same exchange group.
- - `public`: The resource is publicly accessible on the internet. Note that in order for members in other exchange groups to access a resource, it must be declared public. Public resources are also accessible by non-logged users when they browse the exchange network before registering.
+ - `group`: The resource is only accessible by the members of the same exchange group.
+ - `public`: The resource is publicly accessible on the internet. Note that in order for members in other exchange groups to access a resource, it must be declared public. Public resources are also accessible by non-logged users when they browse the group network before registering.
 
-In a future, other access labels may be added (friends, contacts, exchange:XXXX, etc) and the `access` field may accept multiple labels for a resource.
+In a future, other access labels may be added (friends, contacts, group:XXXX, etc) and the `access` field may accept multiple labels for a resource.
 
 ## Authorization
 

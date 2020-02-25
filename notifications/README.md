@@ -31,7 +31,7 @@ Notifications triggered by events from the social service. Some types of message
 |New post     | {post text}                                              |See post      | Daily      |
 |New offer from {name} | {offer title}                                   |See offer     | Daily      |
 |New need from {name} | {need text}                                      |See need      | Immediate  |
-|News in {exchange} | {n} new needs, {n} new offers, {n} new posts and {n} new members.|See news|Daily|
+|News in {group} | {n} new needs, {n} new offers, {n} new posts and {n} new members.|See news|Daily|
 
 ## UX
 A suggested user interface for notifications:

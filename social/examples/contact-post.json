@@ -8,7 +8,7 @@
         "relationships": {
             "owner": {
                 "data": {
-                    "type": "exchange",
+                    "type": "groups",
                     "id": "84278843-50d5-4358-bbf7-a833ea5cde07"
                 }
             }

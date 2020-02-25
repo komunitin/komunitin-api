@@ -1,0 +1,31 @@
+{
+    "data": {
+        "id": "uuid",
+        "type": "transfers",
+        "attributes": {
+            "amount": 123213,
+            "scale": 2,
+            "user": "user-id-from-auth",
+            "type": "payment-request",
+            "state": "new"
+        }
+    },
+    "relationships": {
+        "payer": {
+            "links": {
+                "related": "https://komunitin.org/EITE/accounts/EITE0005"
+            }
+        },
+        "payee": {
+            "links": {
+                "related": "https://integralces.net/XXXX/accounts/XXXX0123"
+            }
+        },
+        "initiator": {
+            "links": {
+                "related": "https://integralces.net/XXXX/accounts/XXXX0123"
+            }
+        }
+    }
+}
+

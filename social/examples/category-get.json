@@ -11,7 +11,7 @@
             "access": "public"
         },
         "relationships": {
-            "exchange": {
+            "group": {
                 "links": {
                     "related": "https://komunitin.org/EITE"
                 }
