@@ -1,7 +1,7 @@
 {
     "data": {
         "id": "84278843-50d5-4358-bbf7-a833ea5cde07",
-        "type": "exchanges",
+        "type": "groups",
         "attributes": {
             "code": "EITE",
             "name": "Easter Island Talent Exchange",
@@ -38,7 +38,9 @@
                         ]
                     ]
                 ]
-            }
+            },
+            "created": "2011-08-19T23:15:30.000Z",
+            "updated": "2020-08-19T23:15:30.000Z"
         },
         "relatinships": {
             "contacts": {
@@ -96,10 +98,6 @@
         },
         "links": {
             "self": "https://komunitin.org/EITE"
-        },
-        "meta": {
-            "created": "2011-08-19T23:15:30.000Z",
-            "updated": "2020-08-19T23:15:30.000Z"
         }
     },
     "included": [
@@ -112,7 +110,9 @@
                 "id": "7ceb75eb-9da0-4746-bb61-a34e0be49112",
                 "attributes": {
                     "type": "phone",
-                    "name": "+34 666 77 88 99"
+                    "name": "+34 666 77 88 99",
+                    "created": "2011-08-19T23:15:30.000Z",
+                    "updated": "2020-08-19T23:15:30.000Z"
                 }
             }
         },
@@ -125,7 +125,9 @@
                 "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
                 "attributes": {
                     "type": "email",
-                    "name": "exhange@easterisland.com"
+                    "name": "exhange@easterisland.com",
+                    "created": "2011-08-19T23:15:30.000Z",
+                    "updated": "2020-08-19T23:15:30.000Z"
                 }
             }
         }

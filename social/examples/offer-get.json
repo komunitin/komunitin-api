@@ -15,8 +15,10 @@
                     "alt": "Ecologic Bread image 2"
                 }
             ],
+            "access": "public",
             "expires": "2020-08-20T23:15:30.000Z",
-            "access": "public"
+            "created": "2019-08-19T23:15:30.000Z",
+            "updated": "2020-08-19T23:15:30.000Z"
         },
         "relationships": {
             "category": {
@@ -32,10 +34,6 @@
         },
         "links": {
             "self": "https://komunitin.org/EITE/offers/ecologic-bread"
-        },
-        "meta": {
-            "created": "2019-08-19T23:15:30.000Z",
-            "updated": "2020-08-19T23:15:30.000Z"
         }
     }
 }

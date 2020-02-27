@@ -6,7 +6,9 @@
             "code": "2020-08-19-2",
             "content": "<p>Hi guys! We're sorry but tomorrow afternoon we've to close the exchange point because Bob got sick.</p><p>Remember that thursday we'll open at 10AM in the morning!</p>",
             "images": [],
-            "access": "public"
+            "access": "public",
+            "created": "2020-08-19T23:15:30.000Z",
+            "updated": "2020-08-19T23:15:30.000Z"
         },
         "relationships": {
             "author": {
@@ -17,10 +19,6 @@
         },
         "links": {
             "self": "https://komunitin.org/EITE/posts/2020-08-19-2"
-        },
-        "meta": {
-            "created": "2020-08-19T23:15:30.000Z",
-            "updated": "2020-08-19T23:15:30.000Z"
         }
     }
 }
