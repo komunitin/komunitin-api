@@ -1,35 +1,56 @@
-# Accounting API
-## Goals
- - Easy for the client app. HTTP/RESTful interface. Support for synchronous call for the client.
- - Integrated protocol for intra-exchange and inter-exchange.
- - The local exchange groups administration should be the points of decision.
- - Currency exchange without speculation.
- - Not tight to a specific implementation or ledger.
- - Compatible with privacy.
- - Easy for exchange groups to manage (not need to be a hacker not an expert in macroeconomics not need to have contact with lots of other exhcange groups).
- - Support for asynchronous comunication between servers.
+# Accounting protocol
+
+Interoperable Accounting for Exchange Communities
+
+## Introduction
+The Accounting API defines a protocol to make payments and charges between members of exchange communities. It can be used for simple local transaction between members of the same exchange group but it also defines a way to make payments across different exchange groups, exchanging the currencies. That makes the protocol very powerful and different from most other options out there.
+
+The protocol is very to implement and understand: just a regular JSON RESTful API following the [JSON:API](https://jsonapi.org) guidelines. It is also not tight to any technology. However it makes use of standard cryptography techniques to make the protocol secure and minimize the trust the members must have with the system. Concretely, members only have to trust their local exchange groups. Local exchange groups must only trust their local neighbours (the currencies they are directly connected to). The system allows then transactions with remote currencies making several currency exchanges from the origin to the destination.
+
+It does not use a shared ledger and it doesn't use any global consensus mechanism. That allows infinite scalability and also it allows a high level of privacy even for transactions with remote exchange groups.
+
+Designed specifically for community exchange groups. It does not use the concept of external market maker to exchange between different currencies. The exchange groups themselves enable gateways that connect their currencies only with their neighbour currencies (one of them is enough) or with one clearing central at the exchange rate they choose. Exchange groups must actively take care of their balance trades with their directly connected currencies for the health of their own currency, trying to keep it close to zero. In a simple setting with only one gateway to remote currencies, that means that the total amount bought outside the exchange group must be roughly equal than the total amount sold outside the group.
 
 ## Objects
+These are the different objects or resources in the API.
 
 ### Currency
-Defines a currency and the rules for exchange with that currency. The base value is an average basic human hour of labor divided by 10^6.
+Defines a currency. The 4-letter codes used in CES (https://community-exchange.org) and IntegralCES (https://integralces.net) are of `CEN` type. Other types of codes may be defined. 
+
+The `scale` is the integer such that `10^(-scale)` is the minimal division for that currency. Currency amounts are specified in this API as integer multiples of `10^(-scale)` minimal unit. `decimals` is the number of decimal digits that should be usually presented to the user.
+
+The `value` is important field for exchanging with other currencies. It defines the value of that currency against a global virtual value that is defined to be an average basic human hour of labor divided by 10^6. So, if the value of currency is exactly on hour of labour (for timebanks, for example), the value field will be 10^6. If the value of a currency is paired to, for example, the Euro, then the value field will be around 10^5. In practice, once the first currency has set their `value` field, new currencies are setting their value compared to previous currencies.
+
 ```JSON
 {
     "type": "currencies",
     "id": "XXXX",
     "attributes": {
-        "value": 100000,
-        "symbol": "₩",
-        "code": "WDLD",
         "code-type": "CEN",
+        "code": "WDLD",
+        
+        "name": "wonder",
+        "name-plural": "wonders",
+        "symbol": "₩",
         "decimals": 2,
-        "default-debit-limit": 0,
-        "default-credit-limit": -1
+        
+        "scale": 4,
+        "value": 100000,
     }
 }
 ```
 ### Account
-Defines an account that holds a balance of a specific currency and is the source or destinatin of money transfers. In centralized systems where all accounts are managed by a single server, all accounts may share the same cryptographic key.
+An account holds a balance of a specific currency and is the source or destinatin of money transfers.
+
+The credit limit is the maximum balance the account may have, and the debit limit the minimum negative balance. A negative value means no limit. These limits are set by the exchange group administration.
+
+`capabilities` are the operations allowed from this account. They are:
+ - `pay`: The account may initiate payments.
+ - `charge`: The account may initiate charges.
+ - `connector`: The account may act as a *direct connector* for extern payments.
+ - `rippling`: The account may act as a *rippling connector* for extern payments.
+
+The key may or may not be unique for the account. In centralized systems where all accounts are managed by a single server, all accounts may share the same cryptographic key.
 
 ```JSON
 {
@@ -37,11 +58,11 @@ Defines an account that holds a balance of a specific currency and is the source
     "id": "XXXX",
     "attributes": {
         "code": "Alice",
-        "balance": 32000,
-        "sequence-number"?: 321,
+        "balance": 3200000,
+        "locked": 0,
         "credit-limit": -1,
-        "debit-limit": 50000,
-        "scale": 2
+        "debit-limit": 5000000,
+        "capabilities": ["pay", "charge"],
     },
     "relationships": {
         "currency": {
@@ -52,38 +73,149 @@ Defines an account that holds a balance of a specific currency and is the source
         "keys": [
             {"data": {"id": "xyz", "type": "RSA2048"}}
         ]
+    },
+    "links": {
+        "self": "https://komunitin.org/WDLD/accounts/Alice"
     }
 }
 ```
 ### Transfer
-A transfer is a JSON object defining a movement of certain amount of credit from one account to another. The meta field is an arbitrary application-specific JSON object. The amount is expressed in payee currency and represents the exact amount they will receive after the transaction.
+A transfer is a plain JSON object defining a movement of certain amount of credit from one account to another.
 
 ```JSON
 {
     "payer": "https://komunitin.org/WDLD/accounts/WDLD0002",
     "payee": "https://komunitin.org/WDLD/accounts/WDLD0003",
-    "amount": 2000,
-    "scale": 2,
-    "currency": "https://komunitin.org/WDLD/currency",
-    "description": "10kg of red potatoes",
-    "meta": {},
+    "amount": 200000,
+    "meta": "10 kg of potatoes"
 }
 ```
-### Local transfer
-Is a transfer where both payer and payee belong to the same currency.
+#### Meta
+The meta field may be used to carry any information related to the transfer. In its simplest form, it is just a plain string with a description of the transfer.
+
+If not a string, then the `meta` field is an object with a field `type` that identifies the scheme of the meta object.
+
+The protocol may be extended with different types for the meta field, including encrypted content for better privacy. That will be relevant for extern transfers.
 
 ### Transaction
-A transaction is the unit of change in the Accounting API. It is made of one or several transfers which will be commited atomically and in the order speciifed. 
+A transaction is the unit of change in the Accounting API. A transaction contains typically just one transfer, but servers may add additional transfers in a transaction to implement features such as taxes. All transfers in a transaction will be commited all or none atomically, and in the specified order.
 
-A transaction may be in different states: `new`, `prepared`, `accepted`, `commited`, `rejected`.
+A transaction may be in different states: 
+ - `new`: The transaction has been created and passed the automatic validations.
+ - `pending`: The transaction is awaiting acceptance by at least one party.
+ - `accepted`: The transaction is accepted by all parties and ready to be committed.
+ - `committed`: The transaction has already been committed. Once a transaction is committed, it can't be undone.  
+ - `rejected`: The transaction has been rejected by one of the parties and won't be committed.
 
-## Payment flow
-A payment or payment request from a user A to a remote user B may involve just a single local operation or a chain of multiple exchange operations along different servers.
+ The `expires` field has different meanings depending on the transaction state. For a `new` transaction, it means the time where it may be automatically deleted. For a `pending` trnsaction, the miximum time it should be `accepted`or `rejected` before automatic behavior (which may be automatic rejection or acceptance). For an `accepted` transaction, the maximum time where it should be committed. 
 
-:ghost: Briefly describe the ripple scheme applied to this case.
+```JSON
+{
+    "data": {
+        "id": "uuid2",
+        "type": "transactions",
+        "attributes": {
+            "transfers": [{
+                "payer": "https://komunitin.org/WDLD/accounts/WDLD0002",
+                "payee": "https://komunitin.org/WDLD/accounts/WDLD0003",
+                "amount": 200000,
+                "meta": "10 kg of potatoes"
+            }],
+            "state": "new",
+            "created": "2020-08-19T23:15:30.000Z",
+            "updated": "2020-08-19T23:15:30.000Z",
+            "expires": "2020-08-19T23:20:30.000Z",
+        },
+        "relationships": {
+            "currency": {
+                "links": {
+                    "related": "https://xchange.net"
+                }
+            }
+        },
+        "links": {
+            "self": "https://xchange.net/transactions/uuid2
+        }
+    }
+}
+```
 
+### Extern transfers
 
-Payments or payment requests are done in two phases. The first phase is the *prepare phase* and the second is the *commit phase*. This way all nodes can perform as much validation as they need during the *prepare phase* and can reject transactions before any money has started to move between accounts. Also, this first phase allows to share information between the two ends of the chain.
+Extern transfers define a movement of amount from one account in one currency from another account in another currency, eventually managed by a remote server.
+
+```JSON
+{
+    "payer": "https://wonderland.org/alice",
+    "payee": "https://reggaex.org/bob",
+    "amount": 20000,
+    "meta": "10 kg of potatoes",
+    "local-payer": "https://xchange.net/wonder",
+    "local-payee": "https://xchange.net/reggaex",
+    "payer-signature": "alice's",
+    "payee-signature": "bob's"
+}
+```
+Beyond regular transfer attributes, they have the `local-payer` and `local-payee`. These are the local accounts that are involved in the extern transfer. They may be ommited if are equal to `payer`or `payee` respectively.
+
+Extern transfers may also carry the cryptographic signature of the payer and the payee.
+
+#### Signature algorithm
+In order to build or verify a transfer signature the following string must be created:
+
+```
+[payer]:[payee]:[amount]:[meta]:[state]:[date]:[nonce]
+```
+
+Where the first 4 elements are the content of the transfer fields, `date` is the transaction `updated` field and `nonce` is a random number also included as a transaction field. Note that the signature includes the state, so a s signature will be used as a proof of acknowledgment of the state of a transaction. 
+
+Encode the string in UTF-8. Then use the private key of the signing account and the cryptographic algorithm specified in the account key and sign the transaction using a standard algorithm. Finally encode the result in BASE64.
+
+In order to avoid replay attacks, servers should persist all transactions for at least one month and reject any signature with repeated nonce and also reject all signatures older than one month. This way a signature can't be reused for a new transaction.
+
+## Endpoints
+The API follows the [JSON:API](https://jsonapi.org) guidelines.
+
+The common CRUD operations are defined at `currency` and `accounts` endpoints for administrative operations.
+
+Payments and charges are done using the `transactions` endpoint. Tipically a transaction will be created with a `POST` request to the transactions endpoint and later it will be either accepted, commited or rejected by updating the transaction using `PATCH` requests that change the `state` field and eventually the signature fields.
+
+## Extern payments
+
+### Introduction
+
+This accounting protocol defines how to perform credit transfers between accounts in remote exchange groups, with different currencies, eventually managed from different servers. In order to do so, the protocol makes successive exchanges from the *source account* to the *destination account* through a chain of connections. A *connection* between two currencies is a pair of accounts, one in each currency and each one owned and automatically managed by the other currency. These type of accounts are called *connector accounts* or just connectors. Connector accounts in one currency represent the balance of trade with other currency.
+
+For example, suppose that Alice has an account in currency α and Bob has an account in currency β and Alice wants to pay 10β to Bob. Suppose there is a connector B in currency α and a connector A in currency β. B is owned by the β management system but belongs to α currency and therefore subject to their administration. Conversely, A is owned by α but subject to β rules. Suppose also that the exchange rate between α and β is 1α = 2β. The transaction from Alice to Bob will be then transformed to two local transactions:
+
+`Alice ---(5α)--->B` and `A ---(10β)--->Bob`
+
+In the previous example there were a connection between the two currencies. However the protocol allow transactions between currencies that are not directly connected through a chain of connections. A `rippling connector` is an account that allows automatic routing of transactions that do not end nor start in the currency they represent.
+
+For example, suppose that now Alice wants to pay 10γ to Carol, where 10α = 1γ, but α and γ are not directly connected. Imagine however that the α-β connection still exists and that there is a β-γ connection formed by accounts C in β and B' in γ. Then the transaction would be:
+
+`Alice ---(100α)--->B` and `A ---(200β)--->C` and `B' ---(10γ)--->Carol`
+
+In this case, accounts B and B' are rippling connectors because they participate in a transaction that doesn't start nor end in β.
+
+### Currency stability
+
+Currencies are free to establish the connections they want with other currencies. However, the currency administration must be aware that exchange with other currencies can be a source of inestability for their currency if it is not well balanced. Rippling is even more dangerous since the trade balance changes without any local action. It is important then to properly set the credit and debit limits to connector accounts and to actively make policies to keep the balances of trade close to zero.
+
+For example, several currencies from a region can create a virtual currency, connect all to this currency and agree on some rules for the connector accounts in this virtual currency (credit and debit limits). They will then all be able to trade between them and each group will only have to take care of the balance of their single connector account.
+
+### Protocol
+
+The protocol for extern payments is an extension of the protocol for local payments. The idea of the protocol is that any exchange group may establish trust with one or a few other currencies and create connections with them. With the help of these trusted local connections and a cryptographic signature, we may securely extend transactions through a global network.
+
+1. `POST` or `PATCH` a transaction with a remote destination account.
+2. Verify that the transaction si valid and can be applied.
+3. If source account is local, add the signature of source account, otherwise verify the source signature.
+3. Choose the best connector to route this transaction
+4. Login to the connector account in an extern currency and perform the transaction.
+6. If the destination account is local, add the signature of the destination account otherwise verify destination signature.
+5. Apply the local transaction.
+
 
 ## Payment flow example
 
@@ -113,7 +245,7 @@ GET https://reggaex.org/bob
         "type": "accounts",
         "attributes": {
             "code": "WDLD0002",
-            "balance": 32000,
+            "balance": 3200000,
             //...
         }
     }
@@ -137,9 +269,7 @@ Host: wonderland.org
         "transfers": [{
             "payer": "https://wonderland.org/alice",
             "payee": "https://reggaex.org/bob",
-            "amount": 2000,
-            "scale": 2,
-            "currency": "RGEX",
+            "amount": 200000,
             "description": "bla bla bla"
         }]
     }
@@ -164,8 +294,7 @@ Host: xchange.net
             "source": "https://wonderland.org/alice",
             "payer": "https://xchange.net/wonder",
             "payee": "https://reggaex.org/bob",
-            "amount": 2000,
-            "scale": 2,
+            "amount": 200000,
             "currency": "RGEX",
             "description": "bla bla bla"
         }],
@@ -189,8 +318,7 @@ Host: xchange.net
             "source": "https://wonderland.org/alice",
             "payer": "https://reggaex.org/x",
             "payee": "https://reggaex.org/bob",
-            "amount": 2000,
-            "scale": 2,
+            "amount": 200000,
             "currency": "RGEX",
             "description": "bla bla bla"
         }],
@@ -212,8 +340,7 @@ The final exchange ReggaeEx validates the transaction and, since Bob's account i
             "source": "https://wonderland.org/alice",
             "payer": "https://reggaex.org/x",
             "payee": "https://reggaex.org/bob",
-            "amount": 2000,
-            "scale": 2,
+            "amount": 200000,
             "currency": "RGEX",
             "description": "bla bla bla"
         }],
@@ -243,8 +370,7 @@ XChange gets the accepted transfer from ReggaeEx above. The `destination-signatu
             "destination": "https://reggaex.org/bob",
             "payer": "https://xchange.net/wonder",
             "payee": "https://xchange.net/reggaex",
-            "amount": 4000,
-            "scale": 3,
+            "amount": 4000000,
             "currency": "XCHG",
             "description": "bla bla bla"
         }],
@@ -271,8 +397,7 @@ Wonderland returns to Alice client the final local transfer. Wonderland substrac
             "destination": "https://reggaex.org/bob",
             "payer": "https://wonderland.org/alice",
             "payee": "https://wonderland.org/x",
-            "amount": 4000,
-            "scale": 2,
+            "amount": 400000,
             "currency": "WDLD",
             "description": "bla bla bla"
         }],
