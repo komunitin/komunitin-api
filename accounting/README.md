@@ -2,6 +2,8 @@
 
 Interoperable Accounting for Exchange Communities
 
+**This is a work in progress document**. Feedback welcome at komunitinbox@gmail.com or at [GitHub](https://github.com/komunitin/komunitin-api).
+
 ## Introduction
 The Accounting API defines a protocol to make payments and charges between members of exchange communities. It can be used for simple local transaction between members of the same exchange group but it also defines a way to make payments across different exchange groups, exchanging the currencies. That makes the protocol very powerful and different from most other options out there.
 
@@ -40,7 +42,7 @@ The `value` is important field for exchanging with other currencies. It defines 
 }
 ```
 ### Account
-An account holds a balance of a specific currency and is the source or destinatin of money transfers.
+An account holds a balance of a specific currency and is the source or destination of money transfers.
 
 The credit limit is the maximum balance the account may have, and the debit limit the minimum negative balance. A negative value means no limit. These limits are set by the exchange group administration.
 
@@ -103,11 +105,11 @@ A transaction is the unit of change in the Accounting API. A transaction contain
 A transaction may be in different states: 
  - `new`: The transaction has been created and passed the automatic validations.
  - `pending`: The transaction is awaiting acceptance by at least one party.
- - `accepted`: The transaction is accepted by all parties and ready to be committed.
+ - `accepted`: The transaction is accepted by all parties and ready to be committed. The server should lock the resources from accounts so the transaction can actually be committed.
  - `committed`: The transaction has already been committed. Once a transaction is committed, it can't be undone.  
  - `rejected`: The transaction has been rejected by one of the parties and won't be committed.
 
- The `expires` field has different meanings depending on the transaction state. For a `new` transaction, it means the time where it may be automatically deleted. For a `pending` trnsaction, the miximum time it should be `accepted`or `rejected` before automatic behavior (which may be automatic rejection or acceptance). For an `accepted` transaction, the maximum time where it should be committed. 
+ The `expires` field has different meanings depending on the transaction state. For a `new` transaction, it means the time where it may be automatically deleted. For a `pending` trnsaction, the maximum time it should be `accepted`or `rejected` before automatic behavior (which may be automatic rejection or acceptance). For an `accepted` transaction, the maximum time where it should be committed. 
 
 ```JSON
 {
@@ -173,12 +175,23 @@ Encode the string in UTF-8. Then use the private key of the signing account and 
 
 In order to avoid replay attacks, servers should persist all transactions for at least one month and reject any signature with repeated nonce and also reject all signatures older than one month. This way a signature can't be reused for a new transaction.
 
-## Endpoints
+## API
 The API follows the [JSON:API](https://jsonapi.org) guidelines.
 
 The common CRUD operations are defined at `currency` and `accounts` endpoints for administrative operations.
 
 Payments and charges are done using the `transactions` endpoint. Tipically a transaction will be created with a `POST` request to the transactions endpoint and later it will be either accepted, commited or rejected by updating the transaction using `PATCH` requests that change the `state` field and eventually the signature fields.
+
+### Transaction workflow
+When a valid `POST` request is received at the `transactions` endpoint, the transaction is created with `new` state. That means that the transaction won't be applied by now. This initial state is useful for systems that may add taxes, fees or other features on transactions: the user may create a transaction to see the additional issues to the transaction and later, if they agree with the created transaction, accept and commit it. Depending on account configurations, once the source account has accepted a transaction the destination account may also need to accept the transaction before it can be committed, so the transaction will be meantime in `pending` state. Once all parties have accepted the transaction, it becomes `accepted` state and it is ready to be committed. Once a transaction is `committed`, it can't be deleted, edited nor rejected.
+
+![Transaction workflow diagram](transaction-workflow.png)
+
+A single transaction doesn't need to pass through all states from `new` to `committed`, but can pass through several states at once.
+
+For example, if a source account wants to pay to another account that is configured to automatically accept payments (as most of them would do), then the source account may directly `POST` a transaction with `committed` state, that will be eventually validated and applied by the server at once. That could be also a charge transaction if the destination account is configured to automatically accept charges or the source account is whitelisted to be automatically accepted.
+
+Suppose now that the destination account is configured to manually accept incomming charges. The source account may `POST` a transaction with state `committed`, but since the destination account doesn't automatically accept the transaction, the response from the server will be a transaction with `pending` state. The destination account will eventually `PATCH` the transaction with `accepted` state. That will accept and immediately commit the transaction.
 
 ## Extern payments
 
@@ -206,22 +219,129 @@ For example, several currencies from a region can create a virtual currency, con
 
 ### Protocol
 
-The protocol for extern payments is an extension of the protocol for local payments. The idea of the protocol is that any exchange group may establish trust with one or a few other currencies and create connections with them. With the help of these trusted local connections and a cryptographic signature, we may securely extend transactions through a global network.
+The protocol for extern payments is an extension of the protocol for local payments. The idea of the protocol is that any exchange group may establish trust with one or a few other currencies and create connections with them. With the help of these trusted local connections and a cryptographic signature, we may securely extend transactions through a global network without needing to connect nor trust to all remote parties nor a single system.
 
-1. `POST` or `PATCH` a transaction with a remote destination account.
-2. Verify that the transaction si valid and can be applied.
-3. If source account is local, add the signature of source account, otherwise verify the source signature.
-3. Choose the best connector to route this transaction
-4. Login to the connector account in an extern currency and perform the transaction.
-6. If the destination account is local, add the signature of the destination account otherwise verify destination signature.
-5. Apply the local transaction.
+The protocol is bassed on what we call the *connector chain*. We call a *node* the service managing one currency. When the source node receives a `POST` or `PATCH` request in their `transactions` endpoint it will authorize and validate the transaction. If the destination account is not local (it may be the `payer`or the `payee` depending on whether it is a payment or a charge), then this is an extern transaction.
 
+The source node will then find either a direct connector to the destination currency or a rippling connection to any other currency. Nodes may have one or more rippling connectors to other currencies and they have an algorithm to choose the most suitable one. This process is analogous to the routing of TCP/IP packets. The source node will then split the original transaction between the local (from the source account to the local connector account) and the remote part (from the connector account in the other currency to the destination). Additionally, the source node must add the signature of the source account. With the signature the destination node and all intermediaries can verify the original claim.
+
+In order to fully perform the operation the node must apply the local part and check that the remote part was also applied.
+
+The remote part is done the same way as the original request: the local node has the credentials to log into the connector account in the connected currency the same way as a regular user and do the request to the `transactions` endpoint.
+
+Intermediate nodes will successively do the same process (except for the source signature), and will either reject the transaction or finally route it to the destination node.
+
+The destination node receives a request from a connector account to a regular account in their currency. It will validate the transaction including the source signature to know where it comes from. It may either reject or perform the requested operation. In the positive case, it will do the local part and add the destination account signature to the response. Then all intermediate nodes verify the destination signature to check that the operation was effectively done, perform their local transaction and propagate the response downstream. When the response arrives to the source node, it can verify that the transaction has effectively arrived to the destination and apply the local part. A remote transaction has been fulfilled :smile:
+
+Note that any node does not need to trust nor even know the whole chain of connections, but only their local counterparts: If a node receives a request with a valid source signature, it can be sure that the original node did the request and that intermediate nodes have not been altered it (although they may or may not applied their local parts). In the same way, if a node receives a response with a valid destination signature, it is sure that the transaction was applied at the end, so it can proceed with its local part regardless of the good behavior of remote nodes. However, a node owns accounts in their local connected currencies so it needs to trust them, since they can effectively tamper account balances registered on their systems. That is exactly the same trust every user has with its own currency system.
+
+### Round trips
+There may be needed more than a single round trip through the connection chain to completely fulfill a transaction. From the `new` state to the `committed` state. In first round trip for a transaction, each node must choose the upstream connector. However for subsequent round trips for a concrete transaction, the path should remain the same. In order to do so, transactions have a `upstream` field that points to the URL of the transaction in the next currency of the chain.  
+
+### Payments
+
+A typical payment needs 2 connector chain roundtrips.
+
+The first one just to create a transaction with `new` state, and therefore see whether is possible to reach the destination and also the cost that the payment will be in local currency. This is initiated with a `POST` request with `state` `new`.
+
+The second one is the transaction commitment, that will be initiated with a `PATCH` request to the `transactions` endpoint with `committed` `state`. In this case each node must first accept the local transaction (and hence lock the needed amount in accounts so it is sure it will be able to later commit the transaction), then request the remote payment, then verify the remote response and the destination signature, send the response downstream and finally apply the local transaction. If upstream request does not respond on time or responds badly, the local transaction is not applied, locked resources are freed and the error is propagated downstream.
+
+A payment could be done in one roundtrip, but it can be dangerous for nodes since the source and other nodes wouldn't know the cost of the transaction for them.
+
+### Charges
+
+A charge also typically needs two roundtrips:
+
+The first one is to lock be sure that the charge is possible and accepted by all parties. It is initiated with a `POST` request with `state` accepted, since the source node already accepts it wants to be payed with X amount. Nodes should first send the transaction upstream, and in positive response, then lock the resources in their local accounts.
+
+The second one is to actually commit the payment. That will be initiated with a `PATCH` request with `committed` `state` to the accepted transaction. Nodes should apply the local transaction first, and then propagate the update upstream with the source signature as a proof of payment.
+
+Charges could also be done in one roundtrip, but that will be dangerous since if any intermediate or the final node doesn't immediately apply the transaction, the previous node will have a charge in downstream connector but not the payment in the upstream one.
+
+### Asynchronous processing
+Servers should immediately answer transaction requests and eventually send updates asynchronously. This behavior prevents unnecessarily locking server resources wile waiting for other servers in the network to do their work. This is done using the `callback` query parameter in requests.
+
+When a node can't completely answer a request immediately because it depends on external agents (being it upstream nodes or manual intervention), it must answer with a `HTTP 202 Accepted` code with a *Request State* object, and a `Content-Location`header with the URL of this object:
+
+```JSON
+{
+    "data": {
+        "id": "uuid",
+        "type": "request-state",
+        "attributes": {
+            "code": 1001,
+            "description": "Pending upstream response",
+            "expires": "2020-08-19T23:15:30.000Z",
+            "callback": "https://xchange.net/transactions/xyz/response"
+        },
+        "relationships": {
+            "content" : {
+                "links": {
+                    "related": "https://komunitin.org/EITE/transactions/uuidt"
+                }
+            }
+        },
+        "links": {
+            "self": "https://komunitin.org/EITE/request-state/uuid"
+        }
+    }
+}
+```
+If the original transaction does not have a `callback` parameter, the server can return a `Retry-After` header to provide guidance to the client as to how long it should wait before checking again. This is useful for asynchronous responses to client apps.
+
+Once the operation is completely performed, a call to the Request State object will return a `303 See other` with the transaction URL in the `Location` header.
+
+If a `callback` query parameter was passed, when the server completely performs the operation it will send a `POST` request to the URL specified in the parameter with the response, that will actually be the updated transaction object.
+
+The following diagram ilustrates a connector chain roundtrip with asynchronous communication. The notification arrows from server to client can be push notifications, emails or any other type of messaging.
+
+![Asynchronous communication diagram](asynchronous-workflow.png)
+
+## Expiry times
+
+When a transaction is in `accepted` state, servers must do all possible to ensure that the transaction can be committed. That includes locking the reources from the implied accounts. It is important then to restrict the time where these resources can be locked, so they may be used for other transactions if the accepted one is not finally performed for whatever reason.
+
+This is managed through the `expires` field in Request State and Transaction objects. A request to the `transactions` endpoint may include an `expires` field as a transaction attribute. This is the maximum time the client allows for the node to perform the operation. If the node can't process the operation immediately, then it will return a Request State object with the `expires` field. It can also choose to directly reject the operation if the `expires` time is too short. If the operation depends on external nodes, the node will set an `expires` time to the upstream request that is a bit shorter than the time it has been asked for, to allow itself to do the needed processing before answering their client. For example, a node may substract one second to the original `expires` time in the upstream transaction.
+
+Once any operation has been performed, the `expires` field of a transaction is the maximum time the node commits itself to keep that state for the transaction. For an `accepted` transaction that involve locked resources, it may be just some seconds or a few minutes. after that the node may reject the transaction and unlock teh resources. For a `new` or `pending` transaction awaiting for intervention, it may be the order or weeks or months. A committed or deleted transaction does not have expiry date.
+
+## Rejection
+Any request to the `transactions` endpoint may be rejected by the node. This is done by setting the transaction state to `rejected`. The transaction will then have additional fields `rejection-message` and `rejection-code`.
+
+```JSON
+{
+    "data": {
+        "id": "uuid1",
+        "type": "transactions",
+        "attributes": {
+            "state": "rejected",
+            "rejection-message": "Insufficient funds",
+            "rejection-code": "1001"
+        }
+    }
+}
+```
+
+Transactions can also be requested to be rejected. That is done with a `PATCH` request:
+
+```HTTP
+PATCH /transactions/uuid
+```
+```JSON
+{
+    "data": {
+        "attributes": {
+            "state": "rejected"
+        }
+    }
+}
+```
 
 ## Payment flow example
 
-This is an example of a payment flow through the federation protocol. Imagine that Alice wants to pay to a remote account held by Bob. Alice has an account in Wonderland exchange (₩) and Bob has an account in ReggaeEx exchange (₽). Wonderland and ReggaEx don't have any way to directly trade, but they all know the intermediate exchange, XChange (₡). Concretely, each exchange owns an account in their respective neighbour exchanges.
+This is an example of a payment flow using the accounting protocol. Imagine that Alice wants to pay to a remote account held by Bob. Alice has an account in Wonderland currency (₩) and Bob has an account in ReggaeEx currency (₽). Wonderland and ReggaEx don't have any way to directly trade, but they both are connected to the intermediate currency XChange (₡). There are the follwing accounts:
 
-| Account   | Exchange | Owner |
+| Account   | Currency | Owner |
 |-----------|----------|-------|
 |`https://wonderland.org/alice`  | Wonderland (₩)   | **Alice** |
 |`https://wonderland.org/x`      | Wonderland (₩)   | XChange   |
@@ -233,7 +353,7 @@ This is an example of a payment flow through the federation protocol. Imagine th
 With this setting, a payment from Alice to Bob would go as follows:
 
 ### 1. Information
-Alice client app gets Bob account and currency public details, so it can show her further details before initiating the transfer. It should also fetch the exchange value for ₽ and ₩, so it can calculate the exchange rate. This is public information.
+Alice client app gets Bob account and currency public details, so it can show her further details before initiating the transfer.
 
 ```HTTP
 GET https://reggaex.org/bob
@@ -252,10 +372,8 @@ GET https://reggaex.org/bob
 }
 ```
 
-### 2. Prepare transaction
-Alice Client app posts a transfer JSON to the `transactions` endpoint in order to get a transaction. The "id" must be set by the client in order to avoid duplicate transactions on retry, using a UUID generator.
-
-This call will not apply the transaction but will rather setup the system so it's ready to commit the transaction and will return a transaction with other details included.
+### 2. Create transaction
+Alice Client app posts a transfer JSON to the `transactions` endpoint in order to create a transaction. The "id" must be set by the client in order to avoid duplicate transactions on retry, using a UUID generator.
 
 ```HTTP
 POST /transactions HTTP/1.1
@@ -266,23 +384,26 @@ Host: wonderland.org
     "data": {
         "id": "uuid1",
         "type": "transactions",
-        "transfers": [{
-            "payer": "https://wonderland.org/alice",
-            "payee": "https://reggaex.org/bob",
-            "amount": 200000,
-            "description": "bla bla bla"
-        }]
+        "attributes": {
+            "transfers": [{
+                "payer": "https://wonderland.org/alice",
+                "payee": "https://reggaex.org/bob",
+                "amount": 200000,
+                "meta": "10 kg of potatoes"
+            }],
+            "state": "new"
+        }
     }
 }
 ```
 
-### 3. Prepare transaction: first hop
-The services does some validation: Alice has sufficient balance, etc. However, the payee account belongs to a remote currency that, in this case, is untrusted by the Alice's currency. But Alice's exchange has a gateway to possibliy reach Bob: XChange. The Wonderland (Alice's) server makes a *Prepare pransaction* call to XChange server, changing the Alice's acount to the virtual Wonderland exchange account in xchange.net.
+### 3. Create transaction: first hop
+The services does some validation: Alice has sufficient balance, etc. However, the payee account belongs to a remote currency that, in this case, is not connected by the Alice's currency. But Alice's currency has a connection to possibliy reach Bob: XChange. 
 
-Wonderland server signs the transaction using Alice's key, so if the transaction finally reaches Bob, he can be sure where the request comes from and how much she originally wanted to transfer.
+Wonderland node signs the transaction using Alice's key, so if the transaction finally reaches Bob, he can be sure where the request comes from and how much she originally wanted to transfer. Then the Wonderland node makes a request to XChange node, setting the connector account as local payer in xchange.net.
 
 ```HTTP
-POST /transactions HTTP/1.1
+POST /transactions?callback=https://wonderland.org/transactions/uuid1/response HTTP/1.1
 Host: xchange.net
 ```
 ```JSON
@@ -290,23 +411,25 @@ Host: xchange.net
     "data": {
         "id": "uuid2",
         "type": "transactions",
-        "transfers": [{
-            "source": "https://wonderland.org/alice",
-            "payer": "https://xchange.net/wonder",
-            "payee": "https://reggaex.org/bob",
-            "amount": 200000,
-            "currency": "RGEX",
-            "description": "bla bla bla"
-        }],
-        "source-signature": "alice(source, destination, amount, new)"
+        "attributes": {
+            "transfers": [{
+                "payer": "https://wonderland.org/alice",
+                "payee": "https://reggaex.org/bob",
+                "amount": 200000,
+                "meta": "10 kg of potatoes",
+                "local-payer": "https://xchange.net/wonder",
+                "payer-signature": "alice's (new)"
+            }],
+            "state": "new"
+        }
     }
 }
 ```
-### 4. Prepare transaction: second hop.
-XChange can't directly execute the transaction since, again, the payee account is remote. However XChange has a gateway with Bob's currency. So after validating the local part of the transaction, it makes the `transactions` POST to the final service, its their gateway account.
+### 4. Create transaction: second hop.
+XChange can't directly execute the transaction since, again, the payee account is remote. However XChange has a direct connection with Bob's currency. So after validating the local part of the transaction, it makes the `transactions` POST to the final node using its connector account.
 
 ```HTTP
-POST /transactions HTTP/1.1
+POST /transactions?callback=https://xchange.net/callbacks/uuid2 HTTP/1.1
 Host: xchange.net
 ```
 ```JSON
@@ -315,21 +438,21 @@ Host: xchange.net
         "id": "uuid3",
         "type": "transactions",
         "transfers": [{
-            "source": "https://wonderland.org/alice",
-            "payer": "https://reggaex.org/x",
+            "payer": "https://wonderland.org/alice",
             "payee": "https://reggaex.org/bob",
             "amount": 200000,
-            "currency": "RGEX",
-            "description": "bla bla bla"
+            "meta": "10 kg of potatoes",
+            "local-payer": "https://reggaex.org/x",
+            "payer-signature": "alice's (new)"
         }],
-        "source-signature": "alice(source, destination, amount, new)"
+        "state": "new"
     }
 }
 ```
-### 5. Prepare transaction: final
-The final exchange ReggaeEx validates the transaction and, since Bob's account is configured to automatically accept any incomming payment, it returns the transaction ready to be commited.
+### 5. Create transaction: final
+The final node ReggaeEx validates and creates the transaction synchronoulsy.
 ```HTTP
-201 Created
+HTTP/1.1 201 Created
 ```
 ```JSON
 {
@@ -337,81 +460,86 @@ The final exchange ReggaeEx validates the transaction and, since Bob's account i
         "id": "uuid3",
         "type": "transactions",
         "transfers": [{
-            "source": "https://wonderland.org/alice",
-            "payer": "https://reggaex.org/x",
+            "payer": "https://wonderland.org/alice",
+            "local-payer": "https://reggaex.org/x",
             "payee": "https://reggaex.org/bob",
             "amount": 200000,
             "currency": "RGEX",
-            "description": "bla bla bla"
+            "meta": "10 kg of potatoes",
+            "payer-signature": "alice's (new)",
+            "payee-signature": "bob's (new)"
         }],
         "created": "2020-08-19T23:15:30.000Z",
-        "expires": "2020-08-19T23:20:30.000Z",
-        "state": "accepted",
-        "source-signature": "alice(source, destination, amount, new)",
-        "destination-signature": "bob(source, destination, amount, accepted)"
+        "expires": "2020-09-19T23:15:30.000Z",
+        "state": "new",
+        
     }
 }
 ```
-ReggaeEx gives 5 minutes to the caller for the transaction to be fulfilled.
+ReggaeEx gives one month to the caller for the transaction to be applied.
 
 ### 6. Prepare transaction: return
 
-XChange gets the accepted transfer from ReggaeEx above. The `destination-signature` allows XChange to prove to Wonderland that Bob will actually receive 20₽.
+XChange gets the transaction from ReggaeEx above. The `payee-signature` allows XChange to prove to Wonderland that it is able to reach Bob with 20₽. Since the call was asynchronous, it must `POST` the response to the callback URL provided:
 
 ```HTTP
-201 Created
+POST /transactions/uuid1/response
+Host: wonderland.org
 ```
 ```JSON
 {
     "data": {
         "transfers": [
         {
-            "source": "https://wonderland.org/alice",
-            "destination": "https://reggaex.org/bob",
-            "payer": "https://xchange.net/wonder",
-            "payee": "https://xchange.net/reggaex",
+            "payer": "https://wonderland.org/alice",
+            "payee": "https://reggaex.org/bob",
+            "local-payer": "https://xchange.net/wonder",
+            "local-payee": "https://xchange.net/reggaex",
             "amount": 4000000,
-            "currency": "XCHG",
-            "description": "bla bla bla"
+            "meta": "10 kg of potatoes",
+            "payer-signature": "alice's (new)",
+            "payee-signature": "bob's (new)"
         }],
         "created": "2020-08-19T23:15:31.000Z",
-        "expires": "2020-08-19T23:20:00.000Z",
-        "state": "accepted",
-        "source-signature": "alice(source, destination, amount, new)",
-        "destination-signature": "bob(source, destination, amount, accepted)"
+        "expires": "2020-09-19T23:15:20.000Z",
+        "state": "new",
+        "upstream": "https://reggaex.org/transactions/uuid3"
     }
 }
 ```
-XChange substracts 30 seconds to the expiry time to be sure it has time to fulfill the upstream transaction if needed.
+XChange substracts 10 seconds to the expiry time to be sure it has time to operate the upstream transaction if needed. It also adds a link to the upstream transaction in ReggaEx.
 
 ### 6. Prepare transaction: response
-Wonderland returns to Alice client the final local transfer. Wonderland substracts an additional minute to the expiry time.
+Wonderland returns to Alice client the final transaction after a poll. Wonderland substracts an additional minute to the expiry time.
 ```HTTP
-201 Created
+HTTP/1.1 200 OK
 ```
 ```JSON
 {
     "data": {
+        "type": "transactions",
         "id": "uuid1",
-        "transfers": [{
-            "destination": "https://reggaex.org/bob",
-            "payer": "https://wonderland.org/alice",
-            "payee": "https://wonderland.org/x",
-            "amount": 400000,
-            "currency": "WDLD",
-            "description": "bla bla bla"
-        }],
-        "created": "2020-08-19T23:15:32.000Z",
-        "expires": "2020-08-19T23:19:00.000Z",
-        "state": "accepted",
-        "source-signature": "alice(source, destination, amount, new)",
-        "destination-signature": "bob(source, destination, amount, accepted)"
+        "attributes": {
+            "transfers": [{
+                "payee": "https://reggaex.org/bob",
+                "payer": "https://wonderland.org/alice",
+                "amount": 400000,
+                "meta": "10 kg of potatoes",
+                "local-payee": "https://wonderland.org/x",
+                "payer-signature": "alice's (new)",
+                "payee-signature": "bob's (new)"
+            }],
+            "created": "2020-08-19T23:15:32.000Z",
+            "expires": "2020-09-19T23:14:20.000Z",
+            "state": "new",
+            "upstream": "https://xchange.net/transactions/uuid2"
+        }
     }
 }
 ```
 Alice now knows that the payment to Bob is possible and that it will cost 40₩ to send 20₽ to Bob.
 
-### 8. Commit
+### 8. Commit trigger
 Now she has two options, either to fulfill the transaction to actually pay the amount or reject the transaction. The second option is a `DELETE` request to `transactions/uuid1`, that will be propagated to subsequent `DELETE` requests ahead in the chain. 
 
 In case she wants to fulfill the transaction, she sends the request:
@@ -427,23 +555,10 @@ Host: wonderland.org
     }
 }
 ```
-Wonderland server will update the `source-signature` field:
-```JSON
-{"source-signature": "alice(source, destination, amount, commited)"}
-```
 
 ### 9. Commit propagation
-Wonderland server needs to do two things in order to commit this transaction:
-- To transfer 40₩ to `https://wonderland.org/x`
-- Send the commit request to the upstream transaction.
 
-In order to do the two operations atomically, the server should:
-1. Verify `source-signature`
-2. Lock the funds from the payer account
-3. Make the upsteam request and wait for the response
-4. Verify the destination signature
-5. Commit the local transfer
-6. Return the response
+Wonderland node will lock 40₩ from Alice balance and update the `payer-signature` field and send the request upstream. It will give just one minute from now to perform the operation:
 
 ```HTTP
 PATCH /transactions/uuid2
@@ -452,46 +567,51 @@ Host: xchange.net
 ```JSON
 {
     "data": {
-        "state": "committed",
-        "source-signature": "alice(source, destination, amount, commited)"
+        "attributes": {
+            "state": "committed",
+            "transfers": [{
+                "payer-signature": "alice's (accepted)"
+            }],
+            "expires": "2020-08-19T23:17:00.000Z"
+        }
     }
 }
 ```
-XChange server will do the same to ReggaEx that hopefully will actually commit the last transaction, returning a `200 OK` with the commited transaction and the destination signature updated.
+XChange will substract one or a few seconds to the `expires` time and will resend the request to ReggaEx. ReggaEx will actually commit the last transaction, returning a `200 OK` with the commited transaction and the payee signature updated with the `committed` state. This signature is the proof that Bob got the credits.
 
 ```HTTP
-201 Created
+200 OK
 ```
 ```JSON
 {
     "data": {
-        "id": "uuid1",
+        "id": "uuid3",
         "type": "transactions",
-        "transfers": [{
-            "source": "https://wonderland.org/alice",
-            "payer": "https://reggaex.org/x",
-            "payee": "https://reggaex.org/bob",
-            "amount": 2000,
-            "scale": 2,
-            "currency": "RGEX",
-            "description": "bla bla bla"
-        }],
-        "state": "commited",
-        "commited": "2020-08-19T23:16:00.000Z", 
-        "created": "2020-08-19T23:15:30.000Z",
-        "source-signature": "alice(source, destination, amount, commited)",
-        "destination-signature": "bob(source, destination, amount, commited)",
+        "attributes": {
+            "transfers": [{
+                "payer": "https://wonderland.org/alice",
+                "local-payer": "https://reggaex.org/x",
+                "payee": "https://reggaex.org/bob",
+                "amount": 200000,
+                "meta": "10 kg of potatoes",
+                "payer-signature": "alice's (accepted)",
+                "payee-signature": "bob's (committed)"
+            }],
+            "state": "committed",
+            "updated": "2020-08-19T23:16:00.000Z", 
+            "created": "2020-08-19T23:15:30.000Z",
+        }
     }
 }
 ```
 
-The `destination-signature` is the proof that Bob got the money.
+XChange will propagate the committed transaction through the callback endpoint. 
 
 ### 9. Commit propagation: response
-Finally the wonderland server returns the commited transaction to Alice app so the transaction is completely applied.
+Finally the wonderland server returns the committed transaction to Alice app upon GET request, so the transaction is completely applied.
 
 ```HTTP
-201 Created
+200 OK
 ```
 ```JSON
 {
@@ -500,87 +620,18 @@ Finally the wonderland server returns the commited transaction to Alice app so t
         "type": "transactions",
         "transfers": [{
             "payer": "https://wonderland.org/alice",
-            "payee": "https://wonderland.org/x",
-            "destination": "https://reggaex.org/bob",
-            "amount": 4000,
-            "scale": 2,
-            "currency": "WDLD",
-            "description": "bla bla bla"
+            "payee": "https://reggaex.org/bob",
+            "amount": 400000,
+            "meta": "10 kg of potatoes",
+            "local-payee": "https://wonderland.org/x",
+            "payer-signature": "alice's (accepted)",
+            "payee-signature": "bob's (committed)"
         }],
-        "state": "commited",
-        "commited": "2020-08-19T23:16:02.000Z", 
+        "state": "committed",
+        "updated": "2020-08-19T23:16:02.000Z", 
         "created": "2020-08-19T23:15:30.000Z",
-        "destination-signature": "bob(source, destination, amount, commited)",
+        "upstream": "https://xchange.net/transactions/uuid2
     }
 }
 ```
 Alice can now be sure that Bob got its 20₽ because of the signature.
-
-## Fail cases
-### Rejection or fail in prepare
-During the prepare phase, if any intermediate node or the final one don't accept the transaction, it should return the transaction with `rejected` state and a `rejection-message`. The rejection message must be propagated downstream.
-```HTTP
-200 OK
-```
-```JSON
-{
-    "id": "uuid1",
-    "type": "transactions",
-    // transfers
-    "state": "rejected",
-    "rejection-message": "Insufficient funds",
-    "rejection-code": "1001"
-}
-```
-In other cases of error, such as upstream timeout, the server may return `50X` and an [error object](https://jsonapi.org/format/#error-objects) that will be equally propagated downstream.
-
-### Prepare timeout
-:gost: TODO
-
-### Rejection or timeout in commit
-Failures in commit phase are minimized since the commit only happens after a successfully prepare phase. However they may sporadically happen.
-
-If an upstream node does not return or returns an error or the return message is not valid (for example, the signatures are invalid), then the caller must understand that the transaction has not been commited and return error. If the transaction was actually commited upstream, only the failing node "loses money" on their upstream node.
-
-### Fraud
-
-//TODO
-
-# Checklist
-There are issues that need to be solved, but I think all of them are solvable, either by documentation or by slightly changing the protocol.
-
- - Add support for manual acceptance
- 
- TODO
-
- - how can Bob be sure that the money comes from Alice?
- 
- She can check the commit source-signature field.
-
- - Intermediate servers can access to description and other info that's irrelevant to them and possibly delicate.
-
-Extend the protocol by adding encrypted data into the `meta` transfer field, while having empty or dummy description.
-
- - What if source/destination/intermediaries want to charge a fee for the transaction or add metadata?
-
-They may do so by applying the exchange rate they want. Nodes may allow (local) competence among different paths. A node will tipically chose the path that most benefits them. They may add supplementary transfers into their object.
-
- - How can Alice be sure that the money actually arrive to Bob?
-
-She can check the commit destination-signature.
-
-- Add support for asynchronous API
-Todo: Either use a callback strategy or use the notificatin API, since jsonapi recommendation is not well suited for chains of dependent requests. Take however the response codes and object structure from jsonapi recommendation.
-
- - What happens if an intermediary fails?
- - What happens if intermediary actively commits fraud?
- - What happens if balances change between.
- - What happens when intermediate node times out after propagating the commit?
- - Lock balances at prepare stage?
- - Now the trust is not really local, since, if the final node behaves badly, alice still spends the money even if first and second node behave good. This MUST (and can!) be fixed (hashlock!).
- - What happens if alice don't fulfill nor delete the transaction?
- - Missing async support.
- 
-
-
-

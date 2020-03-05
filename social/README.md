@@ -4,7 +4,7 @@ REST API featuring marketplace services for Exchange Communities.
 
 See the specificatin documentation at [SwaggerHub](https://app.swaggerhub.com/apis-docs/estevebadia/komunitin-api/0.0.1).
 
-**This is still a work in progress**. Comments welcomed at komunitinbox@gmail.com or at [GitHub](https://github.com/komunitin/komunitin-api).
+**This is a work in progress document**. Feedback welcome at komunitinbox@gmail.com or at [GitHub](https://github.com/komunitin/komunitin-api).
 
 This API provides access to exchange group details, member profile and their offers and needs and informational messages. It doesn't feature payments nor any finantial information, as this is available in a separate API. Subscrption to notifications (email and push) and notification preferences are also defined in a separate API.
 
