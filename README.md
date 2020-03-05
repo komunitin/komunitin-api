@@ -13,8 +13,10 @@ The Notifications API allow an end-user app or a federated server to subscribe f
 
 See the [Komunitin Notifications Readme](notifications/README.md) for details and specification.
 
-## Accounting API
-The accounting API module features financial transactions.
+## Accounting protocol
+The accounting protocol module features financial transactions and federation of nodes.
+
+See the [Accounting protocol Readme](accounting/README.md) for details and specification.
 
 ## Authorization
 The authorization management (login, forgot password, etc) is out of the scope of the API, and will be provided by a third party Identity Access Management (IAM) system using the OpenID Connect protocol over OAuth2. For mobile and web apps, it is recommended to use the OAuth2 Authorization Code Flow with Proof Key for Code Exchange (PKCE). There open source IAM platforms such as [Keycloak](https://keycloak.org) as well as IAM-as-a-service providers.
