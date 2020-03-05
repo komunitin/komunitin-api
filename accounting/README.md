@@ -7,14 +7,14 @@ Interoperable Accounting for Exchange Communities
 ## Introduction
 The Accounting API defines a protocol to make payments and charges between members of exchange communities. It can be used for simple local transaction between members of the same exchange group but it also defines a way to make payments across different exchange groups, exchanging the currencies. That makes the protocol very powerful and different from most other options out there.
 
-The protocol is very to implement and understand: just a regular JSON RESTful API following the [JSON:API](https://jsonapi.org) guidelines. It is also not tight to any technology. However it makes use of standard cryptography techniques to make the protocol secure and minimize the trust the members must have with the system. Concretely, members only have to trust their local exchange groups. Local exchange groups must only trust their local neighbours (the currencies they are directly connected to). The system allows then transactions with remote currencies making several currency exchanges from the origin to the destination.
+The protocol is simple to implement and understand: just a regular JSON RESTful API following the [JSON:API](https://jsonapi.org) guidelines. It is also not tight to any technology. It makes use of standard cryptography techniques to make the protocol secure and minimize the trust the members must have with the system. Concretely, members only have to trust their local exchange groups. Local exchange groups must only trust their local neighbours (the currencies they are directly connected to). The system allows then transactions with remote currencies making several currency exchanges from the origin to the destination.
 
-It does not use a shared ledger and it doesn't use any global consensus mechanism. That allows infinite scalability and also it allows a high level of privacy even for transactions with remote exchange groups.
+The protocol does not use a shared ledger and it doesn't use any global consensus mechanism. That allows infinite scalability and also it allows a high level of privacy even for transactions with remote exchange groups.
 
-Designed specifically for community exchange groups. It does not use the concept of external market maker to exchange between different currencies. The exchange groups themselves enable gateways that connect their currencies only with their neighbour currencies (one of them is enough) or with one clearing central at the exchange rate they choose. Exchange groups must actively take care of their balance trades with their directly connected currencies for the health of their own currency, trying to keep it close to zero. In a simple setting with only one gateway to remote currencies, that means that the total amount bought outside the exchange group must be roughly equal than the total amount sold outside the group.
+It is designed specifically for community exchange groups. It does not use the concept of external market makers to exchange between different currencies. The exchange groups themselves enable gateways that connect their currencies only with their neighbour currencies (one of them is enough) or with one clearing central at the exchange rate they choose. Exchange groups must actively take care of their balance trades with their directly connected currencies for the health of their own currency, trying to keep it close to zero. In a simple setting with only one connection to a remote currency, that means that the total amount bought outside the exchange group must be roughly equal than the total amount sold outside the group.
 
 ## Objects
-These are the different objects or resources in the API.
+These are the different resource objects in the API.
 
 ### Currency
 Defines a currency. The 4-letter codes used in CES (https://community-exchange.org) and IntegralCES (https://integralces.net) are of `CEN` type. Other types of codes may be defined. 
@@ -100,7 +100,7 @@ If not a string, then the `meta` field is an object with a field `type` that ide
 The protocol may be extended with different types for the meta field, including encrypted content for better privacy. That will be relevant for extern transfers.
 
 ### Transaction
-A transaction is the unit of change in the Accounting API. A transaction contains typically just one transfer, but servers may add additional transfers in a transaction to implement features such as taxes. All transfers in a transaction will be commited all or none atomically, and in the specified order.
+A transaction is the unit of change in the Accounting API. A transaction contains typically just one transfer, but servers may add additional transfers in a transaction to implement features such as taxes. All transfers in a transaction will be committed all or none atomically, and in the specified order.
 
 A transaction may be in different states: 
  - `new`: The transaction has been created and passed the automatic validations.
@@ -180,7 +180,7 @@ The API follows the [JSON:API](https://jsonapi.org) guidelines.
 
 The common CRUD operations are defined at `currency` and `accounts` endpoints for administrative operations.
 
-Payments and charges are done using the `transactions` endpoint. Tipically a transaction will be created with a `POST` request to the transactions endpoint and later it will be either accepted, commited or rejected by updating the transaction using `PATCH` requests that change the `state` field and eventually the signature fields.
+Payments and charges are done using the `transactions` endpoint. Tipically a transaction will be created with a `POST` request to the transactions endpoint and later it will be either accepted, committed or rejected by updating the transaction using `PATCH` requests that change the `state` field and eventually the signature fields.
 
 ### Transaction workflow
 When a valid `POST` request is received at the `transactions` endpoint, the transaction is created with `new` state. That means that the transaction won't be applied by now. This initial state is useful for systems that may add taxes, fees or other features on transactions: the user may create a transaction to see the additional issues to the transaction and later, if they agree with the created transaction, accept and commit it. Depending on account configurations, once the source account has accepted a transaction the destination account may also need to accept the transaction before it can be committed, so the transaction will be meantime in `pending` state. Once all parties have accepted the transaction, it becomes `accepted` state and it is ready to be committed. Once a transaction is `committed`, it can't be deleted, edited nor rejected.
@@ -577,7 +577,7 @@ Host: xchange.net
     }
 }
 ```
-XChange will substract one or a few seconds to the `expires` time and will resend the request to ReggaEx. ReggaEx will actually commit the last transaction, returning a `200 OK` with the commited transaction and the payee signature updated with the `committed` state. This signature is the proof that Bob got the credits.
+XChange will substract one or a few seconds to the `expires` time and will resend the request to ReggaEx. ReggaEx will actually commit the last transaction, returning a `200 OK` with the committed transaction and the payee signature updated with the `committed` state. This signature is the proof that Bob got the credits.
 
 ```HTTP
 200 OK
