@@ -420,7 +420,8 @@ Host: xchange.net
                 "local-payer": "https://xchange.net/wonder",
                 "payer-signature": "alice's (new)"
             }],
-            "state": "new"
+            "state": "new",
+            "nonce": "uuid"
         }
     }
 }
@@ -437,15 +438,18 @@ Host: xchange.net
     "data": {
         "id": "uuid3",
         "type": "transactions",
-        "transfers": [{
-            "payer": "https://wonderland.org/alice",
-            "payee": "https://reggaex.org/bob",
-            "amount": 200000,
-            "meta": "10 kg of potatoes",
-            "local-payer": "https://reggaex.org/x",
-            "payer-signature": "alice's (new)"
-        }],
-        "state": "new"
+        "attributes": {
+            "transfers": [{
+                "payer": "https://wonderland.org/alice",
+                "payee": "https://reggaex.org/bob",
+                "amount": 200000,
+                "meta": "10 kg of potatoes",
+                "local-payer": "https://reggaex.org/x",
+                "payer-signature": "alice's (new)"
+            }],
+            "state": "new",
+            "nonce": "uuid"
+        }
     }
 }
 ```
@@ -459,20 +463,22 @@ HTTP/1.1 201 Created
     "data": {
         "id": "uuid3",
         "type": "transactions",
-        "transfers": [{
-            "payer": "https://wonderland.org/alice",
-            "local-payer": "https://reggaex.org/x",
-            "payee": "https://reggaex.org/bob",
-            "amount": 200000,
-            "currency": "RGEX",
-            "meta": "10 kg of potatoes",
-            "payer-signature": "alice's (new)",
-            "payee-signature": "bob's (new)"
-        }],
-        "created": "2020-08-19T23:15:30.000Z",
-        "expires": "2020-09-19T23:15:30.000Z",
-        "state": "new",
-        
+        "attributes": {
+            "transfers": [{
+                "payer": "https://wonderland.org/alice",
+                "local-payer": "https://reggaex.org/x",
+                "payee": "https://reggaex.org/bob",
+                "amount": 200000,
+                "currency": "RGEX",
+                "meta": "10 kg of potatoes",
+                "payer-signature": "alice's (new)",
+                "payee-signature": "bob's (new)"
+            }],
+            "created": "2020-08-19T23:15:30.000Z",
+            "expires": "2020-09-19T23:15:30.000Z",
+            "state": "new",
+            "nonce": "uuid"
+        }
     }
 }
 ```
@@ -489,21 +495,23 @@ Host: wonderland.org
 ```JSON
 {
     "data": {
-        "transfers": [
-        {
-            "payer": "https://wonderland.org/alice",
-            "payee": "https://reggaex.org/bob",
-            "local-payer": "https://xchange.net/wonder",
-            "local-payee": "https://xchange.net/reggaex",
-            "amount": 4000000,
-            "meta": "10 kg of potatoes",
-            "payer-signature": "alice's (new)",
-            "payee-signature": "bob's (new)"
-        }],
-        "created": "2020-08-19T23:15:31.000Z",
-        "expires": "2020-09-19T23:15:20.000Z",
-        "state": "new",
-        "upstream": "https://reggaex.org/transactions/uuid3"
+        "attributes": {
+            "transfers": [{
+                "payer": "https://wonderland.org/alice",
+                "payee": "https://reggaex.org/bob",
+                "amount": 4000000,
+                "meta": "10 kg of potatoes",
+                "local-payer": "https://xchange.net/wonder",
+                "local-payee": "https://xchange.net/reggaex",
+                "payer-signature": "alice's (new)",
+                "payee-signature": "bob's (new)"
+            }],
+            "created": "2020-08-19T23:15:31.000Z",
+            "expires": "2020-09-19T23:15:20.000Z",
+            "state": "new",
+            "nonce": "uuid",
+            "upstream": "https://reggaex.org/transactions/uuid3"
+        }
     }
 }
 ```
@@ -532,6 +540,7 @@ HTTP/1.1 200 OK
             "created": "2020-08-19T23:15:32.000Z",
             "expires": "2020-09-19T23:14:20.000Z",
             "state": "new",
+            "nonce": "uuid",
             "upstream": "https://xchange.net/transactions/uuid2"
         }
     }
@@ -551,7 +560,9 @@ Host: wonderland.org
 ```JSON
 {
     "data": {
-        "state": "committed"
+        "attributes": {
+            "state": "committed"
+        }
     }
 }
 ```
@@ -598,6 +609,7 @@ XChange will substract one or a few seconds to the `expires` time and will resen
                 "payee-signature": "bob's (committed)"
             }],
             "state": "committed",
+            "nonce": "uuid",
             "updated": "2020-08-19T23:16:00.000Z", 
             "created": "2020-08-19T23:15:30.000Z",
         }
@@ -618,19 +630,22 @@ Finally the wonderland server returns the committed transaction to Alice app upo
     "data": {
         "id": "uuid1",
         "type": "transactions",
-        "transfers": [{
-            "payer": "https://wonderland.org/alice",
-            "payee": "https://reggaex.org/bob",
-            "amount": 400000,
-            "meta": "10 kg of potatoes",
-            "local-payee": "https://wonderland.org/x",
-            "payer-signature": "alice's (accepted)",
-            "payee-signature": "bob's (committed)"
-        }],
-        "state": "committed",
-        "updated": "2020-08-19T23:16:02.000Z", 
-        "created": "2020-08-19T23:15:30.000Z",
-        "upstream": "https://xchange.net/transactions/uuid2
+        "attributes": {
+            "transfers": [{
+                "payer": "https://wonderland.org/alice",
+                "payee": "https://reggaex.org/bob",
+                "amount": 400000,
+                "meta": "10 kg of potatoes",
+                "local-payee": "https://wonderland.org/x",
+                "payer-signature": "alice's (accepted)",
+                "payee-signature": "bob's (committed)"
+            }],
+            "state": "committed",
+            "nonce": "uuid",
+            "updated": "2020-08-19T23:16:02.000Z", 
+            "created": "2020-08-19T23:15:30.000Z",
+            "upstream": "https://xchange.net/transactions/uuid2
+        }
     }
 }
 ```
