@@ -7,7 +7,7 @@ Interoperable Accounting for Exchange Communities
 ## Introduction
 The Accounting API defines a protocol to make payments and charges between members of exchange communities. It can be used for simple local transaction between members of the same exchange group but it also defines a way to make payments across different exchange groups, exchanging the currencies. That makes the protocol very powerful and different from most other options out there.
 
-The protocol is simple to implement and understand: just a regular JSON RESTful API following the [JSON:API](https://jsonapi.org) guidelines. It is also not tight to any technology. It makes use of standard cryptography techniques to make the protocol secure and minimize the trust the members must have with the system. Concretely, members only have to trust their local exchange groups. Local exchange groups must only trust their local neighbours (the currencies they are directly connected to). The system allows then transactions with remote currencies making several currency exchanges from the origin to the destination.
+The protocol is simple to implement and understand: just a regular JSON RESTful API following the [JSON:API](https://jsonapi.org) guidelines. It is also not tied to any technology. It makes use of standard cryptography techniques to make the protocol secure and minimize the trust the members must have with the system. Concretely, members only have to trust their local exchange groups. Local exchange groups must only trust their local neighbours (the currencies they are directly connected to). The system allows then transactions with remote currencies making several currency exchanges from the origin to the destination.
 
 The protocol does not use a shared ledger and it doesn't use any global consensus mechanism. That allows infinite scalability and also it allows a high level of privacy even for transactions with remote exchange groups.
 
@@ -49,8 +49,8 @@ The credit limit is the maximum balance the account may have, and the debit limi
 `capabilities` are the operations allowed from this account. They are:
  - `pay`: The account may initiate payments.
  - `charge`: The account may initiate charges.
- - `connector`: The account may act as a *direct connector* for extern payments.
- - `rippling`: The account may act as a *rippling connector* for extern payments.
+ - `connector`: The account may act as a *direct connector* for external transactions.
+ - `rippling`: The account may act as a *rippling connector* for external transactions.
 
 The key may or may not be unique for the account. In centralized systems where all accounts are managed by a single server, all accounts may share the same cryptographic key.
 
@@ -97,7 +97,7 @@ The meta field may be used to carry any information related to the transfer. In 
 
 If not a string, then the `meta` field is an object with a field `type` that identifies the scheme of the meta object.
 
-The protocol may be extended with different types for the meta field, including encrypted content for better privacy. That will be relevant for extern transfers.
+The protocol may be extended with different types for the meta field, including encrypted content for better privacy. That will be relevant for external transfers.
 
 ### Transaction
 A transaction is the unit of change in the Accounting API. A transaction contains typically just one transfer, but servers may add additional transfers in a transaction to implement features such as taxes. All transfers in a transaction will be committed all or none atomically, and in the specified order.
@@ -109,7 +109,7 @@ A transaction may be in different states:
  - `committed`: The transaction has already been committed. Once a transaction is committed, it can't be undone.  
  - `rejected`: The transaction has been rejected by one of the parties and won't be committed.
 
- The `expires` field has different meanings depending on the transaction state. For a `new` transaction, it means the time where it may be automatically deleted. For a `pending` trnsaction, the maximum time it should be `accepted`or `rejected` before automatic behavior (which may be automatic rejection or acceptance). For an `accepted` transaction, the maximum time where it should be committed. 
+ The `expires` field has different meanings depending on the transaction state. For a `new` transaction, it means the time where it may be automatically deleted. For a `pending` transaction, the maximum time it should be `accepted`or `rejected` before automatic behavior (which may be automatic rejection or acceptance). For an `accepted` transaction, the maximum time where it should be committed. 
 
 ```JSON
 {
@@ -142,9 +142,9 @@ A transaction may be in different states:
 }
 ```
 
-### Extern transfers
+### External transfers
 
-Extern transfers define a movement of amount from one account in one currency from another account in another currency, eventually managed by a remote server.
+External transfers define a movement of amount from one account in one currency from another account in another currency, eventually managed by a remote server.
 
 ```JSON
 {
@@ -158,9 +158,9 @@ Extern transfers define a movement of amount from one account in one currency fr
     "payee-signature": "bob's"
 }
 ```
-Beyond regular transfer attributes, they have the `local-payer` and `local-payee`. These are the local accounts that are involved in the extern transfer. They may be ommited if are equal to `payer`or `payee` respectively.
+Beyond regular transfer attributes, they have the `local-payer` and `local-payee`. These are the local accounts that are involved in the external transfer. They may be ommited if are equal to `payer`or `payee` respectively.
 
-Extern transfers may also carry the cryptographic signature of the payer and the payee.
+External transfers may also carry the cryptographic signature of the payer and the payee.
 
 #### Signature algorithm
 In order to build or verify a transfer signature the following string must be created:
@@ -193,7 +193,7 @@ For example, if a source account wants to pay to another account that is configu
 
 Suppose now that the destination account is configured to manually accept incomming charges. The source account may `POST` a transaction with state `committed`, but since the destination account doesn't automatically accept the transaction, the response from the server will be a transaction with `pending` state. The destination account will eventually `PATCH` the transaction with `accepted` state. That will accept and immediately commit the transaction.
 
-## Extern payments
+## External transactions
 
 ### Introduction
 
@@ -219,9 +219,9 @@ For example, several currencies from a region can create a virtual currency, con
 
 ### Protocol
 
-The protocol for extern payments is an extension of the protocol for local payments. The idea of the protocol is that any exchange group may establish trust with one or a few other currencies and create connections with them. With the help of these trusted local connections and a cryptographic signature, we may securely extend transactions through a global network without needing to connect nor trust to all remote parties nor a single system.
+The protocol for external transactions is an extension of the protocol for local transactions. The idea of the protocol is that any exchange group may establish trust with one or a few other currencies and create connections with them. With the help of these trusted local connections and a cryptographic signature, we may securely extend transactions through a global network without needing to connect nor trust to all remote parties nor a single system.
 
-The protocol is bassed on what we call the *connector chain*. We call a *node* the service managing one currency. When the source node receives a `POST` or `PATCH` request in their `transactions` endpoint it will authorize and validate the transaction. If the destination account is not local (it may be the `payer`or the `payee` depending on whether it is a payment or a charge), then this is an extern transaction.
+The protocol is bassed on what we call the *connector chain*. We call a *node* the service managing one currency. When the source node receives a `POST` or `PATCH` request in their `transactions` endpoint it will authorize and validate the transaction. If the destination account is not local (it may be the `payer`or the `payee` depending on whether it is a payment or a charge), then this is an external transaction.
 
 The source node will then find either a direct connector to the destination currency or a rippling connection to any other currency. Nodes may have one or more rippling connectors to other currencies and they have an algorithm to choose the most suitable one. This process is analogous to the routing of TCP/IP packets. The source node will then split the original transaction between the local (from the source account to the local connector account) and the remote part (from the connector account in the other currency to the destination). Additionally, the source node must add the signature of the source account. With the signature the destination node and all intermediaries can verify the original claim.
 
@@ -304,6 +304,8 @@ When a transaction is in `accepted` state, servers must do all possible to ensur
 This is managed through the `expires` field in Request State and Transaction objects. A request to the `transactions` endpoint may include an `expires` field as a transaction attribute. This is the maximum time the client allows for the node to perform the operation. If the node can't process the operation immediately, then it will return a Request State object with the `expires` field. It can also choose to directly reject the operation if the `expires` time is too short. If the operation depends on external nodes, the node will set an `expires` time to the upstream request that is a bit shorter than the time it has been asked for, to allow itself to do the needed processing before answering their client. For example, a node may substract one second to the original `expires` time in the upstream transaction.
 
 Once any operation has been performed, the `expires` field of a transaction is the maximum time the node commits itself to keep that state for the transaction. For an `accepted` transaction that involve locked resources, it may be just some seconds or a few minutes. after that the node may reject the transaction and unlock teh resources. For a `new` or `pending` transaction awaiting for intervention, it may be the order or weeks or months. A committed or deleted transaction does not have expiry date.
+
+Note that any node has its own clock and that the protocol does not enforce any clock synchronization mechanism. Nodes should have internal mechanisms to keep themselves in sync. A node repeteadly out of time is behaving badly and may result in loss of trust from their connections.
 
 ## Rejection
 Any request to the `transactions` endpoint may be rejected by the node. This is done by setting the transaction state to `rejected`. The transaction will then have additional fields `rejection-message` and `rejection-code`.
