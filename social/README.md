@@ -54,7 +54,7 @@ Represent a contact point of a member or an exchange group. It may be a telephon
 ### Categories
 Offers and needs are organized in categories. An offer or need can only belong to a single category. Good and service categories can be customized for each group.
 
-In order to make categories interoperable, they should be mapped to the set of categories defined at [Statistical Classification of Products by Activity in the European Union, Version 2.1](https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&StrNom=CPA_2_1&StrLanguageCode=EN&IntPcKey=&StrLayoutCode=HIERARCHIC) (CPA). CPA has been chosen over other classifications because it is already translated to many languages and publicly accessible in machine-readable format.
+In order to make categories interoperable, they are mapped to the set of categories defined at [Statistical Classification of Products by Activity in the European Union, Version 2.1](https://ec.europa.eu/eurostat/ramon/nomenclatures/index.cfm?TargetUrl=LST_NOM_DTL&StrNom=CPA_2_1&StrLanguageCode=EN&IntPcKey=&StrLayoutCode=HIERARCHIC) (CPA). CPA has been chosen over other classifications because it is already translated to many languages and publicly accessible in machine-readable format. Note that CPA categories are not visible to end-users, just to group administrators.
 
 ### Offers
 Offers are publications created by members to advertize the goods and services they are willing to sell through the exchange system. They should include one or more images and have a title and a detailed description. Usually they are long-lived.
