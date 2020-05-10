@@ -33,6 +33,20 @@ This section extensively use the [JSON:API](https://jsonapi.org) language.
 - Relationships have either a `related` attribute when they are not included or the `data` attribute with the resource identifier objects when they are included in a compound document. In this latter case, the `links` member may be present with pagination when not all related resources are embedded.
 - Exchnage relationship is always implicitely defined in the path.
 
+### Filtering
+`GET` endpoints allow the `filter` query parameter to filter the returned results. The parameter works like that:
+```
+filter[field][operation]=value
+```
+Where `field` is one of the resource attributes or relationships or the special field `search` that means searching in all relevant reaource fields. Nested fields are allowed using the dot `.` character.
+
+`operation` is one of:
+ - `eq`, `ne`: Equal, not equal. The equal operation may be omitted.
+ - `lt`, `gt`, `le`, `ge`: Less than, greater than, less than or equal, greater than or equal.
+ - `includes`: Array includes the value.
+
+And `value` is the value to match. In case of relationships, it is the resource code. There is the special value `self` which refers to the currently logged-in user, identified by the authorization code.
+
 ## Relation to other APIs
 
 ### Authorization
