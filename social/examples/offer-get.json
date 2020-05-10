@@ -3,6 +3,7 @@
         "type": "offer",
         "id": "785ad832-971f-4c7b-a31c-0adb8eafed86",
         "attributes": {
+            "code": "ecologic-bread",
             "name": "Ecologic Bread",
             "content": "<p>We stand up every morning at 3h AM in order to...",
             "images": [

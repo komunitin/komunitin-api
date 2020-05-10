@@ -3,9 +3,10 @@
         "id": "9683ec5d-29d3-419a-8753-a5d092f1bb3d",
         "type": "members",
         "attributes": {
-            "code": "EITE0005",
-            "access": "group",
+            "code": "maries-bakery",
             "name": "Marie's Bakery",
+            "account": "https://accounting.komunitin.org/EITE/accounts/EITE0005",
+            "access": "group",
             "type": "business",
             "description": "My mother Marie opened the first bakery in the town 50 years ago. Since then...",
             "image": "https://komunitin.org/files/EITE/68cbbec3-df9d-4af0-b333-07bb4c404a24.jpeg",
@@ -36,7 +37,7 @@
             },
             "needs": {
                 "links": {
-                    "related": "https://komunitin.org/EITE/needs?filter[member]=EITE0005"
+                    "related": "https://komunitin.org/EITE/needs?filter[member]=maries-bakery"
                 },
                 "meta": {
                     "count": 0
@@ -44,7 +45,7 @@
             },
             "offers": {
                 "links": {
-                    "related": "https://komunitin.org/EITE/offers?filter[member]=EITE0005"
+                    "related": "https://komunitin.org/EITE/offers?filter[member]=maries-bakery"
                 },
                 "meta": {
                     "count": 1
@@ -52,7 +53,7 @@
             }
         },
         "links": {
-            "self": "https://komunitin.org/EITE/members/EITE0005"
+            "self": "https://komunitin.org/EITE/members/maries-bakery"
         }
     },
     "included": [

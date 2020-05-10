@@ -3,6 +3,11 @@
 
 The Komunitin API system is divided in several modules:
 
+## Accounting protocol
+The accounting protocol module features financial transactions and federation of nodes.
+
+See the [Accounting protocol Readme](accounting/README.md) for details and specification.
+
 ## Social API
 The Social API provides the endpoints related to the marketplace service in an exchange community beyond payments. This is details about people, buisinesses and exchange groups, offers and needs, posts, etc. The main goal of this module is to allow apps to discover and travel all this social information.
 
@@ -13,15 +18,10 @@ The Notifications API allow an end-user app or a federated server to subscribe f
 
 See the [Komunitin Notifications Readme](notifications/README.md) for details and specification.
 
-## Accounting protocol
-The accounting protocol module features financial transactions and federation of nodes.
-
-See the [Accounting protocol Readme](accounting/README.md) for details and specification.
-
 ## Authorization
 The authorization management (login, forgot password, etc) is out of the scope of the API, and will be provided by a third party Identity Access Management (IAM) system using the OpenID Connect protocol over OAuth2. For mobile and web apps, it is recommended to use the OAuth2 Authorization Code Flow with Proof Key for Code Exchange (PKCE). There open source IAM platforms such as [Keycloak](https://keycloak.org) as well as IAM-as-a-service providers.
 
-## Files
+## Media
 Binary files upload and download management is out of the scope of this API, and will be provided by a third party service. This way we can enable advanced features like upload and download resumes and effective caching on delivery. Files should be isolated in different pools depending on the exchange group.
 
 ## Federation
