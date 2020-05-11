@@ -5,9 +5,6 @@
         "attributes": {
             "code": "maries-bakery",
             "name": "Marie's Bakery",
-            "users": [
-                "https://auth.komunitin.org/users/123"
-            ],
             "account": "https://accounting.komunitin.org/EITE/accounts/EITE0005",
             "access": "group",
             "type": "business",
