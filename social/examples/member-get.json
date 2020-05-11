@@ -5,7 +5,9 @@
         "attributes": {
             "code": "maries-bakery",
             "name": "Marie's Bakery",
-            "users": ["https://auth.komunitin.org/users/123"],
+            "users": [
+                "https://auth.komunitin.org/users/123"
+            ],
             "account": "https://accounting.komunitin.org/EITE/accounts/EITE0005",
             "access": "group",
             "type": "business",
@@ -19,7 +21,10 @@
             },
             "location": {
                 "type": "Point",
-                "coordinates": [-109.44236755371094, -27.201510867989075]
+                "coordinates": [
+                    -109.44236755371094,
+                    -27.201510867989075
+                ]
             },
             "created": "2019-08-19T23:15:30.000Z",
             "updated": "2020-08-19T23:15:30.000Z"
@@ -27,8 +32,14 @@
         "relationships": {
             "contacts": {
                 "data": [
-                    {"type": "contacts", "id": "7ceb75eb-9da0-4746-bb61-a34e0be49112"},
-                    {"type": "contacts", "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb"}
+                    {
+                        "type": "contacts",
+                        "id": "7ceb75eb-9da0-4746-bb61-a34e0be49112"
+                    },
+                    {
+                        "type": "contacts",
+                        "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb"
+                    }
                 ]
             },
             "group": {
@@ -59,33 +70,29 @@
     },
     "included": [
         {
+            "type": "contacts",
+            "id": "7ceb75eb-9da0-4746-bb61-a34e0be49112",
+            "attributes": {
+                "type": "phone",
+                "name": "+34 666 77 88 99",
+                "created": "2019-08-19T23:15:30.000Z",
+                "updated": "2020-08-19T23:15:30.000Z"
+            },
             "links": {
                 "self": "https://komunitin.org/EITE/contacts/7ceb75eb-9da0-4746-bb61-a34e0be49112"
-            },
-            "data": {
-                "type": "contacts",
-                "id": "7ceb75eb-9da0-4746-bb61-a34e0be49112",
-                "attributes": {
-                    "type": "phone",
-                    "name": "+34 666 77 88 99",
-                    "created": "2019-08-19T23:15:30.000Z",
-                    "updated": "2020-08-19T23:15:30.000Z"
-                }
             }
         },
         {
+            "type": "contacts",
+            "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
+            "attributes": {
+                "type": "email",
+                "name": "exhange@easterisland.com",
+                "created": "2019-08-19T23:15:30.000Z",
+                "updated": "2020-08-19T23:15:30.000Z"
+            },
             "links": {
                 "self": "https://komunitin.org/EITE/contacts/193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb"
-            },
-            "data": {
-                "type": "contacts",
-                "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
-                "attributes": {
-                    "type": "email",
-                    "name": "exhange@easterisland.com",
-                    "created": "2019-08-19T23:15:30.000Z",
-                    "updated": "2020-08-19T23:15:30.000Z"
-                }
             }
         }
     ]

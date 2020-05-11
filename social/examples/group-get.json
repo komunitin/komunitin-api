@@ -5,7 +5,6 @@
         "attributes": {
             "code": "EITE",
             "name": "Easter Island Talent Exchange",
-            "admins": ["https://auth.komunitin.org/users/1"],
             "currency": "https://accounting.komunitin.org/EITE",
             "description": "<p>Here at <strong>Easter Island</strong> it makes a lot of sense to have a local currency because bla bla bla...",
             "image": "https://komunitin.org/files/EITE/c445714f-5a9f-410a-bd8e-1ffe20970c74.png",
@@ -14,7 +13,10 @@
             "location": {
                 "name": "Easter Island",
                 "type": "Point",
-                "coordinates": [-109.44236755371094, -27.201510867989075]
+                "coordinates": [
+                    -109.44236755371094,
+                    -27.201510867989075
+                ]
             },
             "created": "2011-08-19T23:15:30.000Z",
             "updated": "2020-08-19T23:15:30.000Z"
@@ -79,33 +81,29 @@
     },
     "included": [
         {
+            "type": "contacts",
+            "id": "7ceb75eb-9da0-4746-bb61-a34e0be49112",
+            "attributes": {
+                "type": "phone",
+                "name": "+34 666 77 88 99",
+                "created": "2011-08-19T23:15:30.000Z",
+                "updated": "2020-08-19T23:15:30.000Z"
+            },
             "links": {
                 "self": "https://komunitin.org/EITE/contacts/7ceb75eb-9da0-4746-bb61-a34e0be49112"
-            },
-            "data": {
-                "type": "contacts",
-                "id": "7ceb75eb-9da0-4746-bb61-a34e0be49112",
-                "attributes": {
-                    "type": "phone",
-                    "name": "+34 666 77 88 99",
-                    "created": "2011-08-19T23:15:30.000Z",
-                    "updated": "2020-08-19T23:15:30.000Z"
-                }
             }
         },
         {
+            "type": "contacts",
+            "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
+            "attributes": {
+                "type": "email",
+                "name": "exhange@easterisland.com",
+                "created": "2011-08-19T23:15:30.000Z",
+                "updated": "2020-08-19T23:15:30.000Z"
+            },
             "links": {
                 "self": "https://komunitin.org/EITE/contacts/193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb"
-            },
-            "data": {
-                "type": "contacts",
-                "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
-                "attributes": {
-                    "type": "email",
-                    "name": "exhange@easterisland.com",
-                    "created": "2011-08-19T23:15:30.000Z",
-                    "updated": "2020-08-19T23:15:30.000Z"
-                }
             }
         }
     ]
