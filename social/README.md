@@ -42,10 +42,11 @@ Where `field` is one of the resource attributes or relationships or the special 
 
 `operation` is one of:
  - `eq`, `ne`: Equal, not equal. The equal operation may be omitted.
- - `lt`, `gt`, `le`, `ge`: Less than, greater than, less than or equal, greater than or equal.
- - `includes`: Array includes the value.
+ - `lt`, `gt`, `le`, `ge`: Less than, greater than, less than or equal, greater than or equal. For numeric or date values.
 
-And `value` is the value to match. In case of relationships, it is the resource code. There is the special value `self` which refers to the currently logged-in user, identified by the authorization code.
+And `value` is the value to match. In case of relationships, it is the resource code.
+
+*This filtering strategy is not standardized and subject to change.*
 
 ## Relation to other APIs
 
@@ -72,6 +73,9 @@ Special administrative rights must be held in order to change group details.
 
 ### Members
 Members are the subject of this API. They need not to be physical people, but can be businesses, non-profit organizations, etc. They have profile information, contact points and may create offers and needs. Members have a link to their corresponding account in the Accounting API.
+
+### Users
+Users are objects representing the login credentials. A user is linked to one or more members, which carry the actual profile information. Users are the link between the authentication service and this API and allow to manage several members from a single log in and also sharing members accross diferent users without having to share the credentials.
 
 ### Contacts
 Represent a contact point of a member or an exchange group. It may be a telephone number, email address, WhatsApp or Telegram contacts. A contact is always attached to either a member or a group. Contact resources are included by default in they owner resources, and can't be directly listed, so they act effectively as sub-resources of group and member resources.
