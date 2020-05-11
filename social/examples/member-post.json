@@ -1,0 +1,24 @@
+{
+    "data": {
+        "type": "members",
+        "attributes": {
+            "code": "maries-bakery",
+            "name": "Marie's Bakery",
+            "account": "https://accounting.komunitin.org/EITE/accounts/EITE0005",
+            "access": "group",
+            "type": "business",
+            "description": "My mother Marie opened the first bakery in the town 50 years ago. Since then...",
+            "image": "https://komunitin.org/files/EITE/68cbbec3-df9d-4af0-b333-07bb4c404a24.jpeg",
+            "address": {
+                "streetAddress": "7 S. Broadway",
+                "addressLocality": "Denver",
+                "postalCode": "80209",
+                "addressRegion": "CO"
+            },
+            "location": {
+                "type": "Point",
+                "coordinates": [-109.44236755371094, -27.201510867989075]
+            }
+        },
+    }
+}

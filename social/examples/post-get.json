@@ -1,0 +1,24 @@
+{
+    "data": {
+        "type": "message",
+        "id": "8f74060d-4b9f-4972-96f0-d7571470a10b",
+        "attributes": {
+            "code": "2020-08-19-2",
+            "content": "<p>Hi guys! We're sorry but tomorrow afternoon we've to close the exchange point because Bob got sick.</p><p>Remember that thursday we'll open at 10AM in the morning!</p>",
+            "images": [],
+            "access": "public",
+            "created": "2020-08-19T23:15:30.000Z",
+            "updated": "2020-08-19T23:15:30.000Z"
+        },
+        "relationships": {
+            "author": {
+                "links": {
+                    "related": "https://komunitin.org/EITE/EITE0000"
+                }
+            }
+        },
+        "links": {
+            "self": "https://komunitin.org/EITE/posts/2020-08-19-2"
+        }
+    }
+}
