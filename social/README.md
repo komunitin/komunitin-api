@@ -48,6 +48,9 @@ And `value` is the value to match. In case of relationships, it is the resource 
 
 *This filtering strategy is not standardized and subject to change.*
 
+### Pagination
+Pagination is available in all endpoints that return a collection following the [Cursor Pagination](https://jsonapi.org/profiles/ethanresnick/cursor-pagination/) JSON:API profile.
+
 ## Relation to other APIs
 
 ### Authorization

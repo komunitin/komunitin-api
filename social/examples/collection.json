@@ -2,10 +2,10 @@
     "data": [
     ],
     "links": {
-        "self": "https://komunitin.org/EITE/{type}?page[cursor]={id}",
+        "self": "https://komunitin.org/EITE/{type}",
         "first": "https://komunitin.org/EITE/{type}",
-        "prev": "https://komunitin.org/EITE/{type}?page[cursor]={id}",
-        "next": "https://komunitin.org/EITE/{type}?page[cursor]={id}"
+        "prev": null,
+        "next": "https://komunitin.org/EITE/{type}?page[after]={cursor}"
     },
     "meta": {
         "count": 1234
