@@ -1,1653 +1,891 @@
 openapi: 3.0.0
+# Added by API Auto Mocking Plugin
 info:
+  version: "0.0.1"
   title: Komunitin Social API
-  description: |-
+  description: >-
     REST API featuring marketplace services for Exchange Communities.
-
+    
+    
     **This is still a work in progress.**
-  version: 0.0.1
-externalDocs:
-  description: See the Komunitin Social API documentation
-  url: https://github.com/komunitin/komunitin-api/blob/master/social/README.md
 servers:
-- url: https://virtserver.swaggerhub.com/estevebadia/komunitin-api/1.0.0
-  description: SwaggerHub API Auto Mocking
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/estevebadia/komunitin-api/1.0.0
+externalDocs:
+  url: "https://github.com/komunitin/komunitin-api/blob/master/social/README.md"
+  description: "See the Komunitin Social API documentation"
+
 security:
-- accessCode: []
+  - accessCode: []
 tags:
-- name: Users
-  description: Manage users
-- name: Groups
-  description: Manage groups
-- name: Members
-  description: Manage members
-- name: Contacts
-  description: Manage group and member contacts
-- name: Offers
-  description: Manage offers
-- name: Needs
-  description: Manage needs
-- name: Categories
-  description: Manage categories for offers and needs
-- name: Posts
-  description: Manage posts
+  - name: Users
+    description: Manage users
+  - name: Groups
+    description: Manage groups
+  - name: Members
+    description: Manage members
+  - name: Contacts
+    description: Manage group and member contacts
+  - name: Offers
+    description: Manage offers
+  - name: Needs
+    description: Manage needs
+  - name: Categories
+    description: Manage categories for offers and needs 
+  - name: Posts
+    description: Manage posts
 paths:
   /users/me:
+    parameters:
+      - $ref: "#/components/parameters/fields"
+      - $ref: "#/components/parameters/include"
     get:
-      tags:
-      - Users
       summary: Get logged in user
-      description: Return the user resource for the currently logged in user, identified
+      description: >-
+        Return the user resource for the currently logged in user, identified
         by the Authorization token.
-      parameters:
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 users-get:
-                  $ref: '#/components/examples/user-get'
-  /groups:
-    get:
+                  $ref: "#/components/examples/user-get"
       tags:
-      - Groups
+        - Users
+  
+  /groups:
+    parameters:  
+      - $ref: "#/components/parameters/fields"
+      - $ref: "#/components/parameters/include"
+      
+    get:
       summary: Get groups collection
-      description: |-
-        Return the collection of groups in this server. The results are paginated using the `links` section of the response. The caller may use the field `sort` in conjuntion with the field `geo-position` in order to get the groups closer to the caller position. For example:
-
+      description: >-
+        Return the collection of groups in this server. The results are paginated
+        using the `links` section of the response. The caller may use the field
+        `sort` in conjuntion with the field `geo-position` in order to get the groups
+        closer to the caller position. For example:
+        
         `GET /groups?sort=location&geo-position=12.33,14.55 HTTP/1.1`
+        
+        It is recommended to fetch the related `contacts` using the `include`
+        field.
+        
+        `currency` has the same structure as a relationship but it is an attribute
+        since it belongs to the external Accounting API. In particular it can't be
+        included in the response.
       parameters:
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: sort
-        in: query
-        description: '[See jsonapi.org Sorting](https://jsonapi.org/format/#fetching-sorting)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-        example: location,title
-      - name: filter[{type}]
-        in: query
-        description: '[See jsonapi.org Filtering](https://jsonapi.org/format/#fetching-filtering)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
-      - name: geo-position
-        in: query
-        description: Position from where to sort the location parameter, in [geo URI](https://tools.ietf.org/rfc/rfc5870)
-          encoding.
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
-          format: geo
-        example: 22.54,33.45
+        - $ref: "#/components/parameters/sort"
+        - $ref: "#/components/parameters/include"
+        - $ref: "#/components/parameters/filter"
+        - $ref: "#/components/parameters/geo-position"
       responses:
-        "200":
+        '200':
           description: OK
-          content:
-            application/vnd.api+json:
+          content: 
+            "application/vnd.api+json":
               examples:
                 collection:
-                  $ref: '#/components/examples/collection'
-    post:
+                  $ref: "#/components/examples/collection"
+          
       tags:
-      - Groups
+        - Groups
+    post:
       summary: Create new group
-      description: Create a new group. The group may not be immediately available,
-        but wait for administration approval.
-      parameters:
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
+      description: >-
+        Create a new group. The group may not be immediately available, but wait for administration approval.
       requestBody:
         content:
-          application/vnd.api+json:
+          "application/vnd.api+json":
             schema: {}
             examples:
               group-post:
-                $ref: '#/components/examples/group-post'
+                $ref: "#/components/examples/group-post"
       responses:
-        "201":
+        '201':
           description: Created
-          content:
-            application/vnd.api+json:
+          content: 
+            "application/vnd.api+json":
               examples:
                 group-get:
-                  $ref: '#/components/examples/group-get'
+                  $ref: "#/components/examples/group-get"
+      tags:
+        - Groups
   /{groupCode}:
+    parameters:
+      - $ref: "#/components/parameters/group"
     get:
-      tags:
-      - Groups
       summary: Get group details
-      description: Returns the group object and links to the related collections.
-        Includes related contacts by default.
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
+      description: >-
+        Returns the group object and links to the related collections.
+        
+        It is recommended to fetch the related `contacts` using the `include`
+        field.
+        
+        `currency` has the same structure as a relationship but it is an attribute
+        since it belongs to the external Accounting API. In particular it can't be
+        included in the response.
+        
+      parameters: 
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
-              examples:
-                group:
-                  $ref: '#/components/examples/group-get'
-    delete:
+            "application/vnd.api+json":
+                examples:
+                  group:
+                    $ref: "#/components/examples/group-get"
       tags:
-      - Groups
-      summary: Delete group
-      description: Delete a group
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/vnd.api+json:
-              schema: {}
+        - Groups
     patch:
-      tags:
-      - Groups
       summary: Edit group details
-      description: Change some or all group fields.
       parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
+      description: >-
+        Change some or all group fields.
       requestBody:
         content:
-          application/vnd.api+json:
+          "application/vnd.api+json":
             schema: {}
             examples:
               group-patch:
-                $ref: '#/components/examples/group-patch'
+                $ref: "#/components/examples/group-patch"
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 group:
-                  $ref: '#/components/examples/group-get'
-  /{groupCode}/offers:
-    get:
+                  $ref: "#/components/examples/group-get"
       tags:
-      - Offers
-      summary: Get offers collection
-      description: Return a paginated list of offers that belong to the given group.
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: sort
-        in: query
-        description: '[See jsonapi.org Sorting](https://jsonapi.org/format/#fetching-sorting)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-        example: location,title
-      - name: filter[{type}]
-        in: query
-        description: '[See jsonapi.org Filtering](https://jsonapi.org/format/#fetching-filtering)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
+        - Groups
+    delete:
+      summary: Delete group
+      description: >-
+        Delete a group
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
+              schema: {}
+      tags:
+        - Groups
+  /{groupCode}/offers:
+    parameters:
+      - $ref: "#/components/parameters/group"
+      - $ref: "#/components/parameters/fields"
+      - $ref: "#/components/parameters/include"
+    get:
+      summary: Get offers collection
+      description: >-
+        Return a paginated list of offers that belong to the given group.
+      parameters:
+        - $ref: "#/components/parameters/sort"
+        - $ref: "#/components/parameters/filter"
+      responses:
+        '200':
+          description: OK
+          content: 
+            "application/vnd.api+json":
               examples:
                 collection:
-                  $ref: '#/components/examples/collection'
-    post:
+                  $ref: "#/components/examples/collection"
       tags:
-      - Offers
+        - Offers
+    post:
       summary: Create new offer
-      description: Create a new offer object in this group.
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
+      description: >-
+        Create a new offer object in this group.
       requestBody:
         content:
-          application/vnd.api+json:
+          "application/vnd.api+json":
             schema: {}
             examples:
               offer-post:
-                $ref: '#/components/examples/offer-post'
+                $ref: "#/components/examples/offer-post"
       responses:
-        "201":
+        '201':
           description: Created
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 offer-response:
-                  $ref: '#/components/examples/offer-get'
-  /{groupCode}/offers/{offerCode}:
-    get:
+                  $ref: "#/components/examples/offer-get"
       tags:
-      - Offers
+        - Offers
+  /{groupCode}/offers/{offerCode}:
+    parameters:
+      - $ref: "#/components/parameters/group"
+      - $ref: "#/components/parameters/offer"
+    get:
       summary: Get offer details
       parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: offerCode
-        in: path
-        description: url-safe human-readable lowercase string identifying the offer.
-          This identifier is unique only within the group and automatically derived
-          from the offer title.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
-              examples:
-                offer-response:
-                  $ref: '#/components/examples/offer-get'
-    delete:
+            "application/vnd.api+json":
+                examples:
+                  offer-response:
+                    $ref: "#/components/examples/offer-get"
       tags:
-      - Offers
-      summary: Delete offer
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: offerCode
-        in: path
-        description: url-safe human-readable lowercase string identifying the offer.
-          This identifier is unique only within the group and automatically derived
-          from the offer title.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/vnd.api+json:
-              schema: {}
+        - Offers
     patch:
-      tags:
-      - Offers
       summary: Edit offer details
       parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: offerCode
-        in: path
-        description: url-safe human-readable lowercase string identifying the offer.
-          This identifier is unique only within the group and automatically derived
-          from the offer title.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
       requestBody:
         content:
-          application/vnd.api+json:
+          "application/vnd.api+json":
             schema: {}
             examples:
               offer-patch:
-                $ref: '#/components/examples/offer-patch'
+                $ref: "#/components/examples/offer-patch"
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 offer-get:
-                  $ref: '#/components/examples/offer-get'
-  /{groupCode}/members:
-    get:
+                  $ref: "#/components/examples/offer-get"
       tags:
-      - Members
-      summary: Get members collection
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: sort
-        in: query
-        description: '[See jsonapi.org Sorting](https://jsonapi.org/format/#fetching-sorting)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-        example: location,title
-      - name: filter[{type}]
-        in: query
-        description: '[See jsonapi.org Filtering](https://jsonapi.org/format/#fetching-filtering)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: string
+        - Offers
+    delete:
+      summary: Delete offer
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
+              schema: {}
+      tags:
+        - Offers
+  /{groupCode}/members:
+    parameters:
+      - $ref: "#/components/parameters/group"
+      - $ref: "#/components/parameters/fields"
+      - $ref: "#/components/parameters/include"
+    get:
+      summary: Get members collection
+      description: >-
+        Return the collection of members in a group.
+      
+        
+        `account` has the same structure as a relationship but it is an attribute
+        since it belongs to the external Accounting API. In particular it can't be
+        included in the response.
+
+      parameters:
+        - $ref: "#/components/parameters/sort"
+        - $ref: "#/components/parameters/filter"
+      responses:
+        '200':
+          description: OK
+          content: 
+            "application/vnd.api+json":
               examples:
                 collection:
-                  $ref: '#/components/examples/collection'
-    post:
+                  $ref: "#/components/examples/collection"
       tags:
-      - Members
+        - Members
+    post:
       summary: Create new member
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
       requestBody:
         content:
-          application/vnd.api+json:
+          "application/vnd.api+json":
             schema: {}
             examples:
               member-post:
-                $ref: '#/components/examples/member-post'
+                $ref: "#/components/examples/member-post"
       responses:
-        "201":
+        '201':
           description: Created
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 member-get:
-                  $ref: '#/components/examples/member-get'
+                  $ref: "#/components/examples/member-get"
+      tags:
+        - Members
   /{groupCode}/members/{memberCode}:
+    parameters:
+      - $ref: "#/components/parameters/group"
+      - $ref: "#/components/parameters/member"
     get:
-      tags:
-      - Members
       summary: Get a member object
+      description: >-
+        Return a member resource object.
+      
+        `account` has the same structure as a relationship but it is an attribute
+        since it belongs to the external Accounting API. In particular it can't be
+        included in the response.
       parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: memberCode
-        in: path
-        description: 4 letter identifier of the group plus 4 number identifier of
-          the member.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 member-get:
-                  $ref: '#/components/examples/member-get'
-    delete:
+                  $ref: "#/components/examples/member-get"
       tags:
-      - Members
-      summary: Delete member
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: memberCode
-        in: path
-        description: 4 letter identifier of the group plus 4 number identifier of
-          the member.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/vnd.api+json:
-              schema: {}
+        - Members
     patch:
-      tags:
-      - Members
       summary: Edit member profile
       parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: memberCode
-        in: path
-        description: 4 letter identifier of the group plus 4 number identifier of
-          the member.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
       requestBody:
         content:
-          application/vnd.api+json:
+          "application/vnd.api+json":
             schema: {}
             examples:
               member-patch:
-                $ref: '#/components/examples/member-patch'
+                $ref: "#/components/examples/member-patch"
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 member-get:
-                  $ref: '#/components/examples/member-get'
-  /{groupCode}/needs:
-    get:
+                  $ref: "#/components/examples/member-get"
       tags:
-      - Needs
-      summary: Get needs collection
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - Members
+    delete:
+      summary: Delete member
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
+              schema: {}
+      tags:
+        - Members
+  /{groupCode}/needs:
+    parameters:
+      - $ref: "#/components/parameters/group"
+    get:
+      summary: Get needs collection
+      responses:
+        '200':
+          description: OK
+          content: 
+            "application/vnd.api+json":
               examples:
                 collection:
-                  $ref: '#/components/examples/collection'
-    post:
+                  $ref: "#/components/examples/collection"
       tags:
-      - Needs
+        - Needs
+    post:
       summary: Create new need
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
       requestBody:
         content:
-          application/vnd.api+json:
+          "application/vnd.api+json":
             schema: {}
             examples:
               need-post:
-                $ref: '#/components/examples/need-post'
+                $ref: "#/components/examples/need-post"
       responses:
-        "201":
+        '201':
           description: Created
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 need-get:
-                  $ref: '#/components/examples/need-get'
-  /{groupCode}/needs/{needCode}:
-    get:
+                  $ref: "#/components/examples/need-get"
       tags:
-      - Needs
+        - Needs
+  /{groupCode}/needs/{needCode}:
+    parameters:
+      - $ref: "#/components/parameters/group"
+      - $ref: "#/components/parameters/need"
+    get:
       summary: Get need object
       parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: needCode
-        in: path
-        description: url-safe human-readable lowercase string identifying the need.
-          This identifier is unique only within the group and automatically derived
-          from the need fields.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 need-get:
-                  $ref: '#/components/examples/need-get'
-    delete:
+                  $ref: "#/components/examples/need-get"
       tags:
-      - Needs
-      summary: Delete need
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: needCode
-        in: path
-        description: url-safe human-readable lowercase string identifying the need.
-          This identifier is unique only within the group and automatically derived
-          from the need fields.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/vnd.api+json:
-              schema: {}
+        - Needs
     patch:
-      tags:
-      - Needs
       summary: Edit need object
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: needCode
-        in: path
-        description: url-safe human-readable lowercase string identifying the need.
-          This identifier is unique only within the group and automatically derived
-          from the need fields.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
+      parameters:  
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
       requestBody:
         content:
-          application/vnd.api+json:
+          "application/vnd.api+json":
             schema: {}
             examples:
               need-patch:
-                $ref: '#/components/examples/need-patch'
+                $ref: "#/components/examples/need-patch"
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 need-get:
-                  $ref: '#/components/examples/need-get'
+                  $ref: "#/components/examples/need-get"
+      tags:
+        - Needs
+    delete:
+      summary: Delete need
+      responses:
+        '200':
+          description: OK
+          content:
+            "application/vnd.api+json":
+              schema: {}
+      tags:
+        - Needs
   /contacts:
     post:
-      tags:
-      - Contacts
       summary: Create contact
       requestBody:
         content:
-          application/vnd.api+json:
+          "application/vnd.api+json":
             schema: {}
             examples:
               contact-post:
-                $ref: '#/components/examples/contact-post'
+                $ref: "#/components/examples/contact-post"
       responses:
-        "201":
+        '201':
           description: Created
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 contact-get:
-                  $ref: '#/components/examples/contact-get'
+                  $ref: "#/components/examples/contact-get" 
+      tags:
+        - Contacts
   /contacts/{contactId}:
-    delete:
-      tags:
-      - Contacts
-      summary: Delete contact
-      parameters:
-      - name: contactId
-        in: path
-        description: contact UUID
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/vnd.api+json:
-              schema: {}
+    parameters:
+      - $ref: "#/components/parameters/contact"
     patch:
-      tags:
-      - Contacts
       summary: Edit contact
-      parameters:
-      - name: contactId
-        in: path
-        description: contact UUID
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
       requestBody:
         content:
-          application/vnd.api+json:
-            schema: {}
-            examples:
-              contact-patch:
-                $ref: '#/components/examples/contact-patch'
-      responses:
-        "200":
-          description: OK
-          content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
+              schema: {}
               examples:
                 contact-patch:
-                  $ref: '#/components/examples/contact-patch'
-  /{groupCode}/posts:
-    get:
-      tags:
-      - Posts
-      summary: Get posts collection
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+                  $ref: "#/components/examples/contact-patch"
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
+              examples:
+                contact-patch:
+                  $ref: "#/components/examples/contact-patch" 
+      tags:
+        - Contacts
+    delete:
+      summary: Delete contact
+      responses:
+        '200':
+          description: OK
+          content:
+            "application/vnd.api+json":
+              schema: {}
+      tags:
+        - Contacts
+  /{groupCode}/posts:
+    parameters:
+      - $ref: "#/components/parameters/group"
+    get:
+      summary: Get posts collection
+      responses:
+        '200':
+          description: OK
+          content: 
+            "application/vnd.api+json":
               examples:
                 collection:
-                  $ref: '#/components/examples/collection'
-    post:
+                  $ref: "#/components/examples/collection"
       tags:
-      - Posts
+        - Posts
+    post:
       summary: Create new post
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
       requestBody:
         content:
-          application/vnd.api+json:
+          "application/vnd.api+json":
             schema: {}
             examples:
               post-post:
-                $ref: '#/components/examples/post-post'
+                $ref: "#/components/examples/post-post"
       responses:
-        "201":
+        '201':
           description: Created
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 post-get:
-                  $ref: '#/components/examples/post-get'
-  /{groupCode}/posts/{postCode}:
-    get:
+                  $ref: "#/components/examples/post-get"
       tags:
-      - Posts
+        - Posts
+  /{groupCode}/posts/{postCode}:
+    parameters:
+      - $ref: "#/components/parameters/group"
+      - $ref: "#/components/parameters/post"
+    get:
       summary: Get post object
       parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: postCode
-        in: path
-        description: url-safe human-readable string identifying the post. This identifier
-          is unique only within the group and automatically derived from the post
-          fields.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 post-get:
-                  $ref: '#/components/examples/post-get'
-    delete:
+                  $ref: "#/components/examples/post-get"
       tags:
-      - Posts
-      summary: Delete post
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: postCode
-        in: path
-        description: url-safe human-readable string identifying the post. This identifier
-          is unique only within the group and automatically derived from the post
-          fields.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/vnd.api+json:
-              schema: {}
+        - Posts
     patch:
-      tags:
-      - Posts
       summary: Edit post object
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: postCode
-        in: path
-        description: url-safe human-readable string identifying the post. This identifier
-          is unique only within the group and automatically derived from the post
-          fields.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
+      parameters:  
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
       requestBody:
         content:
-          application/vnd.api+json:
+          "application/vnd.api+json":
             schema: {}
             examples:
               post-patch:
-                $ref: '#/components/examples/post-patch'
+                $ref: "#/components/examples/post-patch"
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 post-get:
-                  $ref: '#/components/examples/post-get'
-  /{groupCode}/categories:
-    get:
+                  $ref: "#/components/examples/post-get"
       tags:
-      - Categories
-      summary: Get categories collection
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
+        - Posts
+    delete:
+      summary: Delete post
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
+              schema: {}
+      tags:
+        - Posts
+
+  /{groupCode}/categories:
+    parameters:
+      - $ref: "#/components/parameters/group"
+    get:
+      summary: Get categories collection
+      responses:
+        '200':
+          description: OK
+          content: 
+            "application/vnd.api+json":
               examples:
                 collection:
-                  $ref: '#/components/examples/collection'
-    post:
+                  $ref: "#/components/examples/collection"
       tags:
-      - Categories
+        - Categories
+    post:
       summary: Create new category
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
       requestBody:
         content:
-          application/vnd.api+json:
+          "application/vnd.api+json":
             schema: {}
             examples:
               category-post:
-                $ref: '#/components/examples/category-post'
+                $ref: "#/components/examples/category-post"
       responses:
-        "201":
+        '201':
           description: Created
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 category-get:
-                  $ref: '#/components/examples/category-get'
-  /{groupCode}/categories/{categoryCode}:
-    get:
+                  $ref: "#/components/examples/category-get"
       tags:
-      - Categories
+        - Categories
+  /{groupCode}/categories/{categoryCode}:
+    parameters:
+      - $ref: "#/components/parameters/group"
+      - $ref: "#/components/parameters/category"
+    get:
       summary: Get category object
       parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: categoryCode
-        in: path
-        description: url-safe human-readable string identifying the category. This
-          identifier is unique only within the group and automatically derived from
-          the category title.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 category-get:
-                  $ref: '#/components/examples/category-get'
-    delete:
+                  $ref: "#/components/examples/category-get"
       tags:
-      - Categories
-      summary: Delete category
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: categoryCode
-        in: path
-        description: url-safe human-readable string identifying the category. This
-          identifier is unique only within the group and automatically derived from
-          the category title.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-          content:
-            application/vnd.api+json:
-              schema: {}
+        - Categories
     patch:
-      tags:
-      - Categories
       summary: Edit category object
-      parameters:
-      - name: groupCode
-        in: path
-        description: 4 letter identifier of the group
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: categoryCode
-        in: path
-        description: url-safe human-readable string identifying the category. This
-          identifier is unique only within the group and automatically derived from
-          the category title.
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-      - name: fields[{type}]
-        in: query
-        description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
-      - name: include
-        in: query
-        description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-        required: false
-        style: form
-        explode: true
-        schema:
-          type: array
-          items:
-            type: string
+      parameters:  
+        - $ref: "#/components/parameters/fields"
+        - $ref: "#/components/parameters/include"
       requestBody:
         content:
-          application/vnd.api+json:
+          "application/vnd.api+json":
             schema: {}
             examples:
               category-patch:
-                $ref: '#/components/examples/category-patch'
+                $ref: "#/components/examples/category-patch"
       responses:
-        "200":
+        '200':
           description: OK
           content:
-            application/vnd.api+json:
+            "application/vnd.api+json":
               examples:
                 category-get:
-                  $ref: '#/components/examples/category-get'
+                  $ref: "#/components/examples/category-get"
+      tags:
+        - Categories
+    delete:
+      summary: Delete category
+      responses:
+        '200':
+          description: OK
+          content:
+            "application/vnd.api+json":
+              schema: {}
+      tags:
+        - Categories
+
+
 components:
-  schemas: {}
   parameters:
     fields:
-      name: fields[{type}]
       in: query
-      description: '[See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)'
-      required: false
-      style: form
-      explode: true
+      name: "fields[{type}]"
+      description: >-
+        [See jsonapi.org Sparse Fieldsets](https://jsonapi.org/format/#fetching-sparse-fieldsets)
       schema:
         type: array
         items:
           type: string
     sort:
-      name: sort
       in: query
-      description: '[See jsonapi.org Sorting](https://jsonapi.org/format/#fetching-sorting)'
-      required: false
-      style: form
-      explode: true
+      name: "sort"
+      description: >-
+        [See jsonapi.org Sorting](https://jsonapi.org/format/#fetching-sorting)
       schema:
         type: array
         items:
           type: string
       example: location,title
     geo-position:
-      name: geo-position
       in: query
-      description: Position from where to sort the location parameter, in [geo URI](https://tools.ietf.org/rfc/rfc5870)
-        encoding.
-      required: false
-      style: form
-      explode: true
+      name: "geo-position"
+      description: >-
+        Position from where to sort the location parameter, in [geo URI](https://tools.ietf.org/rfc/rfc5870) encoding.
       schema:
         type: string
         format: geo
       example: 22.54,33.45
     filter:
-      name: filter[{type}]
       in: query
-      description: '[See jsonapi.org Filtering](https://jsonapi.org/format/#fetching-filtering)'
-      required: false
-      style: form
-      explode: true
+      name: "filter[{type}]"
+      description: >-
+        [See jsonapi.org Filtering](https://jsonapi.org/format/#fetching-filtering)
       schema:
         type: string
     include:
-      name: include
       in: query
-      description: '[See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)'
-      required: false
-      style: form
-      explode: true
+      name: "include"
+      description: >-
+        [See jsonapi.org Inclusion of Related Resources](https://jsonapi.org/format/#fetching-includes)
       schema:
         type: array
         items:
           type: string
     group:
       name: groupCode
+      description: >-
+        4 letter identifier of the group
       in: path
-      description: 4 letter identifier of the group
       required: true
-      style: simple
-      explode: false
       schema:
         type: string
     member:
       name: memberCode
+      description: >-
+        4 letter identifier of the group plus 4 number identifier of the member.
       in: path
-      description: 4 letter identifier of the group plus 4 number identifier of the
-        member.
       required: true
-      style: simple
-      explode: false
       schema:
         type: string
     offer:
       name: offerCode
+      description: >-
+        url-safe human-readable lowercase string identifying the offer. This identifier is unique only within the group and automatically derived from the offer title.
       in: path
-      description: url-safe human-readable lowercase string identifying the offer.
-        This identifier is unique only within the group and automatically derived
-        from the offer title.
       required: true
-      style: simple
-      explode: false
       schema:
         type: string
     need:
       name: needCode
+      description: >-
+        url-safe human-readable lowercase string identifying the need. This identifier is unique only within the group and automatically derived from the need fields.
       in: path
-      description: url-safe human-readable lowercase string identifying the need.
-        This identifier is unique only within the group and automatically derived
-        from the need fields.
       required: true
-      style: simple
-      explode: false
       schema:
         type: string
     contact:
       name: contactId
+      description: >-
+        contact UUID
       in: path
-      description: contact UUID
       required: true
-      style: simple
-      explode: false
       schema:
         type: string
     post:
       name: postCode
+      description: >-
+        url-safe human-readable string identifying the post. This identifier is unique only within the group and automatically derived from the post fields.
       in: path
-      description: url-safe human-readable string identifying the post. This identifier
-        is unique only within the group and automatically derived from the post fields.
       required: true
-      style: simple
-      explode: false
       schema:
         type: string
     category:
       name: categoryCode
+      description: >-
+        url-safe human-readable string identifying the category. This identifier is unique only within the group and automatically derived from the category title.
       in: path
-      description: url-safe human-readable string identifying the category. This identifier
-        is unique only within the group and automatically derived from the category
-        title.
       required: true
-      style: simple
-      explode: false
       schema:
         type: string
-  examples:
-    user-get:
-      summary: Get user
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/user-get.json
-    group-get:
-      summary: Get group
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/group-get.json
-    group-post:
-      summary: Create group payload
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/group-post.json
-    group-patch:
-      summary: Update group
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/group-patch.json
-    member-get:
-      summary: Get member
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/member-get.json
-    member-post:
-      summary: Create member
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/member-post.json
-    member-patch:
-      summary: Update member
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/member-patch.json
-    category-get:
-      summary: Get category
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/category-get.json
-    category-post:
-      summary: Create category
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/category-post.json
-    category-patch:
-      summary: Update category
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/category-patch.json
-    offer-get:
-      summary: Get offer
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/offer-get.json
-    offer-post:
-      summary: Create offer
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/offer-post.json
-    offer-patch:
-      summary: Update offer
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/offer-patch.json
-    need-get:
-      summary: Get need
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/need-get.json
-    need-post:
-      summary: Create need
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/need-post.json
-    need-patch:
-      summary: Update need
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/need-patch.json
-    contact-get:
-      summary: Get contact
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/contact-get.json
-    contact-post:
-      summary: Create contact
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/contact-post.json
-    contact-patch:
-      summary: Update contact
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/contact-patch.json
-    post-get:
-      summary: Get post
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/post-get.json
-    post-post:
-      summary: Create post
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/post-post.json
-    post-patch:
-      summary: Update need
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/post-patch.json
-    collection:
-      summary: Generic collection
-      value:
-        $ref: https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/collection.json
+                  
   securitySchemes:
     accessCode:
       type: oauth2
       flows:
         authorizationCode:
-          authorizationUrl: http://example.com/oauth/auth
-          tokenUrl: http://example.com/oauth/token
+          authorizationUrl: 'http://example.com/oauth/auth'
+          tokenUrl: 'http://example.com/oauth/token'
           scopes: {}
+  examples:
+    user-get:
+      summary: "Get user"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/user-get.json"
+    group-get:
+      summary: "Get group"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/group-get.json"
+    group-post:
+      summary: "Create group payload"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/group-post.json"
+    group-patch:
+      summary: "Update group"
+      value: 
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/group-patch.json"
+    member-get:
+      summary: "Get member"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/member-get.json"
+    member-post:
+      summary: "Create member"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/member-post.json"
+    member-patch:
+      summary: "Update member"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/member-patch.json"
+    category-get:
+      summary: "Get category"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/category-get.json"
+    category-post:
+      summary: "Create category"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/category-post.json"
+    category-patch:
+      summary: "Update category"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/category-patch.json"
+    offer-get:
+      summary: "Get offer"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/offer-get.json"
+    offer-post:
+      summary: "Create offer"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/offer-post.json"
+    offer-patch:
+      summary: "Update offer"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/offer-patch.json"
+    need-get:
+      summary: "Get need"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/need-get.json"
+    need-post:
+      summary: "Create need"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/need-post.json"
+    need-patch:
+      summary: "Update need"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/need-patch.json"
+    contact-get:
+      summary: "Get contact"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/contact-get.json"
+    contact-post:
+      summary: "Create contact"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/contact-post.json"
+    contact-patch:
+      summary: "Update contact"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/contact-patch.json"
+    post-get:
+      summary: "Get post"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/post-get.json"
+    post-post:
+      summary: "Create post"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/post-post.json"
+    post-patch:
+      summary: "Update need"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/post-patch.json"
+    collection:
+      summary: "Generic collection"
+      value:
+        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/collection.json"
