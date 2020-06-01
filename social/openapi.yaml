@@ -75,7 +75,7 @@ paths:
         
         `currency` has the same structure as a relationship but it is an attribute
         since it belongs to the external Accounting API. In particular it can't be
-        included in the request.
+        included in the response.
       parameters:
         - $ref: "#/components/parameters/sort"
         - $ref: "#/components/parameters/include"
@@ -126,7 +126,7 @@ paths:
         
         `currency` has the same structure as a relationship but it is an attribute
         since it belongs to the external Accounting API. In particular it can't be
-        included in the request.
+        included in the response.
         
       parameters: 
         - $ref: "#/components/parameters/fields"
@@ -284,7 +284,7 @@ paths:
         
         `account` has the same structure as a relationship but it is an attribute
         since it belongs to the external Accounting API. In particular it can't be
-        included in the request.
+        included in the response.
 
       parameters:
         - $ref: "#/components/parameters/sort"
@@ -329,7 +329,7 @@ paths:
       
         `account` has the same structure as a relationship but it is an attribute
         since it belongs to the external Accounting API. In particular it can't be
-        included in the request.
+        included in the response.
       parameters:
         - $ref: "#/components/parameters/fields"
         - $ref: "#/components/parameters/include"
