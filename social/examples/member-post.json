@@ -4,7 +4,6 @@
         "attributes": {
             "code": "maries-bakery",
             "name": "Marie's Bakery",
-            "account": "https://accounting.komunitin.org/EITE/accounts/EITE0005",
             "access": "group",
             "type": "business",
             "description": "My mother Marie opened the first bakery in the town 50 years ago. Since then...",
@@ -18,7 +17,16 @@
             "location": {
                 "type": "Point",
                 "coordinates": [-109.44236755371094, -27.201510867989075]
+            },
+            "account": {
+                "links": {
+                    "related": "https://accounting.komunitin.org/EITE/accounts/EITE0005"
+                },
+                "data": {
+                    "type": "accounts",
+                    "id": "f0f79f57-7b42-4f7a-ab24-492152890e43"
+                }
             }
-        },
+        }
     }
 }

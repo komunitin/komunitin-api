@@ -5,7 +5,6 @@
         "attributes": {
             "code": "EITE",
             "name": "Easter Island Talent Exchange",
-            "currency": "https://accounting.komunitin.org/EITE",
             "description": "<p>Here at <strong>Easter Island</strong> it makes a lot of sense to have a local currency because bla bla bla...",
             "image": "https://komunitin.org/files/EITE/c445714f-5a9f-410a-bd8e-1ffe20970c74.png",
             "website": "https://easterislandexchange.org",
@@ -19,7 +18,16 @@
                 ]
             },
             "created": "2011-08-19T23:15:30.000Z",
-            "updated": "2020-08-19T23:15:30.000Z"
+            "updated": "2020-08-19T23:15:30.000Z",
+            "currency": {
+                "links": {
+                    "related": "https://accounting.komunitin.org/EITE/currency"
+                },
+                "data": {
+                    "type": "currencies",
+                    "id": "45fd62f1-08e9-4a7b-8593-d36746c0e99c"
+                }
+            }
         },
         "relatinships": {
             "contacts": {
