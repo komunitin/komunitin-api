@@ -51,18 +51,8 @@ And `value` is the value to match. In case of relationships, it is the resource 
 ### Pagination
 Pagination is available in all endpoints that return a collection following the [Cursor Pagination](https://jsonapi.org/profiles/ethanresnick/cursor-pagination/) JSON:API profile.
 
-## Relation to other APIs
-
-### Authorization
-Authorization endpoints are out of the scope of this API, which expects the user to be authorized with an OAuth2 access token. The access token is provided by a separate authorization API. The recommended OAuth2 flow for web apps and native apps is the Authorization Code Flow with Proof Key for Code Exchange (PKCE).
-
-A general `komunitin_social` OAuth2 scope is required to access this API.
-
-### Accounting
-This API depends on an Accounting service wich by default is the [Komunitin Accounting Protocol](../accounting/README.md). However the definition allows to replace it by another accounting API that has the concepts of currency and account.
-
-### Media
-File server is out of the scope of this API, and should be handled using a separate specialized service. This way we ease the implementation of advanced upload techniques and efficient delivery of static binary files. File URLs should be randomized in order to minimize unauthorized access to files. Additional security measures such as short-lived Signed URLs can be implemented to further restrict access to binary files.
+### Versioning
+Clients should allow additional fields along all JSON responses. Therefore adding new fields won't be considered breaking backwards compatibility. API versioning is done using HTTP headers (still to specify).
 
 ## Resource objects
 The whole API is designed as a set of resources and CRUD operations on them.
@@ -105,5 +95,17 @@ Access to all resources may be restricted by assigning one of the predefined acc
 
 In a future, other access labels may be added (friends, contacts, group:XXXX, etc) and the `access` field may accept multiple labels for a resource.
 
-## Versioning
-Clients should allow additional fields along all JSON responses. Therefore adding new fields won't be considered breaking backwards compatibility. API versioning is done using HTTP headers (still to specify).
+## Relation to other APIs
+
+### Authorization
+Authorization endpoints are out of the scope of this API, which expects the user to be authorized with an OAuth2 access token. The access token is provided by a separate authorization API. The recommended OAuth2 flow for web apps and native apps is the Authorization Code Flow with Proof Key for Code Exchange (PKCE).
+
+A general `komunitin_social` OAuth2 scope is required to access this API.
+
+### Accounting
+This API depends on an Accounting service wich by default is the [Komunitin Accounting Protocol](../accounting/README.md). However the definition allows to replace it by another accounting API that has the concepts of currency and account.
+
+Concretely, the `group` resource has the `currency` attribute and the `member`resource has the `account` attribute. These values have the same structure as a one-to-one JSON:API relationship. However, they have not been included into the relationships section because, as they aren't part of this API and eventually managed by a third party, they can't take advantadge of the JSON:API features such as resource inclusion. The same structure helps implementators to reuse some of the code handling relationships.
+
+### Media
+File server is out of the scope of this API, and should be handled using a separate specialized service. This way we ease the implementation of advanced upload techniques and efficient delivery of static binary files. File URLs should be randomized in order to minimize unauthorized access to files. Additional security measures such as short-lived Signed URLs can be implemented to further restrict access to binary files.
