@@ -71,8 +71,11 @@ paths:
         `GET /groups?sort=location&geo-position=12.33,14.55 HTTP/1.1`
         
         It is recommended to fetch the related `contacts` using the `include`
-        field. The related `currency` is not available to be included since it
-        belongs to the Accounting API.
+        field.
+        
+        `currency` has the same structure as a relationship but it is an attribute
+        since it belongs to the external Accounting API. In particular it can't be
+        included in the request.
       parameters:
         - $ref: "#/components/parameters/sort"
         - $ref: "#/components/parameters/include"
@@ -119,8 +122,12 @@ paths:
         Returns the group object and links to the related collections.
         
         It is recommended to fetch the related `contacts` using the `include`
-        field. The related `currency` is not available to be included since it
-        belongs to the Accounting API.
+        field.
+        
+        `currency` has the same structure as a relationship but it is an attribute
+        since it belongs to the external Accounting API. In particular it can't be
+        included in the request.
+        
       parameters: 
         - $ref: "#/components/parameters/fields"
         - $ref: "#/components/parameters/include"
@@ -274,7 +281,10 @@ paths:
       description: >-
         Return the collection of members in a group.
       
-        Related `account` can't be included using the standard `include` parameter.
+        
+        `account` has the same structure as a relationship but it is an attribute
+        since it belongs to the external Accounting API. In particular it can't be
+        included in the request.
 
       parameters:
         - $ref: "#/components/parameters/sort"
@@ -317,7 +327,9 @@ paths:
       description: >-
         Return a member resource object.
       
-        Related `account` can't be included using the standard `include` parameter.
+        `account` has the same structure as a relationship but it is an attribute
+        since it belongs to the external Accounting API. In particular it can't be
+        included in the request.
       parameters:
         - $ref: "#/components/parameters/fields"
         - $ref: "#/components/parameters/include"
