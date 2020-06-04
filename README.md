@@ -29,5 +29,5 @@ The federation of exchange system servers for the Community part is accomplished
 
 Note that servers may trigger notifications based on content they just got from other servers but since the content is always retrieved from the original server through HTTPS, it may not be tampered in the way.
 
-The federation for the payments part is still to be designed. The Interledger Protocol (https://interledger.org/) may be a candidate.
+The federation for the payments is an integral part of the Accounting protocol.
 

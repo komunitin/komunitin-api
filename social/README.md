@@ -41,7 +41,7 @@ filter[field][operation]=value
 Where `field` is one of the resource attributes or relationships or the special field `search` that means searching in all relevant reaource fields. Nested fields are allowed using the dot `.` character.
 
 `operation` is one of:
- - `eq`, `ne`: Equal, not equal. The equal operation may be omitted.
+ - `eq`, `ne`: Equal, not equal. The equal operation may be omitted. Multiple values can be combined in a comma-separated list.
  - `lt`, `gt`, `le`, `ge`: Less than, greater than, less than or equal, greater than or equal. For numeric or date values.
 
 And `value` is the value to match. In case of relationships, it is the resource code.
