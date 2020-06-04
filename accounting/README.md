@@ -28,11 +28,11 @@ The `value` is important field for exchanging with other currencies. It defines 
     "type": "currencies",
     "id": "XXXX",
     "attributes": {
-        "code-type": "CEN",
+        "codeType": "CEN",
         "code": "WDLD",
         
         "name": "wonder",
-        "name-plural": "wonders",
+        "namePlural": "wonders",
         "symbol": "₩",
         "decimals": 2,
         
@@ -62,8 +62,8 @@ The key may or may not be unique for the account. In centralized systems where a
         "code": "Alice",
         "balance": 3200000,
         "locked": 0,
-        "credit-limit": -1,
-        "debit-limit": 5000000,
+        "creditLimit": -1,
+        "debitLimit": 5000000,
         "capabilities": ["pay", "charge"],
     },
     "relationships": {
@@ -152,13 +152,13 @@ External transfers define a movement of amount from one account in one currency 
     "payee": "https://reggaex.org/bob",
     "amount": 20000,
     "meta": "10 kg of potatoes",
-    "local-payer": "https://xchange.net/wonder",
-    "local-payee": "https://xchange.net/reggaex",
-    "payer-signature": "alice's",
-    "payee-signature": "bob's"
+    "localPayer": "https://xchange.net/wonder",
+    "localPayee": "https://xchange.net/reggaex",
+    "payerSignature": "alice's",
+    "payeeSignature": "bob's"
 }
 ```
-Beyond regular transfer attributes, they have the `local-payer` and `local-payee`. These are the local accounts that are involved in the external transfer. They may be ommited if are equal to `payer`or `payee` respectively.
+Beyond regular transfer attributes, they have the `localPayer` and `localPayee`. These are the local accounts that are involved in the external transfer. They may be ommited if are equal to `payer`or `payee` respectively.
 
 External transfers may also carry the cryptographic signature of the payer and the payee.
 
@@ -308,7 +308,7 @@ Once any operation has been performed, the `expires` field of a transaction is t
 Note that any node has its own clock and that the protocol does not enforce any clock synchronization mechanism. Nodes should have internal mechanisms to keep themselves in sync. A node repeteadly out of time is behaving badly and may result in loss of trust from their connections.
 
 ## Rejection
-Any request to the `transactions` endpoint may be rejected by the node. This is done by setting the transaction state to `rejected`. The transaction will then have additional fields `rejection-message` and `rejection-code`.
+Any request to the `transactions` endpoint may be rejected by the node. This is done by setting the transaction state to `rejected`. The transaction will then have additional fields `rejectionMessage` and `rejectionCode`.
 
 ```JSON
 {
@@ -317,8 +317,8 @@ Any request to the `transactions` endpoint may be rejected by the node. This is 
         "type": "transactions",
         "attributes": {
             "state": "rejected",
-            "rejection-message": "Insufficient funds",
-            "rejection-code": "1001"
+            "rejectionMessage": "Insufficient funds",
+            "rejectionCode": "1001"
         }
     }
 }
@@ -419,8 +419,8 @@ Host: xchange.net
                 "payee": "https://reggaex.org/bob",
                 "amount": 200000,
                 "meta": "10 kg of potatoes",
-                "local-payer": "https://xchange.net/wonder",
-                "payer-signature": "alice's (new)"
+                "localPayer": "https://xchange.net/wonder",
+                "payerSignature": "alice's (new)"
             }],
             "state": "new",
             "nonce": "uuid"
@@ -446,8 +446,8 @@ Host: xchange.net
                 "payee": "https://reggaex.org/bob",
                 "amount": 200000,
                 "meta": "10 kg of potatoes",
-                "local-payer": "https://reggaex.org/x",
-                "payer-signature": "alice's (new)"
+                "localPayer": "https://reggaex.org/x",
+                "payerSignature": "alice's (new)"
             }],
             "state": "new",
             "nonce": "uuid"
@@ -468,13 +468,13 @@ HTTP/1.1 201 Created
         "attributes": {
             "transfers": [{
                 "payer": "https://wonderland.org/alice",
-                "local-payer": "https://reggaex.org/x",
+                "localPayer": "https://reggaex.org/x",
                 "payee": "https://reggaex.org/bob",
                 "amount": 200000,
                 "currency": "RGEX",
                 "meta": "10 kg of potatoes",
-                "payer-signature": "alice's (new)",
-                "payee-signature": "bob's (new)"
+                "payerSignature": "alice's (new)",
+                "payeeSignature": "bob's (new)"
             }],
             "created": "2020-08-19T23:15:30.000Z",
             "expires": "2020-09-19T23:15:30.000Z",
@@ -488,7 +488,7 @@ ReggaeEx gives one month to the caller for the transaction to be applied.
 
 ### 6. Prepare transaction: return
 
-XChange gets the transaction from ReggaeEx above. The `payee-signature` allows XChange to prove to Wonderland that it is able to reach Bob with 20₽. Since the call was asynchronous, it must `POST` the response to the callback URL provided:
+XChange gets the transaction from ReggaeEx above. The `payeeSignature` allows XChange to prove to Wonderland that it is able to reach Bob with 20₽. Since the call was asynchronous, it must `POST` the response to the callback URL provided:
 
 ```HTTP
 POST /transactions/uuid1/response
@@ -503,10 +503,10 @@ Host: wonderland.org
                 "payee": "https://reggaex.org/bob",
                 "amount": 4000000,
                 "meta": "10 kg of potatoes",
-                "local-payer": "https://xchange.net/wonder",
-                "local-payee": "https://xchange.net/reggaex",
-                "payer-signature": "alice's (new)",
-                "payee-signature": "bob's (new)"
+                "localPayer": "https://xchange.net/wonder",
+                "localPayee": "https://xchange.net/reggaex",
+                "payerSignature": "alice's (new)",
+                "payeeSignature": "bob's (new)"
             }],
             "created": "2020-08-19T23:15:31.000Z",
             "expires": "2020-09-19T23:15:20.000Z",
@@ -535,9 +535,9 @@ HTTP/1.1 200 OK
                 "payer": "https://wonderland.org/alice",
                 "amount": 400000,
                 "meta": "10 kg of potatoes",
-                "local-payee": "https://wonderland.org/x",
-                "payer-signature": "alice's (new)",
-                "payee-signature": "bob's (new)"
+                "localPayee": "https://wonderland.org/x",
+                "payerSignature": "alice's (new)",
+                "payeeSignature": "bob's (new)"
             }],
             "created": "2020-08-19T23:15:32.000Z",
             "expires": "2020-09-19T23:14:20.000Z",
@@ -571,7 +571,7 @@ Host: wonderland.org
 
 ### 9. Commit propagation
 
-Wonderland node will lock 40₩ from Alice balance and update the `payer-signature` field and send the request upstream. It will give just one minute from now to perform the operation:
+Wonderland node will lock 40₩ from Alice balance and update the `payerSignature` field and send the request upstream. It will give just one minute from now to perform the operation:
 
 ```HTTP
 PATCH /transactions/uuid2
@@ -583,7 +583,7 @@ Host: xchange.net
         "attributes": {
             "state": "committed",
             "transfers": [{
-                "payer-signature": "alice's (accepted)"
+                "payerSignature": "alice's (accepted)"
             }],
             "expires": "2020-08-19T23:17:00.000Z"
         }
@@ -603,12 +603,12 @@ XChange will substract one or a few seconds to the `expires` time and will resen
         "attributes": {
             "transfers": [{
                 "payer": "https://wonderland.org/alice",
-                "local-payer": "https://reggaex.org/x",
+                "localPayer": "https://reggaex.org/x",
                 "payee": "https://reggaex.org/bob",
                 "amount": 200000,
                 "meta": "10 kg of potatoes",
-                "payer-signature": "alice's (accepted)",
-                "payee-signature": "bob's (committed)"
+                "payerSignature": "alice's (accepted)",
+                "payeeSignature": "bob's (committed)"
             }],
             "state": "committed",
             "nonce": "uuid",
@@ -638,9 +638,9 @@ Finally the wonderland server returns the committed transaction to Alice app upo
                 "payee": "https://reggaex.org/bob",
                 "amount": 400000,
                 "meta": "10 kg of potatoes",
-                "local-payee": "https://wonderland.org/x",
-                "payer-signature": "alice's (accepted)",
-                "payee-signature": "bob's (committed)"
+                "localPayee": "https://wonderland.org/x",
+                "payerSignature": "alice's (accepted)",
+                "payeeSignature": "bob's (committed)"
             }],
             "state": "committed",
             "nonce": "uuid",
