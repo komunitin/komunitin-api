@@ -73,7 +73,7 @@ Offers are publications created by members to advertize the goods and services t
 Needs are short publications created by members to request any good or service from the exchange group. They include a short description and are usually short-lived.
 
 ### Posts
-Posts are messages written by the exchange group administration to reach all members in the exchange group. Posts resource may be extended in a future for more flexible audiences, but at the moment we prefer to use extern messaging systems for that purpose.
+Posts are messages written by the exchange group administration to reach all members in the exchange group. Posts resource may be extended in a future for more flexible audiences, but at the moment we prefer to use external messaging systems for that purpose.
 
 ## Data privacy
 Access to all resources may be restricted by assigning one of the predefined access labels to the `access` resource field.
@@ -93,7 +93,11 @@ A general `komunitin_social` OAuth2 scope is required to access this API.
 ### Accounting
 This API depends on an Accounting service wich by default is the [Komunitin Accounting Protocol](../accounting/README.md). However the definition allows to replace it by another accounting API that has the concepts of currency and account.
 
-Concretely, the `group` resource has the `currency` attribute and the `member`resource has the `account` attribute. These values have the same structure as a one-to-one JSON:API relationship. However, they have not been included into the relationships section because, as they aren't part of this API and eventually managed by a third party, they can't take advantadge of the JSON:API features such as resource inclusion. The same structure helps implementators to reuse some of the code handling relationships.
+Concretely, the `group` resource has the `currency` external relationship and the `member` resource has the `account` external relationship.
+
+External relaitonships are defined in a custom extension profile of JSON:API: [External relationships](../jsonapi-profiles/external.md).
+
+The similar structure helps implementators to reuse some of the code handling relationships, although the automatic inclusion is not generally available for external relationships.
 
 ### Media
 File server is out of the scope of this API, and should be handled using a separate specialized service. This way we ease the implementation of advanced upload techniques and efficient delivery of static binary files. File URLs should be randomized in order to minimize unauthorized access to files. Additional security measures such as short-lived Signed URLs can be implemented to further restrict access to binary files.

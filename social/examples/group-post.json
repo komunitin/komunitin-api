@@ -12,12 +12,13 @@
                 "name": "Easter Island",
                 "type": "Point",
                 "coordinates": [-109.44236755371094, -27.201510867989075]
-            },
+            }
+        },
+        "relationships": {
             "currency": {
-                "links": {
-                    "related": "https://accounting.komunitin.org/EITE/currency"
-                },
                 "data": {
+                    "external": true,
+                    "href": "https://accounting.komunitin.org/EITE/currency",
                     "type": "currencies",
                     "id": "45fd62f1-08e9-4a7b-8593-d36746c0e99c"
                 }

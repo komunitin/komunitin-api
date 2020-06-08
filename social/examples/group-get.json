@@ -19,15 +19,6 @@
             },
             "created": "2011-08-19T23:15:30.000Z",
             "updated": "2020-08-19T23:15:30.000Z",
-            "currency": {
-                "links": {
-                    "related": "https://accounting.komunitin.org/EITE/currency"
-                },
-                "data": {
-                    "type": "currencies",
-                    "id": "45fd62f1-08e9-4a7b-8593-d36746c0e99c"
-                }
-            }
         },
         "relatinships": {
             "contacts": {
@@ -80,6 +71,14 @@
                 },
                 "meta": {
                     "count": 432
+                }
+            },
+            "currency": {
+                "data": {
+                    "external": true,
+                    "href": "https://accounting.komunitin.org/EITE/currency",
+                    "type": "currencies",
+                    "id": "45fd62f1-08e9-4a7b-8593-d36746c0e99c"
                 }
             }
         },
