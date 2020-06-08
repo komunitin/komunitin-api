@@ -1,5 +1,5 @@
-# Extern relationships
-Defines the relation between two different JSON:API APIs through relationships that point to resources handled by an extern service.
+# External relationships
+Defines the relation between two different JSON:API APIs through relationships that point to resources handled by an external service.
 
 - Minimum JSON:API version: 1.0
 - Discussion_url: http://github.com/komunitin/komunitin-api

@@ -25,9 +25,11 @@ The authorization management (login, forgot password, etc) is out of the scope o
 Binary files upload and download management is out of the scope of this API, and will be provided by a third party service. This way we can enable advanced features like upload and download resumes and effective caching on delivery. Files should be isolated in different pools depending on the exchange group.
 
 ## Federation
-The federation of exchange system servers for the Community part is accomplished by letting remote servers to subscribe for push notifications. They will be therefore warned when new content is available and then they will be able to retry the new content using the regular community API.
+The federation of exchange system servers for the Community part is accomplished by letting remote servers to subscribe for push notifications. They will be therefore warned when new content is available and then they will be able to retrieve the new content using the regular community API.
 
 Note that servers may trigger notifications based on content they just got from other servers but since the content is always retrieved from the original server through HTTPS, it may not be tampered in the way.
+
+In order to link resources from different servers in a consistent matter, it has been defined a JSON:API extension: [External Relationships](./jsonapi-profiles/external.md).
 
 The federation for the payments is an integral part of the Accounting protocol.
 
