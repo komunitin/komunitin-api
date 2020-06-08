@@ -34,22 +34,10 @@ This section extensively use the [JSON:API](https://jsonapi.org) language.
 - Exchnage relationship is always implicitely defined in the path.
 
 ### Filtering
-`GET` endpoints allow the `filter` query parameter to filter the returned results. The parameter works like that:
-```
-filter[field][operation]=value
-```
-Where `field` is one of the resource attributes or relationships or the special field `search` that means searching in all relevant reaource fields. Nested fields are allowed using the dot `.` character.
-
-`operation` is one of:
- - `eq`, `ne`: Equal, not equal. The equal operation may be omitted. Multiple values can be combined in a comma-separated list.
- - `lt`, `gt`, `le`, `ge`: Less than, greater than, less than or equal, greater than or equal. For numeric or date values.
-
-And `value` is the value to match. In case of relationships, it is the resource code.
-
-*This filtering strategy is not standardized and subject to change.*
+Filtering is available in all endpoints that return a collection following the custom [Simple filtering](../jsonapi-profiles/filter.md) JSON:API profile.
 
 ### Pagination
-Pagination is available in all endpoints that return a collection following the [Cursor Pagination](https://jsonapi.org/profiles/ethanresnick/cursor-pagination/) JSON:API profile.
+Pagination is available in all endpoints that return a collection following the official [Cursor Pagination](https://jsonapi.org/profiles/ethanresnick/cursor-pagination/) JSON:API profile.
 
 ### Versioning
 Clients should allow additional fields along all JSON responses. Therefore adding new fields won't be considered breaking backwards compatibility. API versioning is done using HTTP headers (still to specify).
