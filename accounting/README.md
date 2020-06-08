@@ -26,7 +26,7 @@ The `value` is important field for exchanging with other currencies. It defines 
 ```JSON
 {
     "type": "currencies",
-    "id": "XXXX",
+    "id": "<uuid>",
     "attributes": {
         "codeType": "CEN",
         "code": "WDLD",
@@ -57,7 +57,7 @@ The key may or may not be unique for the account. In centralized systems where a
 ```JSON
 {
     "type": "accounts",
-    "id": "XXXX",
+    "id": "<uuid>",
     "attributes": {
         "code": "Alice",
         "balance": 3200000,
@@ -82,14 +82,24 @@ The key may or may not be unique for the account. In centralized systems where a
 }
 ```
 ### Transfer
-A transfer is a plain JSON object defining a movement of certain amount of credit from one account to another.
+A transfer is a resource object defining a movement of certain amount of credit from one account to another.
 
 ```JSON
 {
-    "payer": "https://komunitin.org/WDLD/accounts/WDLD0002",
-    "payee": "https://komunitin.org/WDLD/accounts/WDLD0003",
-    "amount": 200000,
-    "meta": "10 kg of potatoes"
+    "type": "transfers",
+    "id": "<uuid>",
+    "attributes": {
+        "amount": 200000,
+        "meta": "10 kg of potatoes"
+    },
+    "relationships": {
+        "payer": {
+            "data": {"type": "accounts", "id": "<uuid>"}
+        },
+        "payee": {
+            "data": {"type": "accounts", "id": "<uuid>"}
+        }
+    }
 }
 ```
 #### Meta
@@ -100,7 +110,9 @@ If not a string, then the `meta` field is an object with a field `type` that ide
 The protocol may be extended with different types for the meta field, including encrypted content for better privacy. That will be relevant for external transfers.
 
 ### Transaction
-A transaction is the unit of change in the Accounting API. A transaction contains typically just one transfer, but servers may add additional transfers in a transaction to implement features such as taxes. All transfers in a transaction will be committed all or none atomically, and in the specified order.
+A transaction is the unit of change in the Accounting API.
+
+A transaction contains typically just one transfer, but servers may add additional transfers in a transaction to implement features such as taxes. All transfers in a transaction will be committed all or none atomically, and in the specified order. Transfers are encoded as a relationship that is always included. Transfers are not created nor updated using a separate endpoint, but using the custom [sideposting related resources](../jsonapi-profiles/sidepost.md) extension.
 
 A transaction may be in different states: 
  - `new`: The transaction has been created and passed the automatic validations.
@@ -114,21 +126,18 @@ A transaction may be in different states:
 ```JSON
 {
     "data": {
-        "id": "uuid2",
+        "id": "<uuid>",
         "type": "transactions",
         "attributes": {
-            "transfers": [{
-                "payer": "https://komunitin.org/WDLD/accounts/WDLD0002",
-                "payee": "https://komunitin.org/WDLD/accounts/WDLD0003",
-                "amount": 200000,
-                "meta": "10 kg of potatoes"
-            }],
             "state": "new",
             "created": "2020-08-19T23:15:30.000Z",
             "updated": "2020-08-19T23:15:30.000Z",
             "expires": "2020-08-19T23:20:30.000Z",
         },
         "relationships": {
+            "transfers": {
+                "data": { "type": "transfers", "id": "<uuid>"}
+            },
             "currency": {
                 "links": {
                     "related": "https://xchange.net"
@@ -136,9 +145,27 @@ A transaction may be in different states:
             }
         },
         "links": {
-            "self": "https://xchange.net/transactions/uuid2
+            "self": "https://xchange.net/transactions/uuid2"
         }
-    }
+    },
+    "included": [
+        {
+            "id": "<uuid>",
+            "type": "transfers",
+            "attributes": {
+                "amount": 200000,
+                "meta": "10 kg of potatoes"
+            },
+            "relationships": {
+                "payer": {
+                    "data": { "type": "accounts", "id":"<uuid>" }
+                },
+                "payee": {
+                    "data": { "type": "accounts", "id":"<uuid>" }
+                }
+            }
+        }
+    ]
 }
 ```
 
@@ -146,21 +173,51 @@ A transaction may be in different states:
 
 External transfers define a movement of amount from one account in one currency from another account in another currency, eventually managed by a remote server.
 
-```JSON
-{
-    "payer": "https://wonderland.org/alice",
-    "payee": "https://reggaex.org/bob",
-    "amount": 20000,
-    "meta": "10 kg of potatoes",
-    "localPayer": "https://xchange.net/wonder",
-    "localPayee": "https://xchange.net/reggaex",
-    "payerSignature": "alice's",
-    "payeeSignature": "bob's"
-}
-```
 Beyond regular transfer attributes, they have the `localPayer` and `localPayee`. These are the local accounts that are involved in the external transfer. They may be ommited if are equal to `payer`or `payee` respectively.
 
+When `payer`or `payee` refer to an account from another server, they are encoded as [External relationships](../jsonapi-profiles/external.md).
+
 External transfers may also carry the cryptographic signature of the payer and the payee.
+
+```JSON
+{
+    "attributes": {
+        "amount": 20000,
+        "meta": "10 kg of potatoes",
+        "payerSignature": "alice's",
+        "payeeSignature": "bob's"
+    },
+    "relationships": {
+        "payer": {
+            "data": {
+                "type": "accounts",
+                "id": "<uuid>",
+                "external": true,
+                "href": "https://wonderland.org/alice"
+            }
+        },
+        "payee": {
+            "data": {
+                "type": "accounts",
+                "id": "<uuid>",
+                "external": true,
+                "href": "https://reggaex.org/bob"
+            },
+        },
+        "localPayer": {
+            "data": {
+                "type": "accounts",
+                "id": "<uuid>"
+            },
+        "localPayee": {
+            "data": {
+                "type": "accounts",
+                "id": "<uuid>"
+            }
+        },
+    }
+}
+```
 
 #### Signature algorithm
 In order to build or verify a transfer signature the following string must be created:
@@ -180,7 +237,7 @@ The API follows the [JSON:API](https://jsonapi.org) guidelines.
 
 The common CRUD operations are defined at `currency` and `accounts` endpoints for administrative operations.
 
-Payments and charges are done using the `transactions` endpoint. Tipically a transaction will be created with a `POST` request to the transactions endpoint and later it will be either accepted, committed or rejected by updating the transaction using `PATCH` requests that change the `state` field and eventually the signature fields.
+Payments and charges are done using the `transactions` endpoint. Typically a transaction will be created with a `POST` request to the transactions endpoint and later it will be either accepted, committed or rejected by updating the transaction using `PATCH` requests that change the `state` field and eventually the signature fields of associated transfers.
 
 ### Transaction workflow
 When a valid `POST` request is received at the `transactions` endpoint, the transaction is created with `new` state. That means that the transaction won't be applied by now. This initial state is useful for systems that may add taxes, fees or other features on transactions: the user may create a transaction to see the additional issues to the transaction and later, if they agree with the created transaction, accept and commit it. Depending on account configurations, once the source account has accepted a transaction the destination account may also need to accept the transaction before it can be committed, so the transaction will be meantime in `pending` state. Once all parties have accepted the transaction, it becomes `accepted` state and it is ready to be committed. Once a transaction is `committed`, it can't be deleted, edited nor rejected.
@@ -352,6 +409,9 @@ This is an example of a payment flow using the accounting protocol. Imagine that
 |`https://reggaex.org/x`         | ReggaEx (₽)      | X         |
 |`https://reggaex.org/bob`       | ReggaEx (₽)       | **Bob**   |
 
+
+The serialization of transactions and their transfers using JSON:API is very convenient for a coherent systematic way to access and modify the data. However in this example we'll use a shortened embedded serialization just to improve the readability.
+
 With this setting, a payment from Alice to Bob would go as follows:
 
 ### 1. Information
@@ -383,19 +443,13 @@ Host: wonderland.org
 ```
 ```JSON
 {
-    "data": {
-        "id": "uuid1",
-        "type": "transactions",
-        "attributes": {
-            "transfers": [{
-                "payer": "https://wonderland.org/alice",
-                "payee": "https://reggaex.org/bob",
-                "amount": 200000,
-                "meta": "10 kg of potatoes"
-            }],
-            "state": "new"
-        }
-    }
+    "id": "uuid1",
+    "type": "transactions",
+    "payer": "https://wonderland.org/alice",
+    "payee": "https://reggaex.org/bob",
+    "amount": 200000,
+    "meta": "10 kg of potatoes",
+    "state": "new"
 }
 ```
 
@@ -410,22 +464,16 @@ Host: xchange.net
 ```
 ```JSON
 {
-    "data": {
-        "id": "uuid2",
-        "type": "transactions",
-        "attributes": {
-            "transfers": [{
-                "payer": "https://wonderland.org/alice",
-                "payee": "https://reggaex.org/bob",
-                "amount": 200000,
-                "meta": "10 kg of potatoes",
-                "localPayer": "https://xchange.net/wonder",
-                "payerSignature": "alice's (new)"
-            }],
-            "state": "new",
-            "nonce": "uuid"
-        }
-    }
+    "id": "uuid2",
+    "type": "transactions",
+    "payer": "https://wonderland.org/alice",
+    "payee": "https://reggaex.org/bob",
+    "amount": 200000,
+    "meta": "10 kg of potatoes",
+    "localPayer": "https://xchange.net/wonder",
+    "payerSignature": "alice's (new)",
+    "state": "new",
+    "nonce": "uuid"
 }
 ```
 ### 4. Create transaction: second hop.
@@ -437,22 +485,15 @@ Host: xchange.net
 ```
 ```JSON
 {
-    "data": {
-        "id": "uuid3",
-        "type": "transactions",
-        "attributes": {
-            "transfers": [{
-                "payer": "https://wonderland.org/alice",
-                "payee": "https://reggaex.org/bob",
-                "amount": 200000,
-                "meta": "10 kg of potatoes",
-                "localPayer": "https://reggaex.org/x",
-                "payerSignature": "alice's (new)"
-            }],
-            "state": "new",
-            "nonce": "uuid"
-        }
-    }
+    "id": "uuid3",
+    "type": "transactions",
+    "payer": "https://wonderland.org/alice",
+    "payee": "https://reggaex.org/bob",
+    "amount": 200000,
+    "meta": "10 kg of potatoes",
+    "localPayer": "https://reggaex.org/x",
+    "state": "new",
+    "nonce": "uuid"
 }
 ```
 ### 5. Create transaction: final
@@ -462,26 +503,20 @@ HTTP/1.1 201 Created
 ```
 ```JSON
 {
-    "data": {
-        "id": "uuid3",
-        "type": "transactions",
-        "attributes": {
-            "transfers": [{
-                "payer": "https://wonderland.org/alice",
-                "localPayer": "https://reggaex.org/x",
-                "payee": "https://reggaex.org/bob",
-                "amount": 200000,
-                "currency": "RGEX",
-                "meta": "10 kg of potatoes",
-                "payerSignature": "alice's (new)",
-                "payeeSignature": "bob's (new)"
-            }],
-            "created": "2020-08-19T23:15:30.000Z",
-            "expires": "2020-09-19T23:15:30.000Z",
-            "state": "new",
-            "nonce": "uuid"
-        }
-    }
+    "id": "uuid3",
+    "type": "transactions",
+    "payer": "https://wonderland.org/alice",
+    "localPayer": "https://reggaex.org/x",
+    "payee": "https://reggaex.org/bob",
+    "amount": 200000,
+    "currency": "RGEX",
+    "meta": "10 kg of potatoes",
+    "payerSignature": "alice's (new)",
+    "payeeSignature": "bob's (new)",
+    "created": "2020-08-19T23:15:30.000Z",
+    "expires": "2020-09-19T23:15:30.000Z",
+    "state": "new",
+    "nonce": "uuid"
 }
 ```
 ReggaeEx gives one month to the caller for the transaction to be applied.
@@ -496,25 +531,21 @@ Host: wonderland.org
 ```
 ```JSON
 {
-    "data": {
-        "attributes": {
-            "transfers": [{
-                "payer": "https://wonderland.org/alice",
-                "payee": "https://reggaex.org/bob",
-                "amount": 4000000,
-                "meta": "10 kg of potatoes",
-                "localPayer": "https://xchange.net/wonder",
-                "localPayee": "https://xchange.net/reggaex",
-                "payerSignature": "alice's (new)",
-                "payeeSignature": "bob's (new)"
-            }],
-            "created": "2020-08-19T23:15:31.000Z",
-            "expires": "2020-09-19T23:15:20.000Z",
-            "state": "new",
-            "nonce": "uuid",
-            "upstream": "https://reggaex.org/transactions/uuid3"
-        }
-    }
+    "id": "uuid2",
+    "type": "transactions",
+    "payer": "https://wonderland.org/alice",
+    "payee": "https://reggaex.org/bob",
+    "amount": 4000000,
+    "meta": "10 kg of potatoes",
+    "localPayer": "https://xchange.net/wonder",
+    "localPayee": "https://xchange.net/reggaex",
+    "payerSignature": "alice's (new)",
+    "payeeSignature": "bob's (new)",
+    "created": "2020-08-19T23:15:31.000Z",
+    "expires": "2020-09-19T23:15:20.000Z",
+    "state": "new",
+    "nonce": "uuid",
+    "upstream": "https://reggaex.org/transactions/uuid3"
 }
 ```
 XChange substracts 10 seconds to the expiry time to be sure it has time to operate the upstream transaction if needed. It also adds a link to the upstream transaction in ReggaEx.
@@ -526,26 +557,20 @@ HTTP/1.1 200 OK
 ```
 ```JSON
 {
-    "data": {
-        "type": "transactions",
-        "id": "uuid1",
-        "attributes": {
-            "transfers": [{
-                "payee": "https://reggaex.org/bob",
-                "payer": "https://wonderland.org/alice",
-                "amount": 400000,
-                "meta": "10 kg of potatoes",
-                "localPayee": "https://wonderland.org/x",
-                "payerSignature": "alice's (new)",
-                "payeeSignature": "bob's (new)"
-            }],
-            "created": "2020-08-19T23:15:32.000Z",
-            "expires": "2020-09-19T23:14:20.000Z",
-            "state": "new",
-            "nonce": "uuid",
-            "upstream": "https://xchange.net/transactions/uuid2"
-        }
-    }
+    "id": "uuid1",
+    "type": "transactions",
+    "payee": "https://reggaex.org/bob",
+    "payer": "https://wonderland.org/alice",
+    "amount": 400000,
+    "meta": "10 kg of potatoes",
+    "localPayee": "https://wonderland.org/x",
+    "payerSignature": "alice's (new)",
+    "payeeSignature": "bob's (new)",
+    "created": "2020-08-19T23:15:32.000Z",
+    "expires": "2020-09-19T23:14:20.000Z",
+    "state": "new",
+    "nonce": "uuid",
+    "upstream": "https://xchange.net/transactions/uuid2"
 }
 ```
 Alice now knows that the payment to Bob is possible and that it will cost 40₩ to send 20₽ to Bob.
@@ -561,11 +586,7 @@ Host: wonderland.org
 ```
 ```JSON
 {
-    "data": {
-        "attributes": {
-            "state": "committed"
-        }
-    }
+    "state": "committed"
 }
 ```
 
@@ -579,15 +600,9 @@ Host: xchange.net
 ```
 ```JSON
 {
-    "data": {
-        "attributes": {
-            "state": "committed",
-            "transfers": [{
-                "payerSignature": "alice's (accepted)"
-            }],
-            "expires": "2020-08-19T23:17:00.000Z"
-        }
-    }
+    "state": "committed",
+    "payerSignature": "alice's (accepted)",
+    "expires": "2020-08-19T23:17:00.000Z"
 }
 ```
 XChange will substract one or a few seconds to the `expires` time and will resend the request to ReggaEx. ReggaEx will actually commit the last transaction, returning a `200 OK` with the committed transaction and the payee signature updated with the `committed` state. This signature is the proof that Bob got the credits.
@@ -597,25 +612,19 @@ XChange will substract one or a few seconds to the `expires` time and will resen
 ```
 ```JSON
 {
-    "data": {
-        "id": "uuid3",
-        "type": "transactions",
-        "attributes": {
-            "transfers": [{
-                "payer": "https://wonderland.org/alice",
-                "localPayer": "https://reggaex.org/x",
-                "payee": "https://reggaex.org/bob",
-                "amount": 200000,
-                "meta": "10 kg of potatoes",
-                "payerSignature": "alice's (accepted)",
-                "payeeSignature": "bob's (committed)"
-            }],
-            "state": "committed",
-            "nonce": "uuid",
-            "updated": "2020-08-19T23:16:00.000Z", 
-            "created": "2020-08-19T23:15:30.000Z",
-        }
-    }
+    "id": "uuid3",
+    "type": "transactions",
+    "payer": "https://wonderland.org/alice",
+    "localPayer": "https://reggaex.org/x",
+    "payee": "https://reggaex.org/bob",
+    "amount": 200000,
+    "meta": "10 kg of potatoes",
+    "payerSignature": "alice's (accepted)",
+    "payeeSignature": "bob's (committed)",
+    "state": "committed",
+    "nonce": "uuid",
+    "updated": "2020-08-19T23:16:00.000Z", 
+    "created": "2020-08-19T23:15:30.000Z",
 }
 ```
 
@@ -629,26 +638,20 @@ Finally the wonderland server returns the committed transaction to Alice app upo
 ```
 ```JSON
 {
-    "data": {
-        "id": "uuid1",
-        "type": "transactions",
-        "attributes": {
-            "transfers": [{
-                "payer": "https://wonderland.org/alice",
-                "payee": "https://reggaex.org/bob",
-                "amount": 400000,
-                "meta": "10 kg of potatoes",
-                "localPayee": "https://wonderland.org/x",
-                "payerSignature": "alice's (accepted)",
-                "payeeSignature": "bob's (committed)"
-            }],
-            "state": "committed",
-            "nonce": "uuid",
-            "updated": "2020-08-19T23:16:02.000Z", 
-            "created": "2020-08-19T23:15:30.000Z",
-            "upstream": "https://xchange.net/transactions/uuid2
-        }
-    }
+    "id": "uuid1",
+    "type": "transactions",
+    "payer": "https://wonderland.org/alice",
+    "payee": "https://reggaex.org/bob",
+    "amount": 400000,
+    "meta": "10 kg of potatoes",
+    "localPayee": "https://wonderland.org/x",
+    "payerSignature": "alice's (accepted)",
+    "payeeSignature": "bob's (committed)",
+    "state": "committed",
+    "nonce": "uuid",
+    "updated": "2020-08-19T23:16:02.000Z", 
+    "created": "2020-08-19T23:15:30.000Z",
+    "upstream": "https://xchange.net/transactions/uuid2"
 }
 ```
 Alice can now be sure that Bob got its 20₽ because of the signature.
