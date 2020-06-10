@@ -13,22 +13,9 @@ The specification is based on the proposal [Relationships between resources cont
 
 An **External Relationship** is a relationship between two resources that are managed by different servers.
 
-An **External Resource Identifier Object** is an extension of [Resource Identifier Objects](https://jsonapi.org/format/#document-resource-object-links) with the following additional field:
- - `external`: Optional. Defines whether the linked object belongs to a remote service. If present, its value must be the boolean `true`. If ommitted, it is understood to have the value `false`.
+When fetching a resource that contains external relationships, the server may include linkage data for these relationships using [Resource Identifier Objects](https://jsonapi.org/format/#document-resource-object-links), which are just an objects with `type` and `id`. Up to here nothing changed from a local relationship.
 
- Example of an External Resource Identifier Object:
-
- ```JSON
-{
-  "type": "posts", 
-  "id": "1",
-  "external": true
-}
- ```
-
-When fetching a resource that contains external relationships, the server may include linkage data for these relationships using External Resource Identifier Objects.
-
-When a client requests the inclusion of related resources through `include` query parameter that happen to be external, the server includes **External Resource Object**s with fields `type`, `id` and the `external` flag, and a `self` link that points to the URL of the external server that will return the original copy of the resource, with its attributes and relationships.
+When a client requests the inclusion of related resources through `include` query parameter that happen to be external, the server includes **External Resource Object**s with fields `type`, `id` and the `external` flag, and a `self` link that points to the URL of the external server. This URL provides the original copy of the resource, with its attributes and relationships.
 
 ```JSON
 {
