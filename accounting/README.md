@@ -617,7 +617,7 @@ XChange will substract one or a few seconds to the `expires` time and will resen
 
 XChange will propagate the committed transfer through the callback endpoint. 
 
-### 9. Commit propagation: response
+### 10. Commit propagation: response
 Finally the wonderland server returns the committed transfer to Alice app upon GET request, so the transfer is completely applied.
 
 ```HTTP
