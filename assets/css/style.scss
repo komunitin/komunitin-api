@@ -8,5 +8,7 @@ $header-bg-color-secondary: #a2cc3a !default;
 
 .page-header a {
   color: #fff;
-  text-decoration: none;
+  :hover {
+    text-decoration: none;
+  }
 }
