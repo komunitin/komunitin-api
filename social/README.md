@@ -2,7 +2,7 @@
 
 REST API featuring marketplace services for Exchange Communities.
 
-See the specificatin documentation at [SwaggerHub](https://app.swaggerhub.com/apis-docs/estevebadia/komunitin-api/0.0.1).
+See the specification documentation at [SwaggerHub](https://app.swaggerhub.com/apis-docs/estevebadia/komunitin-api/0.0.1).
 
 **This is a work in progress document**. Feedback welcome at komunitinbox@gmail.com or at [GitHub](https://github.com/komunitin/komunitin-api).
 
