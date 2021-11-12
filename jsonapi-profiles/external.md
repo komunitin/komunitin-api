@@ -13,14 +13,16 @@ The specification is based on the proposal [Relationships between resources cont
 
 An **External Relationship** is a relationship between two resources that are managed by different servers.
 
-When fetching a resource that contains relationships, the server may include linkage data for these relationships using [Resource Identifier Objects](https://jsonapi.org/format/#document-resource-object-links), which are objects with `type` and `id`. An **External Resource Identifier Object** is an extension of a Resource Identifier Object that also has the member `external` with value `true` and the member `href` with value the remote URL where to find the original resource. This is the linkage data for external relationships.
+When fetching a resource that contains relationships, the server may include linkage data for these relationships using [Resource Identifier Objects](https://jsonapi.org/format/#document-resource-object-links), which are objects with `type` and `id`. An **External Resource Identifier Object** is an extension of a Resource Identifier Object that also has the `meta` member `external` with value `true` and the `meta` member `href` with value the remote URL where to find the original resource. This is the linkage data for external relationships.
 
 ```JSON
 {
   "type": "posts",
   "id": "1",
-  "external": true,
-  "href": "https://externalserver.org/posts/1"
+  "meta": {
+    "external": true,
+    "href": "https://externalserver.org/posts/1"
+  }
 }
 ```
 
@@ -31,8 +33,10 @@ When a client requests the inclusion of related resources through `include` quer
   "data": {
     "type": "posts",
     "id": "1",
-    "external": true,
-    "href": "https://externalserver.org/posts/1",
+    "meta": {
+      "external": true,
+      "href": "https://externalserver.org/posts/1",
+    },
     "links": {
       "self": "https://localserver.org/posts/1"
     },
