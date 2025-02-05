@@ -1,9 +1,9 @@
 {
-    "data": {
-        "type": "contacts",
-        "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
-        "attribues": {
-            "name": "+34 666 77 88 00"
-        }
+  "data": {
+    "type": "contacts",
+    "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
+    "attribues": {
+      "name": "+34 666 77 88 00"
     }
+  }
 }

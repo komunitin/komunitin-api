@@ -1,42 +1,46 @@
 {
-    "data": {
-        "type": "categories",
-        "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
-        "attributes": {
-            "code": "food",
-            "name": "Food",
-            "cpa": ["10", "11", "56"],
-            "description": "Alimentation and beverage products and services",
-            "icon": "https://komunitin.org/static/icons/food.svg",
-            "access": "public",
-            "created": "2011-08-19T23:15:30.000Z",
-            "updated": "2020-08-19T23:15:30.000Z"
-        },
-        "relationships": {
-            "group": {
-                "links": {
-                    "related": "https://komunitin.org/EITE"
-                }
-            },
-            "needs": {
-                "links": {
-                    "related": "https://komunitin.org/EITE/needs?filter[category]=food"
-                },
-                "meta": {
-                    "count": 2
-                }
-            },
-            "offers": {
-                "links": {
-                    "related": "https://komunitin.org/EITE/offers?filter[category]=food"
-                },
-                "meta": {
-                    "count": 32
-                }
-            }
-        },
+  "data": {
+    "type": "categories",
+    "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
+    "attributes": {
+      "code": "food",
+      "name": "Food",
+      "cpa": [
+        "10",
+        "11",
+        "56"
+      ],
+      "description": "Alimentation and beverage products and services",
+      "icon": "https://komunitin.org/static/icons/food.svg",
+      "access": "public",
+      "created": "2011-08-19T23:15:30.000Z",
+      "updated": "2020-08-19T23:15:30.000Z"
+    },
+    "relationships": {
+      "group": {
         "links": {
-            "self": "https://komunitin.org/EITE/categories/food"
+          "related": "https://komunitin.org/EITE"
+        }
+      },
+      "needs": {
+        "links": {
+          "related": "https://komunitin.org/EITE/needs?filter[category]=food"
         },
-    }
+        "meta": {
+          "count": 2
+        }
+      },
+      "offers": {
+        "links": {
+          "related": "https://komunitin.org/EITE/offers?filter[category]=food"
+        },
+        "meta": {
+          "count": 32
+        }
+      }
+    },
+    "links": {
+      "self": "https://komunitin.org/EITE/categories/food"
+    },
+  }
 }

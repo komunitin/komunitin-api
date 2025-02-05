@@ -1,12 +1,16 @@
 {
-    "data": {
-        "type": "categories",
-        "attributes": {
-            "name": "Food",
-            "cpa": ["10", "11", "56"],
-            "description": "Alimentation and beverage products and services",
-            "icon": "https://komunitin.org/static/icons/food.svg",
-            "access": "public"
-        }
+  "data": {
+    "type": "categories",
+    "attributes": {
+      "name": "Food",
+      "cpa": [
+        "10",
+        "11",
+        "56"
+      ],
+      "description": "Alimentation and beverage products and services",
+      "icon": "https://komunitin.org/static/icons/food.svg",
+      "access": "public"
     }
+  }
 }

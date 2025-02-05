@@ -1,11 +1,15 @@
 {
-    "data": {
-        "type": "categories",
-        "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
-        "attributes": {
-            "name": "Food",
-            "cpa": ["10", "11", "56"],
-            "description": "Alimentation and beverage products and services"
-        }
+  "data": {
+    "type": "categories",
+    "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
+    "attributes": {
+      "name": "Food",
+      "cpa": [
+        "10",
+        "11",
+        "56"
+      ],
+      "description": "Alimentation and beverage products and services"
     }
+  }
 }

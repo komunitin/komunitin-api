@@ -1,18 +1,18 @@
 {
-    "data": {
-        "type": "offer",
-        "id": "785ad832-971f-4c7b-a31c-0adb8eafed86",
-        "attributes": {
-            "images": [
-                {
-                    "href": "https://komunitin.org/files/EITE/0cdc8a80-1c63-418d-99b6-ee53f366b097.jpeg",
-                    "alt": "Ecologic Bread image"
-                },
-                {
-                    "href": "https://komunitin.org/files/EITE/9fb3c174-3436-4928-b3f9-3a969310b18a.jpeg",
-                    "alt": "Ecologic Bread image 2"
-                }
-            ]
+  "data": {
+    "type": "offer",
+    "id": "785ad832-971f-4c7b-a31c-0adb8eafed86",
+    "attributes": {
+      "images": [
+        {
+          "href": "https://komunitin.org/files/EITE/0cdc8a80-1c63-418d-99b6-ee53f366b097.jpeg",
+          "alt": "Ecologic Bread image"
+        },
+        {
+          "href": "https://komunitin.org/files/EITE/9fb3c174-3436-4928-b3f9-3a969310b18a.jpeg",
+          "alt": "Ecologic Bread image 2"
         }
+      ]
     }
+  }
 }

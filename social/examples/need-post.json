@@ -1,26 +1,26 @@
 {
-    "data": {
-        "type": "needs",
-        "attributes": {
-            "code": "agency-3",
-            "content": "I need a business agency to manage the accounting for me. My business has been growing a bit and it's not sustainable for me to keep doing the numbers myself. It doesn't need to be a professional agency, but anybody who know how to do accountability for a small local business.",
-            "images": [],
-            "expires": "2020-08-20T23:15:30.000Z",
-            "access": "group"
-        },
-        "relationships": {
-            "category": {
-                "data": {
-                    "type": "categories",
-                    "id": "048e7d8e-f3a8-4c0b-88b1-984e7050378c"
-                }
-            },
-            "author": {
-                "data": {
-                    "type": "members",
-                    "id": "9683ec5d-29d3-419a-8753-a5d092f1bb3d"
-                }
-            }
+  "data": {
+    "type": "needs",
+    "attributes": {
+      "code": "agency-3",
+      "content": "I need a business agency to manage the accounting for me. My business has been growing a bit and it's not sustainable for me to keep doing the numbers myself. It doesn't need to be a professional agency, but anybody who know how to do accountability for a small local business.",
+      "images": [],
+      "expires": "2020-08-20T23:15:30.000Z",
+      "access": "group"
+    },
+    "relationships": {
+      "category": {
+        "data": {
+          "type": "categories",
+          "id": "048e7d8e-f3a8-4c0b-88b1-984e7050378c"
         }
+      },
+      "author": {
+        "data": {
+          "type": "members",
+          "id": "9683ec5d-29d3-419a-8753-a5d092f1bb3d"
+        }
+      }
     }
+  }
 }

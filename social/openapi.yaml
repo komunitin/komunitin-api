@@ -5,8 +5,8 @@ info:
   title: Komunitin Social API
   description: >-
     REST API featuring marketplace services for Exchange Communities.
-    
-    
+
+
     **This is still a work in progress.**
 servers:
   - description: SwaggerHub API Auto Mocking
@@ -31,7 +31,7 @@ tags:
   - name: Needs
     description: Manage needs
   - name: Categories
-    description: Manage categories for offers and needs 
+    description: Manage categories for offers and needs
   - name: Posts
     description: Manage posts
 paths:
@@ -45,7 +45,7 @@ paths:
         Return the user resource for the currently logged in user, identified
         by the Authorization token.
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -54,12 +54,12 @@ paths:
                   $ref: "#/components/examples/user-get"
       tags:
         - Users
-  
+
   /groups:
-    parameters:  
+    parameters:
       - $ref: "#/components/parameters/fields"
       - $ref: "#/components/parameters/include"
-      
+
     get:
       summary: Get groups collection
       description: >-
@@ -67,12 +67,12 @@ paths:
         using the `links` section of the response. The caller may use the field
         `sort` in conjuntion with the field `geo-position` in order to get the groups
         closer to the caller position. For example:
-        
+
         `GET /groups?sort=location&geo-position=12.33,14.55 HTTP/1.1`
-        
+
         It is recommended to fetch the related `contacts` using the `include`
         field.
-        
+
         `currency` has the same structure as a relationship but it is an attribute
         since it belongs to the external Accounting API. In particular it can't be
         included in the response.
@@ -82,14 +82,14 @@ paths:
         - $ref: "#/components/parameters/filter"
         - $ref: "#/components/parameters/geo-position"
       responses:
-        '200':
+        "200":
           description: OK
-          content: 
+          content:
             "application/vnd.api+json":
               examples:
                 collection:
                   $ref: "#/components/examples/collection"
-          
+
       tags:
         - Groups
     post:
@@ -104,9 +104,9 @@ paths:
               group-post:
                 $ref: "#/components/examples/group-post"
       responses:
-        '201':
+        "201":
           description: Created
-          content: 
+          content:
             "application/vnd.api+json":
               examples:
                 group-get:
@@ -120,25 +120,25 @@ paths:
       summary: Get group details
       description: >-
         Returns the group object and links to the related collections.
-        
+
         It is recommended to fetch the related `contacts` using the `include`
         field.
-        
+
         `currency` has the same structure as a relationship but it is an attribute
         since it belongs to the external Accounting API. In particular it can't be
         included in the response.
-        
-      parameters: 
+
+      parameters:
         - $ref: "#/components/parameters/fields"
         - $ref: "#/components/parameters/include"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
-                examples:
-                  group:
-                    $ref: "#/components/examples/group-get"
+              examples:
+                group:
+                  $ref: "#/components/examples/group-get"
       tags:
         - Groups
     patch:
@@ -156,7 +156,7 @@ paths:
               group-patch:
                 $ref: "#/components/examples/group-patch"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -170,7 +170,7 @@ paths:
       description: >-
         Delete a group
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -190,9 +190,9 @@ paths:
         - $ref: "#/components/parameters/sort"
         - $ref: "#/components/parameters/filter"
       responses:
-        '200':
+        "200":
           description: OK
-          content: 
+          content:
             "application/vnd.api+json":
               examples:
                 collection:
@@ -211,7 +211,7 @@ paths:
               offer-post:
                 $ref: "#/components/examples/offer-post"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             "application/vnd.api+json":
@@ -230,13 +230,13 @@ paths:
         - $ref: "#/components/parameters/fields"
         - $ref: "#/components/parameters/include"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
-                examples:
-                  offer-response:
-                    $ref: "#/components/examples/offer-get"
+              examples:
+                offer-response:
+                  $ref: "#/components/examples/offer-get"
       tags:
         - Offers
     patch:
@@ -252,7 +252,7 @@ paths:
               offer-patch:
                 $ref: "#/components/examples/offer-patch"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -264,7 +264,7 @@ paths:
     delete:
       summary: Delete offer
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -280,8 +280,8 @@ paths:
       summary: Get members collection
       description: >-
         Return the collection of members in a group.
-      
-        
+
+
         `account` has the same structure as a relationship but it is an attribute
         since it belongs to the external Accounting API. In particular it can't be
         included in the response.
@@ -290,9 +290,9 @@ paths:
         - $ref: "#/components/parameters/sort"
         - $ref: "#/components/parameters/filter"
       responses:
-        '200':
+        "200":
           description: OK
-          content: 
+          content:
             "application/vnd.api+json":
               examples:
                 collection:
@@ -309,7 +309,7 @@ paths:
               member-post:
                 $ref: "#/components/examples/member-post"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             "application/vnd.api+json":
@@ -326,7 +326,7 @@ paths:
       summary: Get a member object
       description: >-
         Return a member resource object.
-      
+
         `account` has the same structure as a relationship but it is an attribute
         since it belongs to the external Accounting API. In particular it can't be
         included in the response.
@@ -334,7 +334,7 @@ paths:
         - $ref: "#/components/parameters/fields"
         - $ref: "#/components/parameters/include"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -356,7 +356,7 @@ paths:
               member-patch:
                 $ref: "#/components/examples/member-patch"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -368,7 +368,7 @@ paths:
     delete:
       summary: Delete member
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -381,9 +381,9 @@ paths:
     get:
       summary: Get needs collection
       responses:
-        '200':
+        "200":
           description: OK
-          content: 
+          content:
             "application/vnd.api+json":
               examples:
                 collection:
@@ -400,7 +400,7 @@ paths:
               need-post:
                 $ref: "#/components/examples/need-post"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             "application/vnd.api+json":
@@ -419,7 +419,7 @@ paths:
         - $ref: "#/components/parameters/fields"
         - $ref: "#/components/parameters/include"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -430,7 +430,7 @@ paths:
         - Needs
     patch:
       summary: Edit need object
-      parameters:  
+      parameters:
         - $ref: "#/components/parameters/fields"
         - $ref: "#/components/parameters/include"
       requestBody:
@@ -441,7 +441,7 @@ paths:
               need-patch:
                 $ref: "#/components/examples/need-patch"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -453,7 +453,7 @@ paths:
     delete:
       summary: Delete need
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -471,13 +471,13 @@ paths:
               contact-post:
                 $ref: "#/components/examples/contact-post"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             "application/vnd.api+json":
               examples:
                 contact-get:
-                  $ref: "#/components/examples/contact-get" 
+                  $ref: "#/components/examples/contact-get"
       tags:
         - Contacts
   /contacts/{contactId}:
@@ -487,25 +487,25 @@ paths:
       summary: Edit contact
       requestBody:
         content:
-            "application/vnd.api+json":
-              schema: {}
-              examples:
-                contact-patch:
-                  $ref: "#/components/examples/contact-patch"
+          "application/vnd.api+json":
+            schema: {}
+            examples:
+              contact-patch:
+                $ref: "#/components/examples/contact-patch"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
               examples:
                 contact-patch:
-                  $ref: "#/components/examples/contact-patch" 
+                  $ref: "#/components/examples/contact-patch"
       tags:
         - Contacts
     delete:
       summary: Delete contact
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -518,9 +518,9 @@ paths:
     get:
       summary: Get posts collection
       responses:
-        '200':
+        "200":
           description: OK
-          content: 
+          content:
             "application/vnd.api+json":
               examples:
                 collection:
@@ -537,7 +537,7 @@ paths:
               post-post:
                 $ref: "#/components/examples/post-post"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             "application/vnd.api+json":
@@ -556,7 +556,7 @@ paths:
         - $ref: "#/components/parameters/fields"
         - $ref: "#/components/parameters/include"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -567,7 +567,7 @@ paths:
         - Posts
     patch:
       summary: Edit post object
-      parameters:  
+      parameters:
         - $ref: "#/components/parameters/fields"
         - $ref: "#/components/parameters/include"
       requestBody:
@@ -578,7 +578,7 @@ paths:
               post-patch:
                 $ref: "#/components/examples/post-patch"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -590,7 +590,7 @@ paths:
     delete:
       summary: Delete post
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -604,9 +604,9 @@ paths:
     get:
       summary: Get categories collection
       responses:
-        '200':
+        "200":
           description: OK
-          content: 
+          content:
             "application/vnd.api+json":
               examples:
                 collection:
@@ -623,7 +623,7 @@ paths:
               category-post:
                 $ref: "#/components/examples/category-post"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             "application/vnd.api+json":
@@ -642,7 +642,7 @@ paths:
         - $ref: "#/components/parameters/fields"
         - $ref: "#/components/parameters/include"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -653,7 +653,7 @@ paths:
         - Categories
     patch:
       summary: Edit category object
-      parameters:  
+      parameters:
         - $ref: "#/components/parameters/fields"
         - $ref: "#/components/parameters/include"
       requestBody:
@@ -664,7 +664,7 @@ paths:
               category-patch:
                 $ref: "#/components/examples/category-patch"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
@@ -676,14 +676,13 @@ paths:
     delete:
       summary: Delete category
       responses:
-        '200':
+        "200":
           description: OK
           content:
             "application/vnd.api+json":
               schema: {}
       tags:
         - Categories
-
 
 components:
   parameters:
@@ -787,105 +786,769 @@ components:
       required: true
       schema:
         type: string
-                  
+
   securitySchemes:
     accessCode:
       type: oauth2
       flows:
         authorizationCode:
-          authorizationUrl: 'http://example.com/oauth/auth'
-          tokenUrl: 'http://example.com/oauth/token'
+          authorizationUrl: "http://example.com/oauth/auth"
+          tokenUrl: "http://example.com/oauth/token"
           scopes: {}
   examples:
     user-get:
       summary: "Get user"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/user-get.json"
+        {
+          "data":
+            {
+              "type": "users",
+              "id": "4383d69d-60ec-4e78-bcd1-f8ef37471939",
+              "relationships":
+                {
+                  "members":
+                    {
+                      "data":
+                        [
+                          {
+                            "type": "members",
+                            "id": "9683ec5d-29d3-419a-8753-a5d092f1bb3d",
+                          },
+                        ],
+                    },
+                },
+            },
+          "included":
+            [
+              {
+                "type": "members",
+                "id": "9683ec5d-29d3-419a-8753-a5d092f1bb3d",
+                "attributes": { //... },
+                "relationships": { //... },
+                "links":
+                  {
+                    "self": "https://komunitin.org/EITE/members/maries-bakery",
+                  },
+              },
+            ],
+        }
     group-get:
       summary: "Get group"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/group-get.json"
+        {
+          "data":
+            {
+              "id": "84278843-50d5-4358-bbf7-a833ea5cde07",
+              "type": "groups",
+              "attributes":
+                {
+                  "code": "EITE",
+                  "name": "Easter Island Talent Exchange",
+                  "description": "<p>Here at <strong>Easter Island</strong> it makes a lot of sense to have a local currency because bla bla bla...",
+                  "image": "https://komunitin.org/files/EITE/c445714f-5a9f-410a-bd8e-1ffe20970c74.png",
+                  "website": "https://easterislandexchange.org",
+                  "access": "public",
+                  "location":
+                    {
+                      "name": "Easter Island",
+                      "type": "Point",
+                      "coordinates": [-109.44236755371094, -27.201510867989075],
+                    },
+                  "created": "2011-08-19T23:15:30.000Z",
+                  "updated": "2020-08-19T23:15:30.000Z",
+                },
+              "relationships":
+                {
+                  "contacts":
+                    {
+                      "data":
+                        [
+                          {
+                            "type": "contacts",
+                            "id": "7ceb75eb-9da0-4746-bb61-a34e0be49112",
+                          },
+                          {
+                            "type": "contacts",
+                            "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
+                          },
+                        ],
+                    },
+                  "members":
+                    {
+                      "links":
+                        { "related": "https://komunitin.org/EITE/members" },
+                      "meta": { "count": 105 },
+                    },
+                  "categories":
+                    {
+                      "links":
+                        { "related": "https://komunitin.org/EITE/categories" },
+                      "meta": { "count": 2 },
+                    },
+                  "offers":
+                    {
+                      "links":
+                        { "related": "https://komunitin.org/EITE/offers" },
+                      "meta": { "count": 170 },
+                    },
+                  "needs":
+                    {
+                      "links":
+                        { "related": "https://komunitin.org/EITE/needs" },
+                      "meta": { "count": 6 },
+                    },
+                  "posts":
+                    {
+                      "links":
+                        { "related": "https://komunitin.org/EITE/posts" },
+                      "meta": { "count": 432 },
+                    },
+                  "currency":
+                    {
+                      "data":
+                        {
+                          "external": true,
+                          "href": "https://accounting.komunitin.org/EITE/currency",
+                          "type": "currencies",
+                          "id": "45fd62f1-08e9-4a7b-8593-d36746c0e99c",
+                        },
+                    },
+                },
+              "links": { "self": "https://komunitin.org/EITE" },
+            },
+          "included":
+            [
+              {
+                "type": "contacts",
+                "id": "7ceb75eb-9da0-4746-bb61-a34e0be49112",
+                "attributes":
+                  {
+                    "type": "phone",
+                    "name": "+34 666 77 88 99",
+                    "created": "2011-08-19T23:15:30.000Z",
+                    "updated": "2011-08-19T23:15:30.000Z",
+                  },
+                "links":
+                  {
+                    "self": "https://komunitin.org/EITE/contacts/7ceb75eb-9da0-4746-bb61-a34e0be49112",
+                  },
+              },
+              {
+                "type": "contacts",
+                "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
+                "attributes":
+                  {
+                    "type": "email",
+                    "name": "exhange@easterisland.com",
+                    "created": "2011-08-19T23:15:30.000Z",
+                    "updated": "2011-08-19T23:15:30.000Z",
+                  },
+                "links":
+                  {
+                    "self": "https://komunitin.org/EITE/contacts/193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
+                  },
+              },
+            ],
+        }
     group-post:
       summary: "Create group payload"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/group-post.json"
+        {
+          "data":
+            {
+              "type": "groups",
+              "attributes":
+                {
+                  "code": "EITE",
+                  "name": "Easter Island Talent Exchange",
+                  "description": "<p>Here at <strong>Easter Island</strong> it makes a lot of sense to have a local currency because bla bla bla...",
+                  "image": "https://komunitin.org/files/EITE/c445714f-5a9f-410a-bd8e-1ffe20970c74.png",
+                  "website": "https://easterislandexchange.org",
+                  "access": "public",
+                  "location":
+                    {
+                      "name": "Easter Island",
+                      "type": "Point",
+                      "coordinates": [-109.44236755371094, -27.201510867989075],
+                    },
+                },
+              "relationships":
+                {
+                  "currency":
+                    {
+                      "data":
+                        {
+                          "external": true,
+                          "href": "https://accounting.komunitin.org/EITE/currency",
+                          "type": "currencies",
+                          "id": "45fd62f1-08e9-4a7b-8593-d36746c0e99c",
+                        },
+                    },
+                },
+            },
+        }
     group-patch:
       summary: "Update group"
-      value: 
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/group-patch.json"
+      value:
+        {
+          "data":
+            {
+              "type": "groups",
+              "id": "84278843-50d5-4358-bbf7-a833ea5cde07",
+              "attributes":
+                {
+                  "description": "<p>Here at the lovely <strong>Easter Island</strong> bla bla bla...",
+                },
+            },
+        }
     member-get:
       summary: "Get member"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/member-get.json"
+        {
+          "data":
+            {
+              "id": "9683ec5d-29d3-419a-8753-a5d092f1bb3d",
+              "type": "members",
+              "attributes":
+                {
+                  "code": "maries-bakery",
+                  "name": "Marie's Bakery",
+                  "access": "group",
+                  "type": "business",
+                  "description": "My mother Marie opened the first bakery in the town 50 years ago. Since then...",
+                  "image": "https://komunitin.org/files/EITE/68cbbec3-df9d-4af0-b333-07bb4c404a24.jpeg",
+                  "address":
+                    {
+                      "streetAddress": "7 S. Broadway",
+                      "addressLocality": "Denver",
+                      "postalCode": "80209",
+                      "addressRegion": "CO",
+                    },
+                  "location":
+                    {
+                      "type": "Point",
+                      "coordinates": [-109.44236755371094, -27.201510867989075],
+                    },
+                  "created": "2019-08-19T23:15:30.000Z",
+                  "updated": "2020-08-19T23:15:30.000Z",
+                },
+              "relationships":
+                {
+                  "contacts":
+                    {
+                      "data":
+                        [
+                          {
+                            "type": "contacts",
+                            "id": "7ceb75eb-9da0-4746-bb61-a34e0be49112",
+                          },
+                          {
+                            "type": "contacts",
+                            "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
+                          },
+                        ],
+                    },
+                  "group":
+                    { "links": { "related": "https://komunitin.org/EITE" } },
+                  "needs":
+                    {
+                      "links":
+                        {
+                          "related": "https://komunitin.org/EITE/needs?filter[member]=maries-bakery",
+                        },
+                      "meta": { "count": 0 },
+                    },
+                  "offers":
+                    {
+                      "links":
+                        {
+                          "related": "https://komunitin.org/EITE/offers?filter[member]=maries-bakery",
+                        },
+                      "meta": { "count": 1 },
+                    },
+                  "account":
+                    {
+                      "data":
+                        {
+                          "external": true,
+                          "href": "https://accounting.komunitin.org/EITE/accounts/EITE0005",
+                          "type": "accounts",
+                          "id": "f0f79f57-7b42-4f7a-ab24-492152890e43",
+                        },
+                    },
+                },
+              "links":
+                { "self": "https://komunitin.org/EITE/members/maries-bakery" },
+            },
+          "included":
+            [
+              {
+                "type": "contacts",
+                "id": "7ceb75eb-9da0-4746-bb61-a34e0be49112",
+                "attributes":
+                  {
+                    "type": "phone",
+                    "name": "+34 666 77 88 99",
+                    "created": "2019-08-19T23:15:30.000Z",
+                    "updated": "2020-08-19T23:15:30.000Z",
+                  },
+                "links":
+                  {
+                    "self": "https://komunitin.org/EITE/contacts/7ceb75eb-9da0-4746-bb61-a34e0be49112",
+                  },
+              },
+              {
+                "type": "contacts",
+                "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
+                "attributes":
+                  {
+                    "type": "email",
+                    "name": "exhange@easterisland.com",
+                    "created": "2019-08-19T23:15:30.000Z",
+                    "updated": "2020-08-19T23:15:30.000Z",
+                  },
+                "links":
+                  {
+                    "self": "https://komunitin.org/EITE/contacts/193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
+                  },
+              },
+            ],
+        }
     member-post:
       summary: "Create member"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/member-post.json"
+        {
+          "data":
+            {
+              "type": "members",
+              "attributes":
+                {
+                  "code": "maries-bakery",
+                  "name": "Marie's Bakery",
+                  "access": "group",
+                  "type": "business",
+                  "description": "My mother Marie opened the first bakery in the town 50 years ago. Since then...",
+                  "image": "https://komunitin.org/files/EITE/68cbbec3-df9d-4af0-b333-07bb4c404a24.jpeg",
+                  "address":
+                    {
+                      "streetAddress": "7 S. Broadway",
+                      "addressLocality": "Denver",
+                      "postalCode": "80209",
+                      "addressRegion": "CO",
+                    },
+                  "location":
+                    {
+                      "type": "Point",
+                      "coordinates": [-109.44236755371094, -27.201510867989075],
+                    },
+                },
+              "relationships":
+                {
+                  "account":
+                    {
+                      "data":
+                        {
+                          "external": true,
+                          "href": "https://accounting.komunitin.org/EITE/accounts/EITE0005",
+                          "type": "accounts",
+                          "id": "f0f79f57-7b42-4f7a-ab24-492152890e43",
+                        },
+                    },
+                },
+            },
+        }
+
     member-patch:
       summary: "Update member"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/member-patch.json"
+        {
+          "data":
+            {
+              "type": "members",
+              "id": "9683ec5d-29d3-419a-8753-a5d092f1bb3d",
+              "attributes":
+                {
+                  "location":
+                    {
+                      "type": "Point",
+                      "coordinates": [-109.44236755371094, -27.201510867989075],
+                    },
+                },
+            },
+        }
+
     category-get:
       summary: "Get category"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/category-get.json"
+        {
+          "data":
+            {
+              "type": "categories",
+              "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
+              "attributes":
+                {
+                  "code": "food",
+                  "name": "Food",
+                  "cpa": ["10", "11", "56"],
+                  "description": "Alimentation and beverage products and services",
+                  "icon": "https://komunitin.org/static/icons/food.svg",
+                  "access": "public",
+                  "created": "2011-08-19T23:15:30.000Z",
+                  "updated": "2020-08-19T23:15:30.000Z",
+                },
+              "relationships":
+                {
+                  "group":
+                    { "links": { "related": "https://komunitin.org/EITE" } },
+                  "needs":
+                    {
+                      "links":
+                        {
+                          "related": "https://komunitin.org/EITE/needs?filter[category]=food",
+                        },
+                      "meta": { "count": 2 },
+                    },
+                  "offers":
+                    {
+                      "links":
+                        {
+                          "related": "https://komunitin.org/EITE/offers?filter[category]=food",
+                        },
+                      "meta": { "count": 32 },
+                    },
+                },
+              "links": { "self": "https://komunitin.org/EITE/categories/food" },
+            },
+        }
+
     category-post:
       summary: "Create category"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/category-post.json"
+        {
+          "data":
+            {
+              "type": "categories",
+              "attributes":
+                {
+                  "name": "Food",
+                  "cpa": ["10", "11", "56"],
+                  "description": "Alimentation and beverage products and services",
+                  "icon": "https://komunitin.org/static/icons/food.svg",
+                  "access": "public",
+                },
+            },
+        }
     category-patch:
       summary: "Update category"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/category-patch.json"
+        {
+          "data":
+            {
+              "type": "categories",
+              "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
+              "attributes":
+                {
+                  "name": "Food",
+                  "cpa": ["10", "11", "56"],
+                  "description": "Alimentation and beverage products and services",
+                },
+            },
+        }
     offer-get:
       summary: "Get offer"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/offer-get.json"
+        {
+          "data":
+            {
+              "type": "offer",
+              "id": "785ad832-971f-4c7b-a31c-0adb8eafed86",
+              "attributes":
+                {
+                  "code": "ecologic-bread",
+                  "name": "Ecologic Bread",
+                  "content": "<p>We stand up every morning at 3h AM in order to...",
+                  "images":
+                    [
+                      {
+                        "href": "https://komunitin.org/files/EITE/0cdc8a80-1c63-418d-99b6-ee53f366b097.jpeg",
+                        "alt": "Ecologic Bread image",
+                      },
+                      {
+                        "href": "https://komunitin.org/files/EITE/9fb3c174-3436-4928-b3f9-3a969310b18a.jpeg",
+                        "alt": "Ecologic Bread image 2",
+                      },
+                    ],
+                  "access": "public",
+                  "expires": "2020-08-20T23:15:30.000Z",
+                  "created": "2019-08-19T23:15:30.000Z",
+                  "updated": "2020-08-19T23:15:30.000Z",
+                },
+              "relationships":
+                {
+                  "category":
+                    {
+                      "links":
+                        {
+                          "related": "https://komunitin.org/EITE/categories/food",
+                        },
+                    },
+                  "author":
+                    {
+                      "links":
+                        { "related": "https://komunitin.org/EITE/EITE0005" },
+                    },
+                },
+              "links":
+                { "self": "https://komunitin.org/EITE/offers/ecologic-bread" },
+            },
+        }
     offer-post:
       summary: "Create offer"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/offer-post.json"
+        {
+          "data":
+            {
+              "type": "offer",
+              "attributes":
+                {
+                  "name": "Ecologic Bread",
+                  "content": "<p>We stand up every morning at 3h AM in order to...",
+                  "images":
+                    [
+                      {
+                        "href": "https://komunitin.org/files/EITE/0cdc8a80-1c63-418d-99b6-ee53f366b097.jpeg",
+                        "alt": "Ecologic Bread image",
+                      },
+                    ],
+                  "expires": "2020-08-20T23:15:30.000Z",
+                  "access": "public",
+                },
+              "relationships":
+                {
+                  "category":
+                    {
+                      "data":
+                        {
+                          "type": "categories",
+                          "id": "6a1f9500-0ff7-4ac7-9753-63829a626d5f",
+                        },
+                    },
+                  "author":
+                    {
+                      "data":
+                        {
+                          "type": "members",
+                          "id": "9683ec5d-29d3-419a-8753-a5d092f1bb3d",
+                        },
+                    },
+                },
+            },
+        }
+
     offer-patch:
       summary: "Update offer"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/offer-patch.json"
+        {
+          "data":
+            {
+              "type": "offer",
+              "id": "785ad832-971f-4c7b-a31c-0adb8eafed86",
+              "attributes":
+                {
+                  "images":
+                    [
+                      {
+                        "href": "https://komunitin.org/files/EITE/0cdc8a80-1c63-418d-99b6-ee53f366b097.jpeg",
+                        "alt": "Ecologic Bread image",
+                      },
+                      {
+                        "href": "https://komunitin.org/files/EITE/9fb3c174-3436-4928-b3f9-3a969310b18a.jpeg",
+                        "alt": "Ecologic Bread image 2",
+                      },
+                    ],
+                },
+            },
+        }
     need-get:
       summary: "Get need"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/need-get.json"
+        {
+          "data":
+            {
+              "type": "needs",
+              "id": "76f46e54-94c9-4893-addf-03f86ee8e8c8",
+              "attributes":
+                {
+                  "code": "agency-3",
+                  "content": "I need a business agency to manage the accounting for me. My business has been growing a bit and it's not sustainable for me to keep doing the numbers myself. It doesn't need to be a professional agency, but anybody who know how to do accountability for a small local business.",
+                  "images": [],
+                  "expires": "2020-08-20T23:15:30.000Z",
+                  "access": "group",
+                  "created": "2019-08-19T23:15:30.000Z",
+                  "updated": "2020-08-19T23:15:30.000Z",
+                },
+              "relationships":
+                {
+                  "category":
+                    {
+                      "links":
+                        {
+                          "related": "https://komunitin.org/EITE/categories/professional-services",
+                        },
+                    },
+                  "author":
+                    {
+                      "links":
+                        { "related": "https://komunitin.org/EITE/EITE0005" },
+                    },
+                },
+              "links": { "self": "https://komunitin.org/EITE/needs/agency-3" },
+            },
+        }
     need-post:
       summary: "Create need"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/need-post.json"
+        {
+          "data":
+            {
+              "type": "needs",
+              "attributes":
+                {
+                  "code": "agency-3",
+                  "content": "I need a business agency to manage the accounting for me. My business has been growing a bit and it's not sustainable for me to keep doing the numbers myself. It doesn't need to be a professional agency, but anybody who know how to do accountability for a small local business.",
+                  "images": [],
+                  "expires": "2020-08-20T23:15:30.000Z",
+                  "access": "group",
+                },
+              "relationships":
+                {
+                  "category":
+                    {
+                      "data":
+                        {
+                          "type": "categories",
+                          "id": "048e7d8e-f3a8-4c0b-88b1-984e7050378c",
+                        },
+                    },
+                  "author":
+                    {
+                      "data":
+                        {
+                          "type": "members",
+                          "id": "9683ec5d-29d3-419a-8753-a5d092f1bb3d",
+                        },
+                    },
+                },
+            },
+        }
+
     need-patch:
       summary: "Update need"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/need-patch.json"
+        {
+          "data":
+            {
+              "type": "needs",
+              "id": "76f46e54-94c9-4893-addf-03f86ee8e8c8",
+              "relationships":
+                {
+                  "category":
+                    {
+                      "data":
+                        {
+                          "type": "categories",
+                          "id": "048e7d8e-f3a8-4c0b-88b1-984e7050378c",
+                        },
+                    },
+                },
+            },
+        }
+
     contact-get:
       summary: "Get contact"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/contact-get.json"
+        {
+          "data":
+            {
+              "type": "contacts",
+              "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
+              "attribues":
+                {
+                  "type": "phone",
+                  "name": "+34 666 77 88 00",
+                  "created": "2011-08-19T23:15:30.000Z",
+                  "updated": "2020-08-19T23:15:30.000Z",
+                },
+              "relationships":
+                {
+                  "owner":
+                    {
+                      "data":
+                        {
+                          "type": "groups",
+                          "id": "84278843-50d5-4358-bbf7-a833ea5cde07",
+                        },
+                    },
+                },
+              "links":
+                {
+                  "self": "https://komunitin.org/EITE/contacts/193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
+                },
+            },
+        }
+
     contact-post:
       summary: "Create contact"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/contact-post.json"
+        {
+          "data":
+            {
+              "type": "contacts",
+              "attribues": { "type": "phone", "name": "+34 666 77 88 99" },
+              "relationships":
+                {
+                  "owner":
+                    {
+                      "data":
+                        {
+                          "type": "groups",
+                          "id": "84278843-50d5-4358-bbf7-a833ea5cde07",
+                        },
+                    },
+                },
+            },
+        }
     contact-patch:
       summary: "Update contact"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/contact-patch.json"
+        {
+          "data":
+            {
+              "type": "contacts",
+              "id": "193e98b4-a27d-4e8a-9a47-2dc5cd1c1ffb",
+              "attribues": { "name": "+34 666 77 88 00" },
+            },
+        }
     post-get:
       summary: "Get post"
-      value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/post-get.json"
+      value: {}
     post-post:
       summary: "Create post"
-      value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/post-post.json"
+      value: {}
     post-patch:
-      summary: "Update need"
-      value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/post-patch.json"
+      summary: "Update post"
+      value: {}
     collection:
       summary: "Generic collection"
       value:
-        $ref: "https://raw.githubusercontent.com/komunitin/komunitin-api/master/social/examples/collection.json"
+        {
+          "data": [// See the specific example for each type],
+          "links":
+            {
+              "self": "https://komunitin.org/EITE/{type}",
+              "first": "https://komunitin.org/EITE/{type}",
+              "prev": null,
+              "next": "https://komunitin.org/EITE/{type}?page[after]={cursor}",
+            },
+          "meta": { "count": 1234 },
+        }

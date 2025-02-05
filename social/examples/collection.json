@@ -1,13 +1,14 @@
 {
-    "data": [
-    ],
-    "links": {
-        "self": "https://komunitin.org/EITE/{type}",
-        "first": "https://komunitin.org/EITE/{type}",
-        "prev": null,
-        "next": "https://komunitin.org/EITE/{type}?page[after]={cursor}"
-    },
-    "meta": {
-        "count": 1234
-    }
+  "data": [
+    //...
+  ],
+  "links": {
+    "self": "https://komunitin.org/EITE/{type}",
+    "first": "https://komunitin.org/EITE/{type}",
+    "prev": null,
+    "next": "https://komunitin.org/EITE/{type}?page[after]={cursor}"
+  },
+  "meta": {
+    "count": 1234
+  }
 }

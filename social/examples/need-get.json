@@ -1,30 +1,30 @@
 {
-    "data": {
-        "type": "needs",
-        "id": "76f46e54-94c9-4893-addf-03f86ee8e8c8",
-        "attributes": {
-            "code": "agency-3",
-            "content": "I need a business agency to manage the accounting for me. My business has been growing a bit and it's not sustainable for me to keep doing the numbers myself. It doesn't need to be a professional agency, but anybody who know how to do accountability for a small local business.",
-            "images": [],
-            "expires": "2020-08-20T23:15:30.000Z",
-            "access": "group",
-            "created": "2019-08-19T23:15:30.000Z",
-            "updated": "2020-08-19T23:15:30.000Z"
-        },
-        "relationships": {
-            "category": {
-                "links": {
-                    "related": "https://komunitin.org/EITE/categories/professional-services"
-                }
-            },
-            "author": {
-                "links": {
-                    "related": "https://komunitin.org/EITE/EITE0005"
-                }
-            }
-        },
+  "data": {
+    "type": "needs",
+    "id": "76f46e54-94c9-4893-addf-03f86ee8e8c8",
+    "attributes": {
+      "code": "agency-3",
+      "content": "I need a business agency to manage the accounting for me. My business has been growing a bit and it's not sustainable for me to keep doing the numbers myself. It doesn't need to be a professional agency, but anybody who know how to do accountability for a small local business.",
+      "images": [],
+      "expires": "2020-08-20T23:15:30.000Z",
+      "access": "group",
+      "created": "2019-08-19T23:15:30.000Z",
+      "updated": "2020-08-19T23:15:30.000Z"
+    },
+    "relationships": {
+      "category": {
         "links": {
-            "self": "https://komunitin.org/EITE/needs/agency-3"
+          "related": "https://komunitin.org/EITE/categories/professional-services"
         }
+      },
+      "author": {
+        "links": {
+          "related": "https://komunitin.org/EITE/EITE0005"
+        }
+      }
+    },
+    "links": {
+      "self": "https://komunitin.org/EITE/needs/agency-3"
     }
+  }
 }
